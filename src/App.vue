@@ -1,11 +1,36 @@
-<script setup></script>
+<script setup>
+
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <router-view>
+    
+  </router-view>
 </template>
 
-<style scoped></style>
+<style>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+}
+ul{
+  list-style: none;
+}
+body{
+  background: black;
+  color: white;
+}
+html {
+  overflow: scroll; /* 确保滚动功能可用 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 和 Edge 旧版 */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, 新版 Edge */
+}
+</style>
