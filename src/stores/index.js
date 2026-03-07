@@ -7,3 +7,4 @@ pinia.use(persist)
 export default pinia
 
 export * from './model/user'
+export * from './model/product'

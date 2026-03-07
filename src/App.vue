@@ -1,11 +1,11 @@
 <script setup>
+import PromptCom from '@/component/PromptCom.vue'
 
 </script>
 
 <template>
-  <router-view>
-    
-  </router-view>
+  <router-view />
+  <PromptCom />
 </template>
 
 <style>

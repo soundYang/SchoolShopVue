@@ -35,7 +35,7 @@
 .container_chat_bot {
   display: flex;
   flex-direction: column;
-  max-width: 800px;
+  max-width: 1200px;
   width: 100%;
 }
 

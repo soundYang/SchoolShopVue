@@ -1,9 +1,10 @@
 <script setup>
 import { strToArr } from '@/unit/StringToArray'
+import { computed } from 'vue'
 const props = defineProps({
   str: String
 })
-const arrStr = strToArr(props.str)
+const arrStr = computed(() => strToArr(props.str))
 </script>
 
 <template>
@@ -20,7 +21,7 @@ const arrStr = strToArr(props.str)
 
 </template>
 
-<style>
+<style scoped>
 .loader-wrapper {
   position: relative;
   display: flex;

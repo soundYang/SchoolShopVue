@@ -1,101 +1,204 @@
+<style scoped>
+  .card-container {
+    perspective: 800px;
+  }
+
+  .card {
+    position: relative;
+    width: 210px;
+    height: 332px;
+    background: #fffffd;
+    border-radius: 1em;
+    box-shadow: 0 0 6px -4px black;
+    transition: 0.75s all;
+    transform-style: preserve-3d;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    bottom: -24px;
+    bottom: 0;
+    left: 0;
+    width: 210px;
+    height: 110px;
+    transform: translate(0em, 60%) rotateX(90deg) scale(0.8);
+    border-radius: 100%;
+    background-color: #000a;
+    z-index: -10;
+    filter: blur(24px);
+  }
+
+  .card-container:hover .card {
+    transform: rotateY(180deg);
+  }
+
+  .back {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inset: 0.7em;
+    border-radius: 1.25em;
+    background: #191f1f;
+    overflow: hidden;
+  }
+
+  .red {
+    position: absolute;
+    background: #cb0323;
+    inset: 0;
+    border-radius: 100%;
+    transform-origin: center;
+    transform: scale(0.875) skewX(-22.5deg);
+  }
+
+  .back .text {
+    position: absolute;
+    font-size: 5em;
+    font-weight: 800;
+    color: #e4c713;
+    transform-origin: center;
+    transform: rotate(-15deg) translateX(5px);
+    text-shadow:
+      2px 2px #f1e8ad,
+      2px 1px #f1e8ad,
+      2px 0px #f1e8ad,
+      2px -1px #f1e8ad,
+      2px -2px #f1e8ad,
+      1px -2px #f1e8ad,
+      0px -2px #f1e8ad,
+      -1px -2px #f1e8ad,
+      -2px -2px #f1e8ad,
+      -2px -1px #f1e8ad,
+      -2px 0px #f1e8ad,
+      -2px 1px #f1e8ad,
+      -2px 2px #f1e8ad,
+      -12px 10px #191f1f,
+      -10px 10px #191f1f,
+      -9px 9.428571429px #191f1f,
+      -8px 8.857142857px #191f1f,
+      -7px 8.285714286px #191f1f,
+      -6px 7.714285714px #191f1f,
+      -5px 7.142857143px #191f1f,
+      -4px 6.571428572px #191f1f,
+      -3px 6px #191f1f,
+      -2px 5.428571429px #191f1f,
+      -1px 4.857142857px #191f1f,
+      0px 4.285714286px #191f1f,
+      1px 3.714285715px #191f1f,
+      2px 3.142857143px #191f1f,
+      3px 2.571428572px #191f1f,
+      4px 2px #191f1f,
+      4px -4px #191f1f,
+      -4px -4px #191f1f,
+      -5px -3px #191f1f,
+      -6px -2px #191f1f,
+      -7px -1px #191f1f,
+      -8px 0px #191f1f,
+      -9px 1px #191f1f,
+      -10px 2px #191f1f,
+      -11px 3px #191f1f,
+      -12px 4px #191f1f,
+      -14px 4px #fffffd,
+      -13px 3px #fffffd,
+      -12px 2px #fffffd,
+      -11px 1px #fffffd,
+      -10px 0px #fffffd,
+      -9px -1px #fffffd,
+      -8px -2px #fffffd,
+      -7px -3px #fffffd,
+      -6px -4px #fffffd,
+      -5px -5px #fffffd,
+      -4px -6px #fffffd,
+      -3px -6px #fffffd,
+      0px -6px #fffffd,
+      3px -6px #fffffd,
+      6px -6px #fffffd,
+      -14px 12px #fffffd,
+      -8px 12px #fffffd,
+      -7px 11.5px #fffffd,
+      -6px 11px #fffffd,
+      -5px 10.5px #fffffd,
+      -4px 10px #fffffd,
+      -3px 9.5px #fffffd,
+      -2px 9px #fffffd,
+      -1px 8.5px #fffffd,
+      0px 8px #fffffd,
+      1px 7.5px #fffffd,
+      2px 7px #fffffd,
+      3px 6.5px #fffffd,
+      4px 6px #fffffd,
+      5px 5.5px #fffffd,
+      6px 4px #fffffd;
+  }
+
+  .front {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inset: 0.7em;
+    border-radius: 1.25em;
+    background: #cb0323;
+    overflow: hidden;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .front .red {
+    border: 0.7em solid #fffffd;
+    transform: scale(0.92, 0.875) skewX(-22.5deg);
+  }
+
+  .text-center {
+    position: absolute;
+    width: 12em;
+    color: white;
+    text-align: center;
+    font-size: 6em;
+    text-shadow:
+      -2px -3px 0 #000,
+      -1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  }
+
+  .text-top {
+    position: absolute;
+    top: 0.2em;
+    left: 0.5em;
+    width: 3em;
+    color: white;
+    font-size: 2rem;
+  }
+
+  .text-bottom {
+    position: absolute;
+    bottom: 0.2em;
+    right: 0em;
+    width: 1em;
+    color: white;
+    font-size: 2rem;
+  }
+</style>
+
 <template>
-<!-- From Uiverse.io by ilkhoeri --> 
-<div class="wrapper">
-  <div class="inner" style="--quantity: 10;">
-    <div class="card" style="--index: 0;--color-card: 142, 249, 252;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 1;--color-card: 142, 252, 204;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 2;--color-card: 142, 252, 157;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 3;--color-card: 215, 252, 142;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 4;--color-card: 252, 252, 142;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 5;--color-card: 252, 208, 142;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 6;--color-card: 252, 142, 142;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 7;--color-card: 252, 142, 239;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 8;--color-card: 204, 142, 252;">
-      <div class="img"></div>
-    </div>
-    <div class="card" style="--index: 9;--color-card: 142, 202, 252;">
-      <div class="img"></div>
+  <div class="card-container">
+    <div class="card">
+      <div class="back">
+        <div class="red"></div>
+        <div class="text">UNO</div>
+      </div>
+      <div class="front">
+        <div class="red"></div>
+        <div class="text-top">5</div>
+        <div class="text-center">5</div>
+        <div class="text-bottom">5</div>
+      </div>
     </div>
   </div>
-</div>
-
 </template>
-
-<style>
-.wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.inner {
-  --w: 100px;
-  --h: 150px;
-  --translateZ: calc((var(--w) + var(--h)) + 0px);
-  --rotateX: -15deg;
-  --perspective: 1000px;
-  position: absolute;
-  width: var(--w);
-  height: var(--h);
-  top: 25%;
-  left: calc(50% - (var(--w) / 2) - 2.5px);
-  z-index: 2;
-  transform-style: preserve-3d;
-  transform: perspective(var(--perspective));
-  animation: rotating 20s linear infinite; /* */
-}
-@keyframes rotating {
-  from {
-    transform: perspective(var(--perspective)) rotateX(var(--rotateX))
-      rotateY(0);
-  }
-  to {
-    transform: perspective(var(--perspective)) rotateX(var(--rotateX))
-      rotateY(1turn);
-  }
-}
-
-.card {
-  position: absolute;
-  border: 2px solid rgba(var(--color-card));
-  border-radius: 12px;
-  overflow: hidden;
-  inset: 0;
-  transform: rotateY(calc((360deg / var(--quantity)) * var(--index)))
-    translateZ(var(--translateZ));
-}
-
-.img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #0000
-    radial-gradient(
-      circle,
-      rgba(var(--color-card), 0.2) 0%,
-      rgba(var(--color-card), 0.6) 80%,
-      rgba(var(--color-card), 0.9) 100%
-    );
-}
-</style>

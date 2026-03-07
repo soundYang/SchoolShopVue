@@ -6,15 +6,17 @@ const router = useRouter()
 
 const userStore = useUserStore()
 const jumpUser = () => {
-  if(!userStore.token){
+  if(!userStore.Account.token){
     router.push('/login')
   }
+  router.push('/user')
+  
 }
 </script>
 
 <template>
   <div class="container">
-  <div data-text="首页" style="--r:-15;" class="glass">
+  <div @click="router.push('/layout')" data-text="首页" style="--r:-15;" class="glass">
     <i class="iconfont icon-shouye"></i>
   </div>
   <div data-text="全部商品" style="--r:5;" class="glass">
@@ -30,7 +32,7 @@ const jumpUser = () => {
 
 </template>
 
-<style>
+<style scoped>
 .container {
   position: relative;
   display: flex;

@@ -112,6 +112,7 @@ const clickFun = () => {
   height: 260px;
   margin-top: 60px;
   border-radius: 10px;
+  object-fit: cover;
 }
 .proDemo>h3{
   font-size: 20px;

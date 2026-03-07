@@ -1,59 +1,282 @@
 <script setup>
+import { ref, onBeforeUnmount } from 'vue'
+import { useToast } from '@/composables/useToast'
+import { UserLoginServer, UserRegisterServer } from '@/api/user'
+import { useUserStore } from '@/stores'
+import { useRouter, useRoute } from 'vue-router'
+
+const { showToast } = useToast()
+const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
+
 defineOptions({
   name: "loginPage",
 })
+
+const showFrom = ref(true) // true: 登录, false: 注册
+
+// 登录表单
+const LoginfromModel = ref({
+  userName: {
+    value: "",
+    rex: /^[a-zA-Z0-9_-]{4,16}$/,
+    msg: '用户名必须是4-16位字母、数字、下划线、减号'
+  },
+  passWord: {
+    value: "",
+    rex: /^[a-zA-Z0-9_-]{4,16}$/,
+    msg: '密码必须是4-16位字母、数字、下划线、减号'
+  },
+  [Symbol.iterator]: function* () {
+    yield* Object.values(this)
+  }
+})
+
+// 注册表单
+const RegisterfromModel = ref({
+  userName: {
+    value: "",
+    rex: /^[a-zA-Z0-9_-]{4,16}$/,
+    msg: '用户名必须是4-16位字母、数字、下划线、减号'
+  },
+  passWord: {
+    value: "",
+    rex: /^[a-zA-Z0-9_-]{4,16}$/,
+    msg: '密码必须是4-16位字母、数字、下划线、减号'
+  },
+  confirmPassWord: {
+    value: "",
+    rex: /^[a-zA-Z0-9_-]{4,16}$/,
+    customValidator: () => {
+      return RegisterfromModel.value.passWord.value === RegisterfromModel.value.confirmPassWord.value
+    },
+    msg: '密码不一致'
+  },
+  phoneNumber: {
+    value: '',
+    rex: /^[1][3-9]\d{8}$/,
+    msg: '手机号格式不正确'
+  },
+  verificationCode: {
+    value: "",
+    rex: /.*/, // 暂不验证，可根据需要修改
+    msg: ''
+  },
+  [Symbol.iterator]: function* () {
+    yield* Object.values(this)
+  }
+})
+
+// 登录提交
+const login = async () => {
+  for (let { value, rex, msg } of LoginfromModel.value) {
+    if (!rex.test(value)) {
+      return showToast(msg, 3000)
+    }
+  }
+  const res = await UserLoginServer({
+    UserName: LoginfromModel.value.userName.value,
+    PassWord: LoginfromModel.value.passWord.value
+  })
+  userStore.setUser(res.data)
+  userStore.setToken(res.token)
+  
+  if(route.query.backPath){
+    return router.go(-1)
+  }
+  router.replace('/layout')
+}
+
+// 注册提交
+const register = async () => {
+  for (let field of RegisterfromModel.value) {
+    // 处理自定义验证（如密码确认）
+    if (field.customValidator && !field.customValidator()) {
+      return showToast(field.msg, 3000)
+    }
+    // 正则验证
+    if (field.rex && !field.rex.test(field.value)) {
+      return showToast(field.msg, 3000)
+    }
+  }
+  
+  await UserRegisterServer({
+    UserName: RegisterfromModel.value.userName.value,
+    PassWord: RegisterfromModel.value.passWord.value,
+    PhoneNumber: RegisterfromModel.value.phoneNumber.value
+  })
+
+  showFrom.value = true
+  LoginfromModel.value.userName.value = RegisterfromModel.value.userName.value
+  LoginfromModel.value.passWord.value = RegisterfromModel.value.passWord.value
+  // 实际注册逻辑...
+}
+
+const btndisabled = ref(false)
+const count = ref(60)
+let codeTimer = null
+
+// 获取验证码
+const getVerificationCode = () => {
+  if(!RegisterfromModel.value.phoneNumber.value){
+    return showToast('请先填写手机号', 3000)
+  }
+  if (!RegisterfromModel.value.phoneNumber.rex.test(+RegisterfromModel.value.phoneNumber.value)) {
+    return showToast('手机号格式不正确', 3000)
+  }
+  /**
+   * 短信验证逻辑
+   */ 
+  
+  showToast('验证码已发送', 3000)
+  btndisabled.value = true
+  count.value = 60
+  codeTimer = setInterval(() => {
+    if (count.value > 0) {
+      count.value--
+    } else {
+      clearInterval(codeTimer)
+      btndisabled.value = false
+    }
+  }, 1000)
+}
+
+onBeforeUnmount(() => {
+  codeTimer && clearInterval(codeTimer)
+})
+
 </script>
 
 <template>
-  <!-- From Uiverse.io by pharmacist-sabot --> 
-<div class="glitch-form-wrapper">
-  <form class="glitch-card">
-    <div class="card-header">
-      <div class="card-title">
-        <span>用户登陆</span>
+  <div class="glitch-form-wrapper">
+    <!-- 登录表单 -->
+    <form @submit.prevent="login" v-if="showFrom" class="glitch-card">
+      <div class="card-header">
+        <div class="card-title"><span>用户登陆</span></div>
+        <div class="card-title changeBtn" @click="showFrom = !showFrom">
+          <span>去注册</span>
+        </div>
       </div>
 
-      <div class="card-dots"><span></span><span></span><span></span></div>
-    </div>
+      <div class="card-body">
+        <div class="form-group">
+          <input
+            type="text"
+            id="login-username"
+            name="username"
+            required=""
+            placeholder=" "
+            v-model="LoginfromModel.userName.value"
+          />
+          <label for="login-username" class="form-label" data-text="账号">账号</label>
+        </div>
 
-    <div class="card-body">
-      <div class="form-group">
-        <input
-          type="text"
-          id="username"
-          name="username"
-          required=""
-          placeholder=""
-        />
-        <label for="username" class="form-label" data-text="账号"
-          >账号</label
-        >
+        <div class="form-group">
+          <input
+            type="password"
+            id="login-password"
+            name="password"
+            required=""
+            placeholder=" "
+            v-model="LoginfromModel.passWord.value"
+          />
+          <label for="login-password" class="form-label" data-text="密码">密码</label>
+        </div>
+
+        <button data-text="登陆" type="submit" class="submit-btn">
+          <span class="btn-text">登陆</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- 注册表单 -->
+    <form @submit.prevent="register" v-else class="glitch-card">
+      <div class="card-header">
+        <div class="card-title"><span>用户注册</span></div>
+        <div class="card-title changeBtn" @click="showFrom = !showFrom">
+          <span>去登陆</span>
+        </div>
       </div>
 
-      <div class="form-group">
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required=""
-          placeholder=""
-        />
-        <label for="password" class="form-label" data-text="密码"
-          >密码</label
-        >
+      <div class="card-body">
+        <div class="form-group">
+          <input
+            type="text"
+            id="register-username"
+            name="username"
+            required=""
+            placeholder=" "
+            v-model="RegisterfromModel.userName.value"
+          />
+          <label for="register-username" class="form-label" data-text="账号">账号</label>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="password"
+            id="register-password"
+            name="password"
+            required=""
+            placeholder=" "
+            v-model="RegisterfromModel.passWord.value"
+          />
+          <label for="register-password" class="form-label" data-text="密码">密码</label>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="password"
+            id="register-confirm"
+            name="confirmPassword"
+            required=""
+            placeholder=" "
+            v-model="RegisterfromModel.confirmPassWord.value"
+          />
+          <label for="register-confirm" class="form-label" data-text="确认密码">确认密码</label>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="tel"
+            id="register-phone"
+            name="phoneNumber"
+            required=""
+            placeholder=" "
+            v-model="RegisterfromModel.phoneNumber.value"
+          />
+          <label for="register-phone" class="form-label" data-text="电话">电话</label>
+        </div>
+
+        <!-- 验证码行（输入框 + 按钮） -->
+        <div class="form-group form-group--code">
+          <input
+            type="text"
+            id="register-code"
+            name="verificationCode"
+            required=""
+            placeholder=" "
+            v-model="RegisterfromModel.verificationCode.value"
+          />
+          <label for="register-code" class="form-label" data-text="验证码">验证码</label>
+          <button 
+           :disabled="btndisabled"
+            class="code-btn" 
+            @click.prevent="getVerificationCode">
+            {{ btndisabled ? `重新发送 ${count}s` : '获取验证码' }}
+          </button>
+        </div>
+
+        <button data-text="注册" type="submit" class="submit-btn">
+          <span class="btn-text">注册</span>
+        </button>
       </div>
-
-      <button data-text="登陆" type="submit" class="submit-btn">
-        <span class="btn-text">登陆</span>
-      </button>
-    </div>
-  </form>
-</div>
-
+    </form>
+  </div>
 </template>
 
 <style scoped>
-/* --- Root Variables for the component --- */
+/* --- Root Variables --- */
 .glitch-form-wrapper {
   --bg-color: #0d0d0d;
   --primary-color: #00f2ea;
@@ -69,17 +292,16 @@ defineOptions({
   align-items: center;
   font-family: var(--font-family);
   background-color: #050505;
+  min-height: 100vh;
 }
 
-/* --- Card Structure --- */
+/* --- Card --- */
 .glitch-card {
   background-color: var(--bg-color);
   width: 100%;
   max-width: 380px;
   border: 1px solid rgba(0, 242, 234, 0.2);
-  box-shadow:
-    0 0 20px rgba(0, 242, 234, 0.1),
-    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 242, 234, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   margin: 1rem;
 }
@@ -99,47 +321,20 @@ defineOptions({
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
 }
 
-.card-title svg {
-  width: 1.2em;
-  height: 1.2em;
-  stroke: var(--primary-color);
-}
-
-.card-dots span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #333;
-  margin-left: 5px;
+.changeBtn {
+  cursor: pointer;
 }
 
 .card-body {
   padding: 1.5rem;
 }
 
-/* --- Form Elements --- */
+/* --- Form Group Base --- */
 .form-group {
   position: relative;
   margin-bottom: 1.5rem;
-}
-
-.form-label {
-  position: absolute;
-  top: 0.75em;
-  left: 0;
-  font-size: 1rem;
-  color: var(--primary-color);
-  opacity: 0.6;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  pointer-events: none;
-  transition: all 0.3s ease;
 }
 
 .form-group input {
@@ -159,6 +354,20 @@ defineOptions({
   border-color: var(--primary-color);
 }
 
+/* --- Floating Label --- */
+.form-label {
+  position: absolute;
+  top: 0.75em;
+  left: 0;
+  font-size: 1rem;
+  color: var(--primary-color);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
 .form-group input:focus + .form-label,
 .form-group input:not(:placeholder-shown) + .form-label {
   top: -1.2em;
@@ -166,6 +375,7 @@ defineOptions({
   opacity: 1;
 }
 
+/* Glitch effect on label when input focused */
 .form-group input:focus + .form-label::before,
 .form-group input:focus + .form-label::after {
   content: attr(data-text);
@@ -179,44 +389,63 @@ defineOptions({
 
 .form-group input:focus + .form-label::before {
   color: var(--secondary-color);
-  animation: glitch-anim var(--glitch-anim-duration)
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .form-group input:focus + .form-label::after {
   color: var(--primary-color);
-  animation: glitch-anim var(--glitch-anim-duration)
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
+  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
 }
 
 @keyframes glitch-anim {
-  0% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-  }
-  20% {
-    transform: translate(-5px, 3px);
-    clip-path: inset(50% 0 20% 0);
-  }
-  40% {
-    transform: translate(3px, -2px);
-    clip-path: inset(20% 0 60% 0);
-  }
-  60% {
-    transform: translate(-4px, 2px);
-    clip-path: inset(80% 0 5% 0);
-  }
-  80% {
-    transform: translate(4px, -3px);
-    clip-path: inset(30% 0 45% 0);
-  }
-  100% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-  }
+  0% { transform: translate(0); clip-path: inset(0 0 0 0); }
+  20% { transform: translate(-5px, 3px); clip-path: inset(50% 0 20% 0); }
+  40% { transform: translate(3px, -2px); clip-path: inset(20% 0 60% 0); }
+  60% { transform: translate(-4px, 2px); clip-path: inset(80% 0 5% 0); }
+  80% { transform: translate(4px, -3px); clip-path: inset(30% 0 45% 0); }
+  100% { transform: translate(0); clip-path: inset(0 0 0 0); }
 }
 
-/* --- Button Styling --- */
+/* --- Special Form Group for Verification Code (input + button inline) --- */
+.form-group--code {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-group--code input {
+  flex: 1;
+  width: auto; /* override width:100% */
+}
+
+/* Code button style */
+.form-group--code .code-btn {
+  flex-shrink: 0;
+  width: 100px; /* adjust as needed */
+  color: var(--primary-color);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid var(--primary-color);
+  padding: 0.4em 0.6em;
+  background-color: transparent;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.form-group--code .code-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+}
+
+/* Ensure label stays left-aligned (relative to the whole group) */
+.form-group--code .form-label {
+  left: 0;
+}
+
+/* --- Submit Button --- */
 .submit-btn {
   width: 100%;
   padding: 0.8em;
@@ -247,7 +476,7 @@ defineOptions({
   transform: scale(0.97);
 }
 
-/* --- Glitch Effect for Button --- */
+/* Glitch effect on button hover */
 .submit-btn .btn-text {
   position: relative;
   z-index: 1;
@@ -278,18 +507,17 @@ defineOptions({
 .submit-btn:focus::before {
   opacity: 1;
   color: var(--secondary-color);
-  animation: glitch-anim var(--glitch-anim-duration)
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .submit-btn:hover::after,
 .submit-btn:focus::after {
   opacity: 1;
   color: var(--bg-color);
-  animation: glitch-anim var(--glitch-anim-duration)
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
+  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
 }
 
+/* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
   .form-group input:focus + .form-label::before,
   .form-group input:focus + .form-label::after,
