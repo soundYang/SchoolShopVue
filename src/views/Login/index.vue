@@ -55,7 +55,7 @@ const RegisterfromModel = ref({
   },
   phoneNumber: {
     value: '',
-    rex: /^[1][3-9]\d{8}$/,
+    rex: /^[1][3-9]\d{9}$/,
     msg: '手机号格式不正确'
   },
   verificationCode: {

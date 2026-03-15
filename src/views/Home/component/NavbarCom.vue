@@ -6,11 +6,18 @@ const router = useRouter()
 
 const userStore = useUserStore()
 const jumpUser = () => {
-  if(!userStore.Account.token){
-    router.push('/login')
+  console.log(userStore.token)
+  if(!userStore.token){
+    return router.push('/login')
   }
   router.push('/user')
-  
+}
+
+const jumpProductManagement = () => { 
+  if(!userStore.token){
+    return router.push('/login')
+  }
+  router.push('/productManagement')
 }
 </script>
 
@@ -19,11 +26,11 @@ const jumpUser = () => {
   <div @click="router.push('/layout')" data-text="首页" style="--r:-15;" class="glass">
     <i class="iconfont icon-shouye"></i>
   </div>
-  <div data-text="全部商品" style="--r:5;" class="glass">
+  <div @click="router.push('/allProduct')" data-text="全部商品" style="--r:5;" class="glass">
     <i class="iconfont icon-shangpin"></i>
   </div>
-  <div data-text="每日盲盒" style="--r:25;" class="glass">
-    <i class="iconfont icon-manghe"></i>
+  <div @click="jumpProductManagement" data-text="商品管理" style="--r:25;" class="glass">
+    <i class="iconfont icon-shangchuanshangpinxinxi"></i>
   </div>
   <div @click="jumpUser"  data-text="我的" style="--r:25;" class="glass">
     <i class="iconfont icon-mine-hover"></i>

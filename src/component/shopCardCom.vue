@@ -10,18 +10,14 @@ defineProps({
   }
 })
 
-const clickFun = () => {
-  console.log('点击了')
-}
-
 </script>
 
 <template>
   <div class="container">
-    <div @click="clickFun" class="card_box">
+    <div @click="$router.push(`/productDetail/${product._id}`)" class="card_box">
       <span v-if="badgeText" :data-text="badgeText"></span>
       <div class="proDemo">
-        <img :src="product.shopImg[0]" alt="">
+        <img v-img-lazy="product.shopImg[0]" alt="">
         <h2>{{ product.shopName }}</h2>
         <h3>￥{{ product.shopPrice.toFixed(2) }}</h3>
       </div>

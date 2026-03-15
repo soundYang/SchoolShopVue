@@ -2,8 +2,10 @@ import axios from 'axios'
 import { useToast } from '@/composables/useToast'
 import { useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import router from '@/router'          
 
 const { showToast } = useToast()
+
 
 const request = axios.create({
   baseURL: 'http://127.0.0.1:3000',
@@ -36,6 +38,11 @@ request.interceptors.response.use(function (response) {
   }, function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
+    if(error.response.data.code === 401){
+      router.replace('/login')
+      showToast('登录过期')
+    }
+    
     return Promise.reject(error);
 })
 

@@ -6,6 +6,11 @@ import { useRouter } from 'vue-router'
 import PopupLayerCom from '@/component/PopupLayerCom.vue'
 import PutFrom from './PutFrom.vue'
 import { ref, provide } from 'vue'
+import { fileToBase64 } from '@/unit/fileToBase64'
+import { UserPutInfoServer } from '@/api/user'
+import { useToast } from '@/composables/useToast'
+import manageAddress from '@/component/manageAddress.vue'
+import addressFrom from '@/component/addressFrom.vue'
 
 /**
  * 修改user页面
@@ -14,8 +19,9 @@ import { ref, provide } from 'vue'
  * 用户的被评论的商品列表
  */
 
+const { showToast } = useToast()
 const userStore = useUserStore()
-const { clearUser } = userStore
+const { clearUser, putUser } = userStore
 const router = useRouter()
 
 const putCount = ref(0) // 修改标记
@@ -34,9 +40,46 @@ const close = () => { showPopup.value = false }
 
 provide('close', close)
 
+// 头像修改
+const putAvatar = async (e) => { 
+  const file = e.target.files[0]
+  if (!file) return
 
-// 信息修改
+  // 验证文件类型（可选）
+  if (!file.type.startsWith('image/')) {
+    showToast('请选择图片文件')
+    return
+  }
 
+  // 验证文件大小（例如限制 2MB）
+  if (file.size > 1 * 1024 * 1024) {
+    showToast('图片大小不能超过 1MB')
+    return
+  }
+  
+  const base64 = await fileToBase64(file)
+  
+  await UserPutInfoServer({
+    Avatar: base64
+  })
+  putUser()
+
+}
+
+// 地址管理
+const openAddressFrom =  (value) => { 
+  putCount.value = value
+}
+provide('openAddressFrom',openAddressFrom)
+
+// 将要修改的数据传入addressFrom子组件
+const putAddress = ref({})
+const openPutAddressFrom = (address) => { 
+  putAddress.value = {
+    ...address
+  }
+  putCount.value = 4
+}
 </script>
 
 <template>
@@ -47,7 +90,7 @@ provide('close', close)
         <div class="card-top">
           <p class="card-top-para">用户信息</p>
         </div>
-        <img class="acatar" src="" alt="" v-if="userInfo.Avatar">
+        <img class="acatar" v-img-lazy="userInfo.Avatar" alt="" v-if="userInfo.Avatar">
         <svg v-else xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
           <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
           <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
@@ -58,12 +101,15 @@ provide('close', close)
       </div>
       <!-- 反面 -->
       <div class="back">
-        <p class="heading">修改信息</p>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-          <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
-          <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
-        </svg>
+        <p class="heading" style="font-size: 30px;">修改信息</p>
+        
+        <div class="avatar">
+          <input @change="putAvatar" class="putInput" type="file">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"  viewBox="0 0 16 16">
+            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
+            <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
+          </svg>
+        </div>
 
         <div class="icons">
           <TooltipsCom @click="showPopup = true, putCount = 0">
@@ -98,7 +144,18 @@ provide('close', close)
     </div>
     <!-- 弹层信息修改 -->
     <PopupLayerCom v-model:visible="showPopup" @close="close">
-       <PutFrom v-model:visible="showPopup" :putCount="putCount" />
+       <!-- 地址管理 -->
+       <manageAddress 
+       v-if="putCount === 1" 
+       @open-put-address-from="openPutAddressFrom"
+       />
+       <!-- 地址修改和添加 -->
+       <addressFrom 
+        v-else-if="putCount === 4"
+        :putAddress="putAddress"
+        />
+       <!-- 电话,密码,用户名修改信息 -->
+       <PutFrom v-else v-model:visible="showPopup" :putCount="putCount" />
     </PopupLayerCom>
   </div>
 </template>
@@ -239,4 +296,22 @@ provide('close', close)
   background: #292929;
 }
 
+.avatar{
+  position: relative;
+}
+.avatar:hover:before{
+  content: '修改头像';
+  color: white;
+  position: absolute; 
+  width: 100px; 
+  transition: all 0.5s ease;
+  right: -100px;
+  top: 40px;
+}
+.putInput{
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  opacity: 0;
+}
 </style>

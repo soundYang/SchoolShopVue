@@ -12,3 +12,8 @@ export const productGetUserListServer = (page = 1, pageSize = 10) => {
     pageSize
   })
 }
+
+// 获取单个商品
+export const ProductGetOneServer = (id) => {
+  return request.get(`/product/getPro?id=${id}`)
+}

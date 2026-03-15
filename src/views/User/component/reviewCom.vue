@@ -10,7 +10,7 @@ defineProps({
   <div class="card">
     <div class="card_load">
       <img 
-      class="card_avatar" :src="reviewUser.Avatar" alt="">
+      class="card_avatar" v-img-lazy="reviewUser.Avatar" alt="">
     </div>
     <div class="card_msg">
       <div class="card_load_extreme_title">{{ reviewUser.userName }}</div>

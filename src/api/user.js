@@ -37,3 +37,8 @@ export const UserGetPswServer = (PassWord) => {
 export const UserGetInfoServer = () => {
   return request.get('user/getUserInfo')
 }
+
+// 通过id获取用户简要信息
+export const UserGetSimpleInfoServer = (id) => {
+  return request.get(`/user/UserSimpleInfo?id=${id}`)
+}
