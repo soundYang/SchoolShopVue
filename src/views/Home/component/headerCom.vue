@@ -65,7 +65,7 @@ const toggleMenu = () => {
 
 // 监听路由变化：如果菜单展开则自动收起
 watch(
-  () => route.path, // 监听路径变化
+  () => route.fullPath, // 监听路径变化
   () => {
     // 当路由变化时，若菜单处于展开状态（!tl.reversed()），则将其收起
     if (tl && !tl.reversed()) {

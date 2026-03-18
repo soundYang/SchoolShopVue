@@ -79,8 +79,8 @@ const login = async () => {
     UserName: LoginfromModel.value.userName.value,
     PassWord: LoginfromModel.value.passWord.value
   })
-  userStore.setUser(res.data)
-  userStore.setToken(res.token)
+  userStore.setUser(res.data.data)
+  userStore.setToken(res.data.token)
   
   if(route.query.backPath){
     return router.go(-1)

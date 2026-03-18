@@ -11,7 +11,7 @@ const addresses = ref([])
 
 const getAddressList = async () => {
   const res = await AddressGetListServer()
-  addresses.value = res
+  addresses.value = res.data
   putUser()
 }
 getAddressList()

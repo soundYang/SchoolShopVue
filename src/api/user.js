@@ -42,3 +42,8 @@ export const UserGetInfoServer = () => {
 export const UserGetSimpleInfoServer = (id) => {
   return request.get(`/user/UserSimpleInfo?id=${id}`)
 }
+
+// 确认用户是否存在
+export const UserGetExistServer = (id) => {
+  return request.get(`/user/checkUser?id=${id}`)
+}

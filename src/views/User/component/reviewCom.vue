@@ -81,7 +81,7 @@ defineProps({
   }
 
   .card_load_extreme_descripion {
-    width: 800px;
+    width: 700px;
     height: 60px;
     border-radius: 5px;
     background: linear-gradient(

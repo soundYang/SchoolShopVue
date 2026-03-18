@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import userProCardCom from './userProCardCom.vue'
-
+ 
 defineProps({ 
   proList: Array,
   title: String
@@ -29,23 +29,27 @@ onUnmounted(() => {
     listEl.removeEventListener('wheel', handleWheel)
   }
 })
+
 </script>
 
 <template>
   <div class="proListBox">
     <h2 class="title">{{ title }}</h2>
-    <div v-if="proList?.length" class="list-wrapper">
-      <div class="list" ref="listRef">
-        <!-- 测试用红块，记得替换为实际组件 -->
-        <userProCardCom
-          style="flex-shrink: 0;" 
-          v-for="item in proList" 
-          :key="item._id"
-          :product="item"
-        />
+    <div v-if="proList">
+      <div v-if="proList?.length" class="list-wrapper">
+        <div class="list" ref="listRef">
+          <userProCardCom
+            style="flex-shrink: 0;" 
+            v-for="item in proList" 
+            :key="item._id"
+            :product="item"
+          />
+        </div>
       </div>
+      <h1 v-else class="noPro">暂无{{ title }}</h1>
     </div>
-    <h1 v-else class="noPro">暂无{{ title }}</h1>
+    <!-- 通过访问查询时不允许观看 -->
+    <h1 v-else class="noPro">暂无访问权力</h1>
   </div>
 </template>
 

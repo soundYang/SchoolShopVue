@@ -6,7 +6,6 @@ const router = useRouter()
 
 const userStore = useUserStore()
 const jumpUser = () => {
-  console.log(userStore.token)
   if(!userStore.token){
     return router.push('/login')
   }

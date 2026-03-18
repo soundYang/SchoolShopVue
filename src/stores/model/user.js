@@ -7,7 +7,7 @@ export const useUserStore = defineStore("user",() => {
   const token = ref("")
   const putUser = async () => {
     const res = await UserGetInfoServer()
-    Account.value = res
+    Account.value = res.data
   }
   const setUser = (user) => {
     Account.value = user

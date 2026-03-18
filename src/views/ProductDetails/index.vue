@@ -6,7 +6,7 @@ defineOptions({
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ProductGetOneServer } from '@/api/product'
-import { UserGetSimpleInfoServer } from '@/api/user'
+import { UserGetSimpleInfoServer, UserGetExistServer } from '@/api/user'
 import productImgs from './component/productImgs.vue'
 import { useRouter } from 'vue-router'
 
@@ -18,27 +18,22 @@ const product = ref({})
 const sellerInfo = ref({})
 const getProduct = async () => {
   const res = await ProductGetOneServer(id)
-  product.value = res
-  console.log(product.value)
-
+  product.value = res.data
   await getSellerInfo()
-  console.log(sellerInfo.value)
-  
 }  
 getProduct()
 
 const getSellerInfo = async () => {
   const res = await UserGetSimpleInfoServer(product.value.userId)
-  sellerInfo.value = res
+  sellerInfo.value = res.data
 }
 
-const jumpSeller = () => {
-   router.push({
-      name: 'seller',
-      params: {
-        id: product.value.userId
-      }
-   })
+const jumpSeller = async () => {
+   // 判断用户是否存在
+   const { data: isExist } = await UserGetExistServer(sellerInfo.value._id)
+   if(!isExist) return
+    
+   router.push('/user?id=' + sellerInfo.value._id)
 }
 
 </script>
@@ -76,7 +71,7 @@ const jumpSeller = () => {
             </div>
          </div>
          <div class="bottom">
-           <h1> 售价：{{ product.shopPrice.toFixed(2) }}￥ </h1>
+           <h1> 售价：{{ product.shopPrice?.toFixed(2) }}￥ </h1>
            <h3> 商品库存：{{ product.shopStatus }} </h3>
            <span>已被浏览{{ product.viewCount }}次</span>
            <div class="box-button">

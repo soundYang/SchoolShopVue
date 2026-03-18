@@ -1,7 +1,7 @@
 <script setup>
 import SearchCom from './component/SearchCom.vue'
 import SearchMsgCom from './component/SearchMsgCom.vue'
-import shopShowListCom from '@/component/shopShowListCom.vue'
+import shopShowListCom from './component/shopShowListCom.vue'
 import blindBox from './component/blindBox.vue'
 import newProCom from './component/newProCom.vue'
 
@@ -16,7 +16,8 @@ defineOptions({
 const hotList = ref([])
 const newList = ref([])
 const getList = async (list,key) => {
-   list.value = await ProductGetlistServer(key)
+   const res = await ProductGetlistServer(key)
+   list.value = res.data
 }
 
 getList(hotList,'hot')
@@ -43,7 +44,9 @@ getList(newList,'new')
        />
 
        <!-- 每日好物 -->
-        <newProCom style="margin-top: 200px;"/>
+        <newProCom 
+        :list="newList"
+        style="margin-top: 200px;"/>
    </div>
 </template>
 

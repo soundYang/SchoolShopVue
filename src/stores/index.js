@@ -8,3 +8,4 @@ export default pinia
 
 export * from './model/user'
 export * from './model/product'
+export * from './model/loading'

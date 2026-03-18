@@ -3,36 +3,73 @@ import infoCardCom from './component/infoCardCom.vue'
 import proListBox from './component/proListBox.vue'
 import reviewCom from './component/reviewCom.vue'
 
-import { useUserStore } from '@/stores'
-import { useProductStore } from '@/stores'
+import { useUserStore, useProductStore } from '@/stores'
 import { OrderGetlistServer } from '@/api/order'
 import { ReviewGetlistServer } from '@/api/review'
+import { UserGetSimpleInfoServer } from '@/api/user'
 
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 const { Account } = storeToRefs(useUserStore())
-
-// 用户买的商品
-const buyerOrderList = ref([])
-const getCompletedOrder = async () => {
-  const res = await OrderGetlistServer({ role: 'buyer', status: 3 })
-  buyerOrderList.value = res
-}
-getCompletedOrder()
-
-// 用户卖的商品
 const { SellProduct } = storeToRefs(useProductStore())
 const { getSellProductList } = useProductStore()
-getSellProductList()
 
-// 用户的被评价
+const route = useRoute()
+
+// 响应式数据
+const sellerId = ref(route.query.id)
+const sellerInfo = ref()
+const buyerOrderList = ref([])
 const reviewList = ref([])
-const getReviewList = async () => {
-  const res = await ReviewGetlistServer({ sellerId: Account.value._id })
-  reviewList.value = res
+
+// 统一的数据获取函数
+const fetchData = async () => {
+  const currentSellerId = route.query.id
+  sellerId.value = currentSellerId
+
+  // 1. 获取卖家信息
+  if (currentSellerId) {
+    const res = await UserGetSimpleInfoServer(currentSellerId)
+    sellerInfo.value = res
+  } else {
+    sellerInfo.value = null // 使用null表示当前是自己的主页，模板中会回退到Account
+  }
+
+  // 2. 获取当前用户购买的已完成商品（仅自己主页）
+  if (!currentSellerId) {
+    const res = await OrderGetlistServer({ role: 'buyer', status: 3 })
+    buyerOrderList.value = res.data
+  } else {
+    buyerOrderList.value = null // 他人主页清空已购商品（或可保留为空）
+  }
+
+  // 3. 获取卖家发布的商品
+  // 假设 getSellProductList 接受一个 userId 参数，为空时获取当前登录用户的
+  await getSellProductList(currentSellerId)
+
+  // 4. 获取评价列表
+  const targetUserId = currentSellerId || Account.value?._id
+  if (targetUserId) {
+    const res = await ReviewGetlistServer({ sellerId: targetUserId })
+    reviewList.value = res.data
+  } else {
+    reviewList.value = []
+  }
 }
-getReviewList()
+
+/**
+ * 监听路由参数变化
+ * 防止组件复用
+ */
+watch(
+  () => route.query.id,
+  async () => {
+    await fetchData()
+  },
+  { immediate: true } // immediate 确保组件挂载时执行一次
+)
 
 defineOptions({
   name: 'UserPage'
@@ -40,9 +77,11 @@ defineOptions({
 </script>
 
 <template>
-   <div class="userBox">
+  <!-- 模板内容不变 -->
+  <div class="userBox">
     <div class="userinfo">
-      <infoCardCom :userInfo="Account" />
+      <!-- 如果 sellerInfo 为 null，则使用 Account；否则使用 sellerInfo -->
+      <infoCardCom :userInfo="sellerInfo !== null ? sellerInfo : Account" />
     </div>
     <div class="proInfoBox">
       <div class="boughtBox">
@@ -53,17 +92,17 @@ defineOptions({
       </div>
       <div class="reviewBox">
         <div class="reviewTitle">用户评价</div>
-        <div class="reviewList" v-if="reviewList.length" >
-          <reviewCom 
-           v-for="item in reviewList" 
-           :key="item._id"
-           :reviewUser="item"
-           />
+        <div class="reviewList" v-if="reviewList.length">
+          <reviewCom
+            v-for="item in reviewList"
+            :key="item._id"
+            :reviewUser="item"
+          />
         </div>
         <h1 v-else class="noReview">暂无用户评价</h1>
       </div>
     </div>
-   </div>
+  </div>
 </template>
 
 <style scoped>

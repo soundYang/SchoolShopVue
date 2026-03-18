@@ -1,31 +1,46 @@
+<script setup>
+import shopCard from '@/component/shopCard.vue'
+import router from '@/router'
+
+defineProps({
+  list: Array
+})
+// 计算旋转角度和动画延迟的辅助函数（直接在模板中使用，或定义方法）
+const getCardStyle = (index, total) => {
+  if (total === 0) return {}
+  const angleStep = 360 / total
+  const delayStep = 20 / total  // 总动画时长20秒
+  return {
+    transform: `translate(-50%, -50%) rotateY(${index * angleStep}deg) translateZ(280px)`,
+    animationDelay: `-${index * delayStep}s`
+  }
+}
+</script>
+
 <template>
   <section>
     <h2 class="title">新鲜好物</h2>
-    <div class="card-3d">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div v-if="list && list.length" class="card-3d">
+     <shopCard 
+         v-for="(item, index) in list"
+        :key="item._id"
+        :style="getCardStyle(index, list.length)"
+        :product="item"
+        @click="router.push(`/productDetail/${item._id}`)"
+     />
     </div>
   </section>
 </template>
 
 <style scoped>
-/* 标题 */
-.title{
+/* 标题样式保持不变 */
+.title {
   margin-left: 70px;
   margin-bottom: 20px;
-  /* 字体倾斜 */
   transform: skewX(-20deg);
   font-family: 'Courier New', Courier, monospace;
 }
-.title::before{
+.title::before {
   content: "";
   display: block;
   width: 120px;
@@ -35,7 +50,7 @@
   margin-left: -5px;
 }
 
-/* 主体 */
+/* 全局动画定义不变 */
 @keyframes autoRun3d {
   from {
     transform: perspective(800px) rotateY(-360deg);
@@ -60,18 +75,18 @@
 .card-3d {
   position: relative;
   width: 100%;
-  height: 40vw;          /* 若卡片上下超出，可适当增加此值，例如 300px */
+  height: 20vw;          /* 根据需求调整，例如 300px */
   transform-style: preserve-3d;
   transform: perspective(800px);
   animation: autoRun3d 20s linear infinite;
   will-change: transform;
-  margin: 0px auto;
+  margin: 100px auto;
 }
 
 .card-3d div {
   position: absolute;
-  width: 170px;           /* 调整为 170px */
-  height: 230px;          /* 调整为 230px */
+  width: 200px;
+  height: 330px;
   background-color: rgb(199, 199, 199);
   border: solid 2px lightgray;
   border-radius: 0.5rem;
@@ -91,45 +106,5 @@
   animation-play-state: paused !important;
 }
 
-/* 各个卡片的位置和动画延迟（半径调整为 280px） */
-.card-3d div:nth-child(1) {
-  transform: translate(-50%, -50%) rotateY(0deg) translateZ(280px);
-  animation-delay: -0s;
-}
-.card-3d div:nth-child(2) {
-  transform: translate(-50%, -50%) rotateY(36deg) translateZ(280px);
-  animation-delay: -2s;
-}
-.card-3d div:nth-child(3) {
-  transform: translate(-50%, -50%) rotateY(72deg) translateZ(280px);
-  animation-delay: -4s;
-}
-.card-3d div:nth-child(4) {
-  transform: translate(-50%, -50%) rotateY(108deg) translateZ(280px);
-  animation-delay: -6s;
-}
-.card-3d div:nth-child(5) {
-  transform: translate(-50%, -50%) rotateY(144deg) translateZ(280px);
-  animation-delay: -8s;
-}
-.card-3d div:nth-child(6) {
-  transform: translate(-50%, -50%) rotateY(180deg) translateZ(280px);
-  animation-delay: -10s;
-}
-.card-3d div:nth-child(7) {
-  transform: translate(-50%, -50%) rotateY(216deg) translateZ(280px);
-  animation-delay: -12s;
-}
-.card-3d div:nth-child(8) {
-  transform: translate(-50%, -50%) rotateY(252deg) translateZ(280px);
-  animation-delay: -14s;
-}
-.card-3d div:nth-child(9) {
-  transform: translate(-50%, -50%) rotateY(288deg) translateZ(280px);
-  animation-delay: -16s;
-}
-.card-3d div:nth-child(10) {
-  transform: translate(-50%, -50%) rotateY(324deg) translateZ(280px);
-  animation-delay: -18s;
-}
+/* 移除所有静态的 nth-child 样式，现在通过内联样式动态控制 */
 </style>

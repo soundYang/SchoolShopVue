@@ -4,9 +4,9 @@ import { productGetUserListServer } from "@/api/product"
 
 export const useProductStore = defineStore("product",() => { 
  
-  const getSellProductList = async () => { 
-    const res = await productGetUserListServer()
-    setSellProduct(res)
+  const getSellProductList = async (id) => { 
+    const res = await productGetUserListServer(id)
+    setSellProduct(res.data)
   }
   const SellProduct = ref([])  // 卖的
   const BuyProduct = ref([])   // 买的

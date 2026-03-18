@@ -1,11 +1,18 @@
 <script setup>
 import PromptCom from '@/component/PromptCom.vue'
+import LoadingCom from './component/LoadingCom.vue'
 
+import { useLoadingStore } from '@/stores'
+
+const loadingStore = useLoadingStore()
 </script>
 
 <template>
   <router-view />
+  <!-- 提示框 -->
   <PromptCom />
+  <!-- 加载动画 -->
+  <LoadingCom :show="loadingStore.isLoading"/>
 </template>
 
 <style>
@@ -21,7 +28,7 @@ ul{
   list-style: none;
 }
 body{
-  background: black;
+  background: rgb(33, 33, 33);
   color: white;
 }
 html {

@@ -1,17 +1,50 @@
+<script setup>
+defineProps({
+  // 控制加载动画显示/隐藏
+  show: {
+    type: Boolean,
+    default: false
+  },
+  // 遮罩层背景色（可半透明），默认透明黑色
+  maskColor: {
+    type: String,
+    default: 'rgba(0, 0, 0, 0.3)'
+  }
+})
+</script>
+
 <template>
-  <div class="spinner">
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  <span></span>
-  </div>
+  <Teleport to="body">
+    <div v-if="show" class="loading-mask" :style="{ backgroundColor: maskColor }" @click.stop.prevent>
+      <div class="spinner">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </Teleport>
 </template>
 
-<style>
+<style scoped>
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 极高层级，覆盖所有内容 */
+  /* 不设置 pointer-events: none，因为遮罩本身要拦截点击 */
+  /* 通过 @click.stop.prevent 阻止点击事件穿透和默认行为 */
+}
+
 .spinner {
   position: relative;
   width: 60px;
@@ -20,7 +53,8 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  margin-left: -75px;
+  /* 移除之前的 margin-left: -75px，因为现在居中 */
+  margin-left: 0;
 }
 
 .spinner span {
@@ -77,12 +111,10 @@
   50% {
     opacity: 0.7;
   }
-
   75% {
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
   }
-
   80% {
     opacity: 1;
   }

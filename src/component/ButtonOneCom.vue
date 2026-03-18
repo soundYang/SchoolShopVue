@@ -44,7 +44,7 @@ const arrStr = strToArr(props.str)
   </div>
 </template>
 
-<style>
+<style scoped>
 /* ===== CSS 变量 ===== */
 :root {
   --highlight-hue: 210deg;
@@ -315,4 +315,5 @@ const arrStr = strToArr(props.str)
   filter: drop-shadow(0 0 3px var(--glow-color)) drop-shadow(0 -4px 6px #0009);
   animation: none;
 }
+
 </style>

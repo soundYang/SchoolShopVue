@@ -1,23 +1,18 @@
 <script setup>
-import ToTime from '@/unit/ToTime'
-import TooltipsCom from '@/component/TooltipsCom.vue'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
-import PopupLayerCom from '@/component/PopupLayerCom.vue'
-import PutFrom from './PutFrom.vue'
 import { ref, provide } from 'vue'
-import { fileToBase64 } from '@/unit/fileToBase64'
 import { UserPutInfoServer } from '@/api/user'
-import { useToast } from '@/composables/useToast'
+
 import manageAddress from '@/component/manageAddress.vue'
 import addressFrom from '@/component/addressFrom.vue'
+import PopupLayerCom from '@/component/PopupLayerCom.vue'
+import TooltipsCom from '@/component/TooltipsCom.vue'
+import PutFrom from './PutFrom.vue'
 
-/**
- * 修改user页面
- * 用户发布的商品列表
- * 用户已购商品列表
- * 用户的被评论的商品列表
- */
+import { fileToBase64 } from '@/unit/fileToBase64'
+import ToTime from '@/unit/ToTime'
+import { useToast } from '@/composables/useToast'
 
 const { showToast } = useToast()
 const userStore = useUserStore()
@@ -45,13 +40,11 @@ const putAvatar = async (e) => {
   const file = e.target.files[0]
   if (!file) return
 
-  // 验证文件类型（可选）
   if (!file.type.startsWith('image/')) {
     showToast('请选择图片文件')
     return
   }
 
-  // 验证文件大小（例如限制 2MB）
   if (file.size > 1 * 1024 * 1024) {
     showToast('图片大小不能超过 1MB')
     return
@@ -63,14 +56,13 @@ const putAvatar = async (e) => {
     Avatar: base64
   })
   putUser()
-
 }
 
 // 地址管理
-const openAddressFrom =  (value) => { 
+const openAddressFrom = (value) => { 
   putCount.value = value
 }
-provide('openAddressFrom',openAddressFrom)
+provide('openAddressFrom', openAddressFrom)
 
 // 将要修改的数据传入addressFrom子组件
 const putAddress = ref({})
@@ -80,32 +72,20 @@ const openPutAddressFrom = (address) => {
   }
   putCount.value = 4
 }
+provide('openPutAddressFrom', openPutAddressFrom)
 </script>
 
 <template>
   <div class="container" v-if="userInfo">
-    <div class="card">
-      <!-- 正面 -->
-      <div class="front">
-        <div class="card-top">
-          <p class="card-top-para">用户信息</p>
-        </div>
-        <img class="acatar" v-img-lazy="userInfo.Avatar" alt="" v-if="userInfo.Avatar">
-        <svg v-else xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
-          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
-        </svg>
-        <p class="userName"> {{ userInfo.UserName }} </p>
-        <p class="userinfo">id: {{ userInfo._id }}</p>
-        <p class="userinfo">创建时间: {{ ToTime(userInfo.CreatedTime) }}</p>
-      </div>
-      <!-- 反面 -->
-      <div class="back">
+    <!-- 书卡效果 -->
+    <div class="book">
+      <!-- 反面内容（翻开后显示） -->
+      <div class="back-content" v-if="userInfo.CreatedTime">
         <p class="heading" style="font-size: 30px;">修改信息</p>
-        
+
         <div class="avatar">
           <input @change="putAvatar" class="putInput" type="file">
-          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"  viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" viewBox="0 0 16 16">
             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
             <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"></path>
           </svg>
@@ -132,130 +112,160 @@ const openPutAddressFrom = (address) => {
           </TooltipsCom>
           <TooltipsCom @click="showPopup = true, putCount = 3">
             <template #icon>
-             <i class="iconfont icon-ziyuanxhdpi"></i>
+              <i class="iconfont icon-ziyuanxhdpi"></i>
             </template>
             <h4>当前用户名: {{ userInfo.UserName }}</h4>
           </TooltipsCom>
         </div>
 
         <button @click="logOut" class="boton-elegante">退出登陆</button>
+      </div>
+      <div v-else class="back-content">
+        <h2>暂无权限访问</h2>
+      </div>
 
+      <!-- 封面（初始可见） -->
+      <div class="cover">
+        <div class="card-top">
+          <p class="card-top-para">用户信息</p>
+        </div>
+        <img class="acatar" v-img-lazy="userInfo.Avatar" alt="" v-if="userInfo.Avatar">
+        <svg v-else xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
+        </svg>
+        <p class="userName"> {{ userInfo.UserName }} </p>
+        <p class="userinfo">id: {{ userInfo._id }}</p>
+        <p v-if="userInfo.CreatedTime" class="userinfo">创建时间: {{ ToTime(userInfo.CreatedTime) }}</p>
       </div>
     </div>
+
     <!-- 弹层信息修改 -->
     <PopupLayerCom v-model:visible="showPopup" @close="close">
-       <!-- 地址管理 -->
-       <manageAddress 
-       v-if="putCount === 1" 
-       @open-put-address-from="openPutAddressFrom"
-       />
-       <!-- 地址修改和添加 -->
-       <addressFrom 
+      <manageAddress 
+        v-if="putCount === 1" 
+        @open-put-address-from="openPutAddressFrom"
+      />
+      <addressFrom 
         v-else-if="putCount === 4"
         :putAddress="putAddress"
-        />
-       <!-- 电话,密码,用户名修改信息 -->
-       <PutFrom v-else v-model:visible="showPopup" :putCount="putCount" />
+      />
+      <PutFrom v-else v-model:visible="showPopup" :putCount="putCount" />
     </PopupLayerCom>
   </div>
 </template>
 
 <style scoped>
-  .container {
-    height: 700px;
-    width: 450px;
-    color: white;
-    perspective: 800px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
+/* ========== 组件一：书本翻开效果 ========== */
+.book {
+  position: relative;
+  border-radius: 2rem;           /* 与卡片圆角一致 */
+  width: 450px;
+  height: 700px;
+  background-color: transparent; /* 背景由内部元素决定 */
+  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+  transform: preserve-3d;
+  perspective: 2000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
 
-  .card {
-    width: 100%;
-    height: 100%;
-    background: black;
-    border-radius: 2rem;
-    position: relative;
-    transition: transform 1500ms;
-    transform-style: preserve-3d;
-  }
+.cover {
+  top: 0;
+  left: 0;
+  position: absolute;
+  background-color: black;        /* 与卡片正面背景一致 */
+  width: 100%;
+  height: 100%;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.5s;
+  transform-origin: 0;
+  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;         /* 纵向排列内部元素 */
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: white;                   /* 文字颜色 */
+}
 
-  .card-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 10%;
-    position: absolute;
-    width: 50%;
-    background-color: transparent;
-    border: 2px solid black;
-    top: 0;
-    border-top: none;
-    border-radius: 0 0 1rem 1rem;
-    box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
-  }
+.book:hover .cover {
+  transition: all 0.5s;
+  transform: rotateY(-80deg);
+}
 
-  .card-top-para {
-    font-size: 16px;
-    font-weight: bold;
-  }
+/* 反面内容容器（翻开后显示） */
+.back-content {
+  width: 100%;
+  height: 100%;
+  background: black;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: white;
+  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+}
 
-  .container:hover > .card {
-    cursor: pointer;
-    transform: rotateX(180deg) rotateZ(-180deg);
-  }
+/* ========== 组件二原有样式（保留布局、颜色、动画，移除翻转相关） ========== */
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10%;
+  width: 50%;
+  background-color: transparent;
+  border: 2px solid black;
+  border-top: none;
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+}
 
-  .front,
-  .back {
-    height: 100%;
-    width: 100%;
-    border-radius: 2rem;
-    box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
-    position: absolute;
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-  }
+.card-top-para {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
 
-  .back {
-    background-color: black;
-    transform: rotateX(180deg) rotateZ(-180deg);
-  }
-
-  .userName {
-    font-size: 40px;
-    font-weight: bold;
-  }
-
-  .userinfo {
-    font-size: 20px;
-    font-weight: 500;
-    margin-top: 10px;
-  }
-
-  .icons {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-.acatar{
+.acatar {
   width: 200px;
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.userName {
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+}
+
+.userinfo {
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 10px;
+  color: white;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 20px;
+}
+
 .icons i {
   color: white;
   font-size: 30px;
 }
 
 /* 退出按钮样式 */
-/* From Uiverse.io by iZOXVL */ 
 .boton-elegante {
   padding: 15px 30px;
   border: 2px solid #2c2c2c;
@@ -296,22 +306,28 @@ const openPutAddressFrom = (address) => {
   background: #292929;
 }
 
-.avatar{
+/* 头像修改区域 */
+.avatar {
   position: relative;
 }
-.avatar:hover:before{
+.avatar:hover:before {
   content: '修改头像';
   color: white;
-  position: absolute; 
-  width: 100px; 
+  position: absolute;
+  width: 100px;
   transition: all 0.5s ease;
   right: -100px;
   top: 40px;
 }
-.putInput{
+.putInput {
   width: 100px;
   height: 100px;
   position: absolute;
   opacity: 0;
+}
+
+/* 其余辅助样式 */
+.heading {
+  color: white;
 }
 </style>

@@ -36,7 +36,7 @@ const putInfo = async () => {
   if(props.putCount === 2) {
     if(putFrom.value.PassWord === putFrom.value.oldPassword) return showToast('新密码不能与旧密码相同')
     const res = await UserGetPswServer(putFrom.value.oldPassword)
-    if(!res.isExist) return   
+    if(!res.data.isExist) return   
   }
 
   for (const [key, value] of putFrom.value) { 
@@ -59,8 +59,6 @@ const putInfo = async () => {
      
     <!-- 电话 -->
   
-    <!-- 地址 -->
-    
     <!-- 密码 -->
     <input v-if="putCount === 2" v-model="putFrom.oldPassword" placeholder="原密码" required="" name="oldPassword" class="input">
     <input v-if="putCount === 2" v-model="putFrom.PassWord" placeholder="新密码" required="" name="newPassword" class="input">
