@@ -144,7 +144,6 @@ provide('openPutAddressFrom', openPutAddressFrom)
     <PopupLayerCom v-model:visible="showPopup" @close="close">
       <manageAddress 
         v-if="putCount === 1" 
-        @open-put-address-from="openPutAddressFrom"
       />
       <addressFrom 
         v-else-if="putCount === 4"

@@ -21,7 +21,6 @@ import navbarCom from './component/navbarCom.vue'
   width: 100%;
   height: 100vh;
   display: flex;
-  border-bottom:1px solid white;
 }
 .manageBox>div{
   margin-top: 66px;

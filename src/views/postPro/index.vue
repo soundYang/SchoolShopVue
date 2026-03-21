@@ -1,15 +1,50 @@
 <script setup>
+/**
+ * base64上传图片过大
+ * 修改前端后端将商品信息其改成file对象的形式上传
+ */
 defineOptions({
   name: 'postProPage'
 })
 
 import proInfoFrom from './component/proInfoFrom.vue'
 
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, provide } from 'vue'
 import { fileToBase64 } from '@/unit/fileToBase64'
 import { useToast } from '@/composables/useToast'
 
+import { LabelGetAllServer } from '@/api/label'
+import { ProductPublishServer } from '@/api/product'
+
 const { showToast } = useToast()
+
+const proFrom = ref({
+  shopName: '',
+  shopPrice: '',
+  shopActualValue: '',
+  shopNum: '',
+  shopMsg: '',
+  isBlinBox: true,
+  shopImg: [],
+  shopType: [],
+  publishAddress: {},
+})   // 商品信息
+
+// 获取标签
+const labels = ref()
+const getAllLabel = async () => {
+  const res = await LabelGetAllServer()
+  labels.value = res.data[0]
+}
+getAllLabel()
+
+const setProFrom = (data) => {
+  proFrom.value = data
+}
+
+provide('proFrom', proFrom)
+provide('setProFrom', setProFrom)
+provide('labels', labels)
 
 // 图片上传
 const imgList = ref([])
@@ -28,9 +63,25 @@ const pushImg = async (e) => {
   const base = await fileToBase64(img)
   imgList.value.push(base)
 }
-
+// 提交时设置图片
+const setImgList = () => { 
+  if(!imgList.value.length) {
+    return false
+  }
+  
+  proFrom.value.shopImg = imgList.value
+  return true
+} 
+provide('setImgList', setImgList)
 // 获取图片列表容器引用
 const imgShowRef = ref(null)
+
+// 上传商品
+const pushProduct = async () => { 
+  const res = await ProductPublishServer(proFrom.value)
+  console.log(res)
+}
+provide('pushProduct', pushProduct)
 
 // 鼠标滚轮横向滚动处理
 const handleWheel = (e) => {
@@ -65,7 +116,7 @@ onUnmounted(() => {
          :src="item">
        </div>
     </div>
-    <proInfoFrom />
+    <proInfoFrom/>
   </div>
 </template>
 
@@ -120,7 +171,7 @@ onUnmounted(() => {
   justify-content: center;
   font-size: 100px;
   color: #090909;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  /* box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff; */
   pointer-events: none; /* 让点击穿透到 input */
   z-index: 1;
 }

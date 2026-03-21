@@ -6,25 +6,25 @@ import { useUserStore } from '@/stores'
 
 const { putUser } = useUserStore()
 
-// 模拟地址数据
+// 地址数据
 const addresses = ref([])
 
 const getAddressList = async () => {
   const res = await AddressGetListServer()
   addresses.value = res.data
   putUser()
-}
+} 
 getAddressList()
 
 // 当前选中的地址ID
-const selectedAddress = ref(1)
+const selectedAddress = ref()
 const openAddressFrom = inject('openAddressFrom')
-const emit = defineEmits(['openPutAddressFrom'])
 
+const openPutAddressFrom = inject('openPutAddressFrom')
 // 将修改的地址数据传递给父组件
 const putAddress = (id) => {
   const address = addresses.value.find(item => item._id === id)
-  emit('openPutAddressFrom', address)
+  openPutAddressFrom(address)
 }
 
 // 删除地址
@@ -34,10 +34,19 @@ const delAdress = async (id) => {
   putUser()
 }
 
+/**
+ * 为什么是4
+ * 因为先做的user页面，所以固定为4
+ */
 const openAddress = () => {
   putAddress()   // 清空putAddress当中缓存的数据
   openAddressFrom(4)
 }
+
+defineExpose({
+  selectedAddress,
+  addresses
+})
 </script>
 
 <template>

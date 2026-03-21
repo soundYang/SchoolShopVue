@@ -1,4 +1,61 @@
 <script setup>
+import LabelBox from './LabelBox.vue'
+import PopupLayerCom from '@/component/PopupLayerCom.vue'
+import manageAddress from '@/component/manageAddress.vue'
+import addressFrom from '@/component/addressFrom.vue'
+
+import fromBtn from './fromBtn.vue'
+import { provide, inject, ref, watch } from 'vue'
+
+
+const proFrom = inject('proFrom')
+const setProFrom = inject('setProFrom')
+
+// 定义需要循环的字段（排除 shopMsg 和 isBlinBox，单独处理）
+const fields = [
+  { key: 'shopName', placeholder: '商品名称' },
+  { key: 'shopPrice', placeholder: '商品价格' },
+  { key: 'shopActualValue', placeholder: '商品估计价值' },
+  { key: 'shopNum', placeholder: '商品数量' }
+]
+
+const visible = ref(false)
+const count = ref(0)  // 控制弹框显示表单
+
+// 获取选中地址
+const manageAddressRef = ref(null)
+
+const close = () => {
+  visible.value = false
+}
+provide('close', close)
+
+// 地址管理
+const openAddress = () => { 
+  visible.value = true
+  count.value = 1
+}
+
+watch(() => manageAddressRef.value?.selectedAddress,() => {
+  if(manageAddressRef.value?.selectedAddress){
+    proFrom.value.publishAddress = manageAddressRef.value.addresses.find(item => item._id === manageAddressRef.value.selectedAddress)
+  }
+})
+const openAddressFrom = async (value) => { 
+  count.value = value  
+}
+provide('openAddressFrom', openAddressFrom)
+
+// 将要修改的数据传入addressFrom子组件
+const putAddress = ref({})
+const openPutAddressFrom = (address) => { 
+  putAddress.value = {
+    ...address
+  }
+  count.value = 4
+}
+provide('openPutAddressFrom', openPutAddressFrom)
+
 
 </script>
 
@@ -6,19 +63,80 @@
   <div>
     <form class="form">
       <div class="title">商品信息<br><span>Product Information</span></div>
-      <input placeholder="商品名称" name="proName" class="input" type="text">
-      <input placeholder="商品价格" name="proName" class="input" type="text">
-      <input placeholder="商品估值" name="proName" class="input" type="text">
-      <input placeholder="商品数量" name="proName" class="input" type="text">
-      <textarea placeholder="商品信息" name="proName" class="input proMsg" type="text"></textarea>
+      
+      <!-- 循环渲染输入框 -->
+      <input
+        v-for="field in fields"
+        :key="field.key"
+        :value="proFrom[field.key]"
+        @input="setProFrom({ ...proFrom, [field.key]: $event.target.value })"
+        :placeholder="field.placeholder"
+        class="input"
+        type="text"
+      />
+
+      <!-- 商品标签 -->
+      <div class="label">
+        <label @click="visible = true, count = 0">选择商品标签</label>
+        <ul v-if="proFrom.shopType.length" class="lableList">
+          <li 
+          v-for="item in proFrom.shopType"
+          :key="item">
+            {{ item }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- 地址选择 -->
+      <div>
+        <label class="address" @click="openAddress">选择发货地址</label>
+        <div class="addressInfo" v-if="proFrom.publishAddress.detail">
+          <h5>{{ proFrom.publishAddress.detail }}</h5>
+          <span>|</span>
+          <h5>{{ proFrom.publishAddress.receiver }}</h5>
+          <span>|</span>
+          <h5>{{ proFrom.publishAddress.phone }}</h5>
+          <span>|</span>
+        </div>
+      </div>
+
+      <!-- 单独处理多行文本 -->
+      <textarea
+        :value="proFrom.shopMsg"
+        @input="setProFrom({ ...proFrom, shopMsg: $event.target.value })"
+        placeholder="商品描述"
+        class="input proMsg"
+      ></textarea>
+
+      <!-- 复选框 -->
       <label class="custom-checkbox">
         <span style="margin-right: 20px;">是否允许为盲盒</span>
-        <input name="dummy" type="checkbox">
+        <input
+          :checked="proFrom.isBlinBox"
+          @change="setProFrom({ ...proFrom, isBlinBox: $event.target.checked })"
+          type="checkbox"
+        />
         <span class="checkmark"></span>
       </label>
+
+      <fromBtn />
     </form>
+
+    <!-- 选择标签弹层 -->
+    <PopupLayerCom v-model:visible="visible" @close="close">
+      <!-- 标签选择 -->
+      <LabelBox  v-if="count === 0"/> 
+      <!-- 修改地址 -->
+      <addressFrom 
+      v-if="count === 4"
+      :putAddress="putAddress"
+      @openPutAddressFrom="openPutAddressFrom"/> 
+      <!-- 地址管理 -->
+      <manageAddress ref="manageAddressRef" v-if="count === 1"/>
+    </PopupLayerCom>
   </div>
 </template>
+
 
 <style scoped>
 /* 表单 */
@@ -77,7 +195,8 @@
   }
 
   .proMsg{
-    width: 300px;
+    width: 1000px;
+    height: 100px;
   }
 
 /* 单选框样式 */
@@ -145,4 +264,30 @@
   transition: background-color 1.3s, border-color 1.3s, color 1.3s, transform 0.3s;
 }
 
+.label,
+.address{
+  cursor: pointer;
+}
+.label>label:hover,
+.address:hover{
+  color: black;
+  text-decoration: underline;
+}
+
+/* 标签列表样式 */
+.lableList{
+  display: flex;
+  flex-wrap: wrap;
+  color: black;
+  gap: 10px;
+}
+
+.addressInfo{
+  display: flex;
+  gap: 15px;
+}
+.addressInfo>h5{
+  line-height: 30px;
+  color: black;
+}
 </style>
