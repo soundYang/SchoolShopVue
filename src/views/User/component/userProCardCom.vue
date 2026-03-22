@@ -1,4 +1,5 @@
 <script setup>
+import { getImageUrl } from '@/unit/getImagerUrl'
 defineProps({
   product: Object
 })
@@ -6,7 +7,7 @@ defineProps({
 
 <template>
   <div class="card">
-    <img :src="product.shopImg[0]" alt="">
+    <img :src="getImageUrl(product.shopImg[0])" alt="">
     <h2>{{ product.shopName }}</h2>
     <h3>￥{{ product.shopPrice.toFixed(2) }}</h3>
   </div>
@@ -38,8 +39,8 @@ defineProps({
     font-family:'方正舒体';
   }
   .card>img{
-    width: 50px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 10px;
     object-fit: cover;
   }

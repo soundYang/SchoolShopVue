@@ -34,19 +34,51 @@ const proFromRegx = {
 
 const pushProduct = inject('pushProduct')
 
-const subPro = () => {
-  if(!setImgList()){
+const subPro = async () => {
+  // 验证图片
+  if (!setImgList()) {
     return showToast('请至少上传一张商品图片')
   }
-  for(let [key, value] of proFromRegx){
-    if(!value.regx.test(proFrom.value[key])){
+  
+  // 验证字段
+  for (let [key, value] of Object.entries(proFromRegx)) {
+    if (!value.regx.test(proFrom.value[key])) {
       return showToast(value.message)
     }
   }
-  if(!proFrom.value.shopType.length){
+  
+  // 验证商品类型
+  if (!proFrom.value.shopType.length) {
     return showToast('请选择商品类型')
   }
-  pushProduct(proFrom)
+  
+  // 验证地址
+  if (!proFrom.value.publishAddress || !Object.keys(proFrom.value.publishAddress).length) {
+    return showToast('请选择发货地址')
+  }
+  
+  // 构建 FormData
+  const formData = new FormData()
+  
+  // 添加普通字段
+  formData.append('shopName', proFrom.value.shopName)
+  formData.append('shopPrice', proFrom.value.shopPrice)
+  formData.append('shopActualValue', proFrom.value.shopActualValue)
+  formData.append('shopNum', proFrom.value.shopNum)
+  formData.append('shopMsg', proFrom.value.shopMsg)
+  formData.append('isBlinBox', proFrom.value.isBlinBox)
+  formData.append('shopType', JSON.stringify(proFrom.value.shopType))
+  formData.append('publishAddress', JSON.stringify(proFrom.value.publishAddress))
+  
+  // 添加图片文件
+  if (proFrom.value.shopImg && proFrom.value.shopImg.length) {
+    proFrom.value.shopImg.forEach((file) => {
+      formData.append('shopImg', file)
+    })
+  }
+  
+  // 调用上传接口
+  await pushProduct(formData)
 }
 </script>
 

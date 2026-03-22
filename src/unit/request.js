@@ -8,7 +8,7 @@ const { showToast } = useToast()
 let loadingStore
 
 const request = axios.create({
-  baseURL: 'http://127.0.0.1:3000',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 5000
 })
 
@@ -20,6 +20,11 @@ request.interceptors.request.use(function (config) {
     const { Account, token } = storeToRefs(useUserStore())
     if(token.value){
       config.headers.Authorization = `Bearer ${token.value}`
+    }
+
+    // 如果数据是 FormData，不要设置 Content-Type，让浏览器自动设置
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type']
     }
     
     return config

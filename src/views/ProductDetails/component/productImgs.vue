@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+// import { getImageUrl } from '@/unit/getImagerUrl'
 
 // 每个卡片的旋转角度（固定，不随拖拽改变）
 const angles = ref([-54, -36, -18, 0, 18, 36, 54])

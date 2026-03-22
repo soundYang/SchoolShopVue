@@ -40,8 +40,11 @@ export const ProductGetAllServer = (page = 1, pageSize = 20 ) => {
     }
   )
 }
-
-// 发布商品
-export const ProductPublishServer = (data) => {
-  return request.post('product/create', data)
+// 发布商品（使用 FormData）
+export const ProductPublishServer = (formData) => {
+  return request.post('/product/create', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }

@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { getImageUrl } from '@/unit/getImagerUrl'
 
 const router = useRouter()
 
@@ -16,7 +17,7 @@ defineProps({
     <div class="wrapper">
       <!-- 图片区域，悬停时高度缩小 -->
       <div class="card-image">
-        <img v-img-lazy="product.shopImg[0]" :alt="product.shopName" />
+        <img v-img-lazy="getImageUrl(product.shopImg[0])" :alt="product.shopName" />
       </div>
 
       <!-- 商品信息：上下结构 -->
