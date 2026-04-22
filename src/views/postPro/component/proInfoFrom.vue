@@ -41,7 +41,7 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
     proFrom.value.publishAddress = manageAddressRef.value.addresses.find(item => item._id === manageAddressRef.value.selectedAddress)
   }
 })
-const openAddressFrom = async (value) => { 
+const openAddressFrom = (value) => { 
   count.value = value  
 }
 provide('openAddressFrom', openAddressFrom)

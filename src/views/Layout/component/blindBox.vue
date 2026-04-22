@@ -1,13 +1,24 @@
 <script setup>
 import blindBoxCard from './blindBoxCard.vue'
+import patticleClock from './patticleClock.vue'
+
 import { ref } from 'vue'
+import { useBlindBoxStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+
+/**
+ * 价格数据 [0.99  6.99 9.99  19.9 39.9  69.9]
+ */
+
+const blindBoxStore = useBlindBoxStore()
+const { blindBox } = storeToRefs(blindBoxStore)
+if(!blindBox.value.length){
+  blindBoxStore.getBlindBox()
+}
 
 const color = ref([
   {
     bgGradient: 'linear-gradient(145deg, #fbbf24, #b45309)'
-  },
-  {
-    bgGradient: 'linear-gradient(145deg, #23FB23, #3CB408)'
   },
   {
     bgGradient: 'linear-gradient(145deg, #B223FB, #4A08B4)'
@@ -15,18 +26,40 @@ const color = ref([
   {
     bgGradient: 'linear-gradient(145deg, #236BFB, #0872B4)'
   },
+  {
+    bgGradient: 'linear-gradient(145deg, #23FB23, #3CB408)'
+  },
 ])
+
+const colorSelect = (price) => {
+  let index
+  if(price === 0.99){
+    index = 0
+  }else if(price === 6.99 || price === 9.99){
+    index = 1
+  }else if(price === 19.9 || price === 39.9){
+    index = 2
+  }else if(price === 69.9){
+    index = 3
+  }
+  return index
+}
+
 </script>
 
 <template>
   <section class="blindBox">
     <h2 class="title">每日盲盒</h2>
     <div>
+      <span class="time">下次刷新时间：</span><patticle-clock width="500px" height="200px"/>
+    </div>
+    <div v-if="blindBox.length">
         <blind-box-card
-        v-for="(item, index) in color"
+        v-for="(item, index) in blindBox"
         :key="index"
-        :bg-gradient="item.bgGradient"
-        :bg-shape-color="item.bgShapeColor"
+        :blindBox="item"
+        :bg-gradient="color[colorSelect(item.randomPrice)].bgGradient"
+        :bg-shape-color="color[colorSelect(item.randomPrice)].bgShapeColor"
       />
     </div>
   </section>
@@ -59,5 +92,9 @@ const color = ref([
   font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
   padding: 1rem;
   gap: 40px;
+}
+.time{
+  font-size: 40px;
+  font-family: '华文新魏';
 }
 </style>

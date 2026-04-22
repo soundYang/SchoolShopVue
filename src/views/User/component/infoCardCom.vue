@@ -1,5 +1,5 @@
 <script setup>
-import { useUserStore } from '@/stores'
+import { useUserStore, useBlindBoxStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import { ref, provide } from 'vue'
 import { UserPutInfoServer } from '@/api/user'
@@ -17,6 +17,7 @@ import { useToast } from '@/composables/useToast'
 const { showToast } = useToast()
 const userStore = useUserStore()
 const { clearUser, putUser } = userStore
+const blindBoxStore = useBlindBoxStore()
 const router = useRouter()
 
 const putCount = ref(0) // 修改标记
@@ -25,8 +26,10 @@ defineProps({
   userInfo: Object
 })
 
+// 退出登陆
 const logOut = () => { 
   clearUser()
+  blindBoxStore.clearBlindBox()
   router.push('/login')
 }
 
@@ -51,7 +54,7 @@ const putAvatar = async (e) => {
   }
   
   const base64 = await fileToBase64(file)
-  
+
   await UserPutInfoServer({
     Avatar: base64
   })
@@ -73,6 +76,7 @@ const openPutAddressFrom = (address) => {
   putCount.value = 4
 }
 provide('openPutAddressFrom', openPutAddressFrom)
+
 </script>
 
 <template>
@@ -129,22 +133,24 @@ provide('openPutAddressFrom', openPutAddressFrom)
         <div class="card-top">
           <p class="card-top-para">用户信息</p>
         </div>
-        <img class="acatar" v-img-lazy="userInfo.Avatar" alt="" v-if="userInfo.Avatar">
+        <img class="acatar" :src="userInfo.Avatar" alt="" v-if="userInfo.Avatar">
         <svg v-else xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
           <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
           <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
         </svg>
         <p class="userName"> {{ userInfo.UserName }} </p>
-        <p class="userinfo">id: {{ userInfo._id }}</p>
+        <p class="userinfo" v-if="userInfo.CreatedTime">用户余额:    {{ userInfo.Balance }}￥</p>
         <p v-if="userInfo.CreatedTime" class="userinfo">创建时间: {{ ToTime(userInfo.CreatedTime) }}</p>
       </div>
     </div>
 
     <!-- 弹层信息修改 -->
     <PopupLayerCom v-model:visible="showPopup" @close="close">
+      <!-- 管理地址 -->
       <manageAddress 
         v-if="putCount === 1" 
       />
+      <!-- 修改地址 -->
       <addressFrom 
         v-else-if="putCount === 4"
         :putAddress="putAddress"

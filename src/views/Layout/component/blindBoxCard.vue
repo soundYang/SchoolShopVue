@@ -1,8 +1,11 @@
 <script setup>
 import { ref } from 'vue'
+import { useBlindBoxStore } from '@/stores/model/blindBox'
+
+const blindBoxStore = useBlindBoxStore()
 
 // 定义 props
-defineProps({
+const props = defineProps({
   // 背景渐变（支持任何CSS background值）
   bgGradient: {
     type: String,
@@ -11,6 +14,9 @@ defineProps({
   bgShapeColor: {
     type: String,
     default: '#3a2e1f'
+  },
+  blindBox:{
+    type: Object
   }
 })
 
@@ -18,6 +24,9 @@ defineProps({
 const isFlashing = ref(false)      // 高光闪烁
 const isFading = ref(false)        // 磨砂褪去（永久）
 const animationPlayed = ref(false) // 是否已播放过动画
+
+const price = ref(props.blindBox.randomPrice)
+const lable = ref(props.blindBox.label)
 
 // 触发动画（仅一次）
 const triggerAnimation = () => {
@@ -32,6 +41,13 @@ const triggerAnimation = () => {
     isFlashing.value = false
     isFading.value = true
   }, 500)
+  if(!props.blindBox.isOpen){
+    blindBoxStore.setBlindboxIsOpen(props.blindBox._id)
+  }
+}
+
+if(props.blindBox.isOpen){
+  triggerAnimation()
 }
 </script>
 
@@ -40,6 +56,7 @@ const triggerAnimation = () => {
     <div
       class="glass-card"
       @click="triggerAnimation"
+      v-if="blindBox._id"
     >
       <!-- 背景层：可自定义渐变和形状颜色 -->
       <div class="card-bg-layer" :style="{ background: bgGradient }">
@@ -62,8 +79,8 @@ const triggerAnimation = () => {
           class="frost-panel-full"
           :class="{ 'fade-blur': isFading }"
         >
-          <span class="title">???</span>
-          <span class="sub">???</span>
+          <span class="title">{{ !isFading ? '???' : lable }}</span>
+          <span class="sub">{{ !isFading ? '???' : price }}</span>
           <div class="year">
             <span>store</span>
           </div>

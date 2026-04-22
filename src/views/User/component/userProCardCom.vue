@@ -7,7 +7,7 @@ defineProps({
 
 <template>
   <div class="card">
-    <img :src="getImageUrl(product.shopImg[0])" alt="">
+    <img v-img-lazy="getImageUrl(product.shopImg[0])" alt="">
     <h2>{{ product.shopName }}</h2>
     <h3>￥{{ product.shopPrice.toFixed(2) }}</h3>
   </div>

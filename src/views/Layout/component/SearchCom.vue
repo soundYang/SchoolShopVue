@@ -1,3 +1,27 @@
+<script setup>
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useToast } from '@/composables/useToast'
+
+const { showToast } = useToast()
+const router = useRouter()
+
+const searchMessage = ref('')
+
+const goSearchPage = () => {
+  if(searchMessage.value.trim() === '') {
+    return showToast('请输入搜索内容')
+  }
+  
+  router.push({
+    path: '/search',
+    query: {
+      key: searchMessage.value
+    }
+  })
+}
+</script>
+
 <template>
   <div class="container_chat_bot">
     <div class="container-chat-options">
@@ -7,10 +31,12 @@
             id="chat_bot"
             name="chat_bot"
             placeholder="今天的你想要淘点什么"
+            v-model="searchMessage"
+            @keyup.enter="goSearchPage"
           ></textarea>
         </div>
         <div class="options">
-          <button class="btn-submit">
+          <button @click="goSearchPage" class="btn-submit">
             <i>
               <svg viewBox="0 0 512 512">
                 <path

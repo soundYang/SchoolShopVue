@@ -1,26 +1,36 @@
+/**
+ * 只存储用户的信息
+ */
+
+
 import { defineStore } from "pinia"
 import { ref } from "vue" 
 import { productGetUserListServer } from "@/api/product"
 
 export const useProductStore = defineStore("product",() => { 
- 
-  const getSellProductList = async (id) => { 
-    const res = await productGetUserListServer(id)
-    setSellProduct(res.data)
-  }
   const SellProduct = ref([])  // 卖的
   const BuyProduct = ref([])   // 买的
+  const sellTotal = ref(0)
 
+  const getSellProductList = async ({id, page = 1, pageSize = 10}) => { 
+    const res = await productGetUserListServer(id, page, pageSize)
+    setSellProduct(res.data)
+    setSellTotal(res.total)
+  }
   const setSellProduct = (product) => {
     SellProduct.value = product
   }
   const setBuyProduct = (product) => {
     BuyProduct.value = product
   }
+  const setSellTotal = (total) => {
+    sellTotal.value = total
+  } 
 
   return {
     SellProduct,
     BuyProduct,
+    sellTotal,
     setSellProduct,
     setBuyProduct,
     getSellProductList

@@ -7,6 +7,7 @@ import { useUserStore, useProductStore } from '@/stores'
 import { OrderGetlistServer } from '@/api/order'
 import { ReviewGetlistServer } from '@/api/review'
 import { UserGetSimpleInfoServer } from '@/api/user'
+import { productGetUserListServer } from "@/api/product"
 
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
@@ -19,35 +20,49 @@ const { getSellProductList } = useProductStore()
 const route = useRoute()
 
 // 响应式数据
-const sellerId = ref(route.query.id)
-const sellerInfo = ref()
-const buyerOrderList = ref([])
-const reviewList = ref([])
-
+const sellerId = ref(route.query.id)  // 卖家id
+const sellerInfo = ref()              // 卖家信息
+const buyerOrderList = ref([])        // 订单列表
+const reviewList = ref([])            // 评价列表
+const sellProductList = ref([])       // 卖家商品列表
+const judgeUser = ref(false)          // 判断用户是否为卖家 默认为非卖家
 // 统一的数据获取函数
 const fetchData = async () => {
   const currentSellerId = route.query.id
   sellerId.value = currentSellerId
+  console.log(currentSellerId , Account.value?._id)
+   
+  if(currentSellerId && currentSellerId !== Account.value?._id) {
+    judgeUser.value = true
+  } else {
+    judgeUser.value = false
+  }
 
   // 1. 获取卖家信息
-  if (currentSellerId) {
+  if (judgeUser.value) {
     const res = await UserGetSimpleInfoServer(currentSellerId)
-    sellerInfo.value = res
+    sellerInfo.value = res.data
   } else {
     sellerInfo.value = null // 使用null表示当前是自己的主页，模板中会回退到Account
   }
 
   // 2. 获取当前用户购买的已完成商品（仅自己主页）
-  if (!currentSellerId) {
+  if (judgeUser.value) {
+    buyerOrderList.value = null // 他人主页清空已购商品（或可保留为空）
+  } else {
     const res = await OrderGetlistServer({ role: 'buyer', status: 3 })
     buyerOrderList.value = res.data
-  } else {
-    buyerOrderList.value = null // 他人主页清空已购商品（或可保留为空）
   }
 
   // 3. 获取卖家发布的商品
   // 假设 getSellProductList 接受一个 userId 参数，为空时获取当前登录用户的
-  await getSellProductList(currentSellerId)
+  if(judgeUser.value){
+    const res = await productGetUserListServer(currentSellerId)
+    sellProductList.value = res.data
+    
+  }else {    
+    await getSellProductList({})
+  }
 
   // 4. 获取评价列表
   const targetUserId = currentSellerId || Account.value?._id
@@ -88,7 +103,9 @@ defineOptions({
         <proListBox title="已购商品" :proList="buyerOrderList" />
       </div>
       <div class="postedBox">
-        <proListBox title="已发布商品" :proList="SellProduct" />
+        <proListBox 
+        title="已发布商品" 
+        :proList=" judgeUser ? sellProductList : SellProduct" />
       </div>
       <div class="reviewBox">
         <div class="reviewTitle">用户评价</div>

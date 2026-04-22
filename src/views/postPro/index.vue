@@ -4,11 +4,14 @@ defineOptions({
 })
 
 import proInfoFrom from './component/proInfoFrom.vue'
+
 import { ref, onMounted, onUnmounted, provide } from 'vue'
 import { useToast } from '@/composables/useToast'
+import { compressImage } from '@/unit/compressImage'
+import { useRouter } from 'vue-router'
+
 import { LabelGetAllServer } from '@/api/label'
 import { ProductPublishServer } from '@/api/product'
-import { useRouter } from 'vue-router'
 
 const { showToast } = useToast()
 const router = useRouter()
@@ -54,14 +57,17 @@ const pushImg = async (e) => {
   if (!img) {
     return showToast('请选择图片文件')
   }
-  if (img.size > 1 * 1024 * 1024) {
+  const newFile = await compressImage(img)
+  console.log(newFile)
+  if (newFile.size > 1 * 1024 * 1024) {
     return showToast('图片大小不能超过 1MB')
   }
 
+  
   // 存储 File 对象
-  imgFiles.value.push(img)
+  imgFiles.value.push(newFile)
   // 创建临时 URL 用于预览
-  const imageUrl = URL.createObjectURL(img)
+  const imageUrl = URL.createObjectURL(newFile)
   imgUrls.value.push(imageUrl)
 }
 

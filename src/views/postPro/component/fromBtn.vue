@@ -9,7 +9,7 @@ const setImgList = inject('setImgList')
 const proFromRegx = {
   shopName:{
     message: '商品名称长度2~20个字符',
-    regx: /^[\u4e00-\u9fa5a-zA-Z0-9]{2,20}$/
+    regx: /^.{2,100}$/
   },
   shopPrice:{
     message: '商品价格格式为1-9位数字',
@@ -25,7 +25,7 @@ const proFromRegx = {
   },
   shopMsg:{
     message: '商品描述长度2~100个字符',
-    regx: /^[\u4e00-\u9fa5a-zA-Z0-9]{2,100}$/
+     regx: /^.{2,100}$/
   },
   [Symbol.iterator]: function* () {
     yield* Object.entries(proFromRegx)

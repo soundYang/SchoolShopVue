@@ -15,11 +15,13 @@ const route = useRoute()
 const { id }  = route.params
 
 const product = ref({})
-const sellerInfo = ref({})
+const sellerInfo = ref({}) 
+const count = ref(1)
+
 const getProduct = async () => {
   const res = await ProductGetOneServer(id)
   product.value = res.data
-  await getSellerInfo()
+  await getSellerInfo()  
 }  
 getProduct()
 
@@ -32,8 +34,13 @@ const jumpSeller = async () => {
    // 判断用户是否存在
    const { data: isExist } = await UserGetExistServer(sellerInfo.value._id)
    if(!isExist) return
-    
    router.push('/user?id=' + sellerInfo.value._id)
+}
+
+const buyShop = () => {
+   // // 路径跳转
+   router.push(`/shopOrder?id=${id}&count=${count.value}`)
+
 }
 
 </script>
@@ -41,7 +48,7 @@ const jumpSeller = async () => {
 <template>
    <section class="detailBox">
       <div class="proImgBox">
-         <productImgs />
+         <productImgs :shopImg="product.shopImg"/>
          <p style="
           color: rgb(192, 191, 191);
           text-align: center;
@@ -72,10 +79,16 @@ const jumpSeller = async () => {
          </div>
          <div class="bottom">
            <h1> 售价：{{ product.shopPrice?.toFixed(2) }}￥ </h1>
-           <h3> 商品库存：{{ product.shopStatus }} </h3>
+           <h3> 商品库存：{{ product.shopNum }} </h3>
            <span>已被浏览{{ product.viewCount }}次</span>
+           <!-- 数量 -->
+            <div class="countBox">
+               <button @click="count > 1 ? count-- : 1" class="button">-</button>
+               <span>{{ count }}</span>
+               <button @click="count++" class="button">+</button>
+            </div>
            <div class="box-button">
-             <div class="button"><span>购买</span></div>
+             <div @click="buyShop" class="button"><span>购买</span></div>
            </div>
          </div>
       </div>
@@ -146,9 +159,6 @@ const jumpSeller = async () => {
    flex-direction: column;
    row-gap: 50px;
 }
-.bottom>h3{
-   
-}
 
 /* 按钮 */
 .box-button {
@@ -183,4 +193,15 @@ const jumpSeller = async () => {
   transform: translateY(10px);
 }
 
+.countBox{
+   display: flex;
+   gap: 20px;
+   align-items: center;
+   line-height: 30px;
+   text-align: center;
+}
+.countBox *{
+   width: 30px;
+   height: 30px;
+}
 </style>

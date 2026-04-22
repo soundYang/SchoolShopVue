@@ -6,11 +6,13 @@ export const ProductGetlistServer = (key) => {
 }
 
 // 获取单个用户发布的商品列表
-export const productGetUserListServer = (id, page = 1, pageSize = 10) => {
+export const productGetUserListServer = (id, page = 1, pageSize = 10) => {  
   return request.get(`/product/getUserProducts`,{
-    page,
-    pageSize,
-    id
+    params:{
+      id,
+      page,
+      pageSize
+    }
   })
 }
 
@@ -46,5 +48,33 @@ export const ProductPublishServer = (formData) => {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
+  })
+}
+
+// 修改商品状态
+export const ProductUpdateStatusServer = ({id, status}) => {
+  return request.post('product/updatePro', { 
+    _id: id,
+    shopStatus: status
+   })
+}
+
+
+// 删除商品
+export const ProductDeleteServer = (_id) => {
+  
+  return request.delete('/product/delPro',{
+    params:{
+      _id
+    }
+  })
+}
+
+// 模糊搜索
+export const ProductSearchServer = ({keyword , page = 1, pageSize = 20}) => {
+  return request.post('/product/searchPro',{
+    keyword,
+    page,
+    pageSize
   })
 }
