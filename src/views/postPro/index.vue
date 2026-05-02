@@ -130,6 +130,7 @@ onUnmounted(() => {
 
 <template>
   <div class="postProBox">
+    <ReturnPage />
     <h1 class="title">上传商品图片</h1>
     <div class="photoBox">
       <input 

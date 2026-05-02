@@ -127,6 +127,7 @@ useInfiniteScroll(
 
 <template>
   <div class="box" ref="targetRef">
+    <ReturnPage />
     <!-- 搜索栏 -->
     <div class="searchBox">
       

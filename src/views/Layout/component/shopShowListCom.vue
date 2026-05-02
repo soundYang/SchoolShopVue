@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import shopCardCom from './shopCardCom.vue'
+
+const router = useRouter()
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -75,21 +78,21 @@ defineProps({
     <div class="section-title">
       <h2 class="text-center">{{ badgeText }}</h2>
     </div>
-    
+
     <div class="container-fluid">
       <div ref="galleryWrapper" class="horiz-gallery-wrapper">
-        
+
         <div class="horiz-gallery-strip">
-          <shopCardCom 
-          :badge-text="badgeText" 
+          <shopCardCom
+          :badge-text="badgeText"
           :product="item"
-          class="project-wrap" 
-          v-for="item in list" 
+          class="project-wrap"
+          v-for="item in list"
           :key="item">
           </shopCardCom>
 
-          <div class="project-wrap more-details">
-            <span>更多详情</span> 
+          <div class="project-wrap more-details" @click="router.push('/allProduct')">
+            <span>更多详情</span>
             <i class="iconfont icon-gengduo"></i>
           </div>
         </div>

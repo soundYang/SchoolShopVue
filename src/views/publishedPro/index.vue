@@ -69,6 +69,7 @@ defineOptions({
 
 <template>
   <div class="box">
+    <ReturnPage />
     <div class="title">
       已发布商品列表<br />
       <span>List of Published Products</span>

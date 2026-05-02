@@ -1,10 +1,10 @@
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
 import { BlindBoxGetAllServer } from "@/api/blindBox"
-import { useUserStore } from "./user"  // 假设你有 user store
+import { useUserStore } from "./user"  
 
-export const useBlindBoxStore = defineStore("blindBox", () => { 
-  const blindBox = ref({})
+export const useBlindBoxStore = defineStore("blindBox", () => {
+  const blindBox = ref([])
   // 移除 lastClearDate 全局 ref，改用 computed 或方法基于当前用户
   const userStore = useUserStore()
 
@@ -32,22 +32,41 @@ export const useBlindBoxStore = defineStore("blindBox", () => {
 
   const getBlindBox = async () => {
     const res = await BlindBoxGetAllServer()
-    blindBox.value = res.data
-    console.log(blindBox.value)
-    blindBox.value.forEach(item => {
-      item.isOpen = false
+    const boxes = res.data
+    const current = Array.isArray(blindBox.value) ? blindBox.value : []
+    boxes.forEach(box => {
+      const existing = current.find(b => b._id === box._id)
+      if (existing) {
+        if (existing.orderId) box.orderId = existing.orderId
+        if (existing.isRevealed) {
+          box.isRevealed = existing.isRevealed
+          box.orderId = existing.orderId || box.orderId
+        }
+      }
     })
+    blindBox.value = boxes
   }
-  
-  const setBlindboxIsOpen = (id) => {
-    const index = blindBox.value.findIndex(item => item._id === id)
-    blindBox.value[index].isOpen = true
+
+  const setBlindBoxOrderId = (boxId, orderId) => {
+    if (!Array.isArray(blindBox.value)) return
+    const item = blindBox.value.find(item => item._id === boxId)
+    if (item) {
+      item.orderId = orderId
+    }
+  }
+
+  const setBlindBoxRevealed = (boxId) => {
+    if (!Array.isArray(blindBox.value)) return
+    const item = blindBox.value.find(item => item._id === boxId)
+    if (item) {
+      item.isRevealed = true
+    }
   }
 
   // 清除盲盒数据（用于退出登录，但不影响其他用户记录）
   const clearBlindBox = () => {
     localStorage.removeItem('blindBox')   // 清除持久化数据
-    blindBox.value = {}                   // 重置状态
+    blindBox.value = []                   // 重置状态
     // 注意：不清除 lastClearDate，因为那是其他用户的记录，我们只清除自己的盲盒数据
   }
 
@@ -72,7 +91,8 @@ export const useBlindBoxStore = defineStore("blindBox", () => {
   return {
     blindBox,
     getBlindBox,
-    setBlindboxIsOpen,
+    setBlindBoxOrderId,
+    setBlindBoxRevealed,
     clearBlindBox,
     shouldClearToday,
     markClearedToday,

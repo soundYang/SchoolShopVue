@@ -1,93 +1,125 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useBlindBoxStore } from '@/stores/model/blindBox'
+import { BlindBoxRevealServer } from '@/api/blindBox'
+import { formatPrice } from '@/unit/format'
 
+const router = useRouter()
 const blindBoxStore = useBlindBoxStore()
 
-// 定义 props
 const props = defineProps({
-  // 背景渐变（支持任何CSS background值）
   bgGradient: {
     type: String,
   },
-  // 深色不规则形状的背景色
   bgShapeColor: {
     type: String,
     default: '#3a2e1f'
   },
-  blindBox:{
+  blindBox: {
     type: Object
+  },
+  bgImage: {
+    type: String,
+    default: ''
   }
 })
 
-// 响应式状态
-const isFlashing = ref(false)      // 高光闪烁
-const isFading = ref(false)        // 磨砂褪去（永久）
-const animationPlayed = ref(false) // 是否已播放过动画
+const isFlashing = ref(false)
+const isFading = ref(false)
+const animationPlayed = ref(false)
 
 const price = ref(props.blindBox.randomPrice)
 const lable = ref(props.blindBox.label)
 
-// 触发动画（仅一次）
-const triggerAnimation = () => {
+const triggerAnimation = (orderId) => {
   if (animationPlayed.value) return
   animationPlayed.value = true
-
-  // 启动高光动画
   isFlashing.value = true
-
-  // 300ms 后高光结束，同时磨砂开始褪去（永久）
   setTimeout(() => {
     isFlashing.value = false
     isFading.value = true
+    setTimeout(() => {
+      if (orderId) {
+        router.push(`/orderDetail?id=${orderId}`)
+      }
+    }, 800)
   }, 500)
-  if(!props.blindBox.isOpen){
-    blindBoxStore.setBlindboxIsOpen(props.blindBox._id)
-  }
 }
 
-if(props.blindBox.isOpen){
+const getOrderId = () => {
+  return props.blindBox.orderId || blindBoxStore.blindBox?.find(b => b._id === props.blindBox._id)?.orderId
+}
+
+const handleClick = async () => {
+  console.log(props.blindBox);
+
+  if (props.blindBox.isRevealed) {
+    const orderId = getOrderId()
+    console.log(orderId);
+    if (orderId) {
+      router.push(`/orderDetail?id=${orderId}`)
+    } else {
+      try {
+        const res = await BlindBoxRevealServer(props.blindBox._id)
+        if (res.data && res.data.orderId) {
+          blindBoxStore.setBlindBoxOrderId(props.blindBox._id, res.data.orderId)
+          router.push(`/orderDetail?id=${res.data.orderId}`)
+        }
+      } catch (error) {
+        console.error('创建订单失败:', error)
+      }
+    }
+    return
+  }
+  if (animationPlayed.value) return
+
+  price.value = props.blindBox.randomPrice
+  lable.value = props.blindBox.label
+  blindBoxStore.setBlindBoxRevealed(props.blindBox._id)
   triggerAnimation()
 }
+
+onMounted(() => {
+  if (props.blindBox.isRevealed) {
+    triggerAnimation()
+  }
+})
 </script>
 
 <template>
   <div class="glass-demo-container">
     <div
       class="glass-card"
-      @click="triggerAnimation"
+      @click="handleClick"
       v-if="blindBox._id"
     >
-      <!-- 背景层：可自定义渐变和形状颜色 -->
-      <div class="card-bg-layer" :style="{ background: bgGradient }">
-        <div class="card-bg-shape" :style="{ backgroundColor: bgShapeColor }"></div>
+      <div class="card-bg-layer" :style="{ backgroundImage: bgImage ? `url(${bgImage})` : bgGradient, backgroundSize: 'cover', backgroundPosition: 'center' }">
+        <div class="card-bg-shape" :style="{ backgroundColor: bgImage ? 'rgba(0,0,0,0.3)' : bgShapeColor }"></div>
       </div>
 
-      <!-- 磨砂层（动态褪去） -->
       <div
         class="card-frost-center"
         :class="{ 'no-frost': isFading }"
       >
         <div class="spinner">
-          <i class="iconfont icon-manghe"></i>
+          <img src="@/assets/盲盒.png" alt="盲盒" class="box-image" />
         </div>
       </div>
 
-      <!-- 顶层内容：磨砂面板（动态褪去） -->
       <div class="card-content">
         <div
           class="frost-panel-full"
           :class="{ 'fade-blur': isFading }"
         >
           <span class="title">{{ !isFading ? '???' : lable }}</span>
-          <span class="sub">{{ !isFading ? '???' : price }}</span>
+          <span class="sub">{{ !isFading ? '???' : `¥${formatPrice(price)}` }}</span>
           <div class="year">
             <span>store</span>
           </div>
         </div>
       </div>
 
-      <!-- 高光动画层（点击时触发） -->
       <div
         class="card-highlight"
         :class="{ flash: isFlashing }"
@@ -97,9 +129,6 @@ if(props.blindBox.isOpen){
 </template>
 
 <style scoped>
-/* 样式与之前完全相同，无需修改 */
-
-
 .glass-card {
   position: relative;
   width: 200px;
@@ -150,19 +179,27 @@ if(props.blindBox.isOpen){
 }
 
 .spinner {
-  width: 128px;
-  height: 128px;
-  border-radius: 9999px;
-  background: linear-gradient(145deg, #f59e0b, #fbbf24);
-  box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);
+  width: 140px;
+  height: 140px;
+  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.spinner>i {
-  color: black;
-  font-size: 60px;
+.box-image {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  filter: drop-shadow(0 8px 20px rgba(245, 158, 11, 0.5));
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover .box-image {
+  transform: scale(1.08);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .card-content {
@@ -183,8 +220,9 @@ if(props.blindBox.isOpen){
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(249, 250, 251, 0.1);
   border-radius: 16px;
-  color: #e5e7eb;
+  color: #ffffff;
   font-family: 'Courier New', monospace, monospace;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   pointer-events: auto;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-sizing: border-box;
@@ -199,14 +237,15 @@ if(props.blindBox.isOpen){
 
 .frost-panel-full .title {
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.2;
 }
 
 .frost-panel-full .sub {
   font-size: 14px;
-  color: #d1d5db;
+  color: #ffffff;
   margin-top: 4px;
+  font-weight: 600;
 }
 
 .frost-panel-full .year {
@@ -216,8 +255,9 @@ if(props.blindBox.isOpen){
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: #d1d5db;
+  color: #ffffff;
   letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .card-highlight {

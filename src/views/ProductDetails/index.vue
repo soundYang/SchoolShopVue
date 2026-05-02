@@ -3,26 +3,42 @@ defineOptions({
   name: 'ProductsDetail'
 })
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { ProductGetOneServer } from '@/api/product'
 import { UserGetSimpleInfoServer, UserGetExistServer } from '@/api/user'
 import productImgs from './component/productImgs.vue'
 import { useRouter } from 'vue-router'
+import BuyButtom from '@/component/buyButtom.vue'
+import { useToast } from '@/composables/useToast'
+import { useUserStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+import { formatPrice } from '@/unit/format'
+
+const { showToast } = useToast()
+
+const userStore = useUserStore()
+const { Account } = storeToRefs(userStore)
 
 const router = useRouter()
 const route = useRoute()
 const { id }  = route.params
 
 const product = ref({})
-const sellerInfo = ref({}) 
+const sellerInfo = ref({})
 const count = ref(1)
+
+const isSelfProduct = computed(() => {
+  if (!product.value.userId || !Account.value?._id) return false
+  return String(product.value.userId) === String(Account.value._id)
+})
 
 const getProduct = async () => {
   const res = await ProductGetOneServer(id)
   product.value = res.data
-  await getSellerInfo()  
-}  
+  await getSellerInfo()
+}
+
 getProduct()
 
 const getSellerInfo = async () => {
@@ -38,7 +54,15 @@ const jumpSeller = async () => {
 }
 
 const buyShop = () => {
-   // // 路径跳转
+  if (isSelfProduct.value) {
+    showToast('不能购买自己的商品')
+    return
+  }
+  if(product.value.shopNum < count.value) {
+    showToast('库存不足')
+    return
+  }
+   // 路径跳转
    router.push(`/shopOrder?id=${id}&count=${count.value}`)
 
 }
@@ -47,6 +71,7 @@ const buyShop = () => {
 
 <template>
    <section class="detailBox">
+      <ReturnPage />
       <div class="proImgBox">
          <productImgs :shopImg="product.shopImg"/>
          <p style="
@@ -64,11 +89,11 @@ const buyShop = () => {
                   {{ product.shopMsg }}
                </p>
                <div class="label">
-                  <span 
+                  <span
                   v-for="(value, index) in product.shopType"
                   :key="index"
                   >
-                  {{ value }}   
+                  {{ value }}
                  </span>
                </div>
             </div>
@@ -78,7 +103,7 @@ const buyShop = () => {
             </div>
          </div>
          <div class="bottom">
-           <h1> 售价：{{ product.shopPrice?.toFixed(2) }}￥ </h1>
+           <h1> 售价：{{ formatPrice(product.shopPrice) }}￥ </h1>
            <h3> 商品库存：{{ product.shopNum }} </h3>
            <span>已被浏览{{ product.viewCount }}次</span>
            <!-- 数量 -->
@@ -87,8 +112,14 @@ const buyShop = () => {
                <span>{{ count }}</span>
                <button @click="count++" class="button">+</button>
             </div>
-           <div class="box-button">
-             <div @click="buyShop" class="button"><span>购买</span></div>
+           <div v-if="isSelfProduct" class="self-product-hint">
+             不能购买自己的商品
+           </div>
+           <div v-else class="box-button">
+             <BuyButtom
+               str="购买"
+               @click="buyShop"
+             />
            </div>
          </div>
       </div>
@@ -123,9 +154,9 @@ const buyShop = () => {
    margin-top: 30px;
    color: rgb(192, 191, 191);
    font-size: 20px;
-   word-wrap: break-word;    
-   overflow-wrap: break-word;  
-   word-break: break-all; 
+   word-wrap: break-word;
+   overflow-wrap: break-word;
+   word-break: break-all;
    text-indent: 2rem;
    margin-left: -30px;
 }
@@ -161,38 +192,6 @@ const buyShop = () => {
 }
 
 /* 按钮 */
-.box-button {
-  cursor: pointer;
-  border: 4px solid black;
-  background-color: gray;
-  padding-bottom: 10px;
-  transition: 0.1s ease-in-out;
-  user-select: none;
-  width: 100px;
-}
-
-.button {
-  background-color: #dddddd;
-  border: 4px solid #fff;
-  padding: 3px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.button span {
-  font-size: 1.2em;
-  letter-spacing: 1px;
-  text-align: center;
-  color: black;
-}
-
-.box-button:active {
-  padding: 0;
-  margin-bottom: 10px;
-  transform: translateY(10px);
-}
-
 .countBox{
    display: flex;
    gap: 20px;
@@ -203,5 +202,16 @@ const buyShop = () => {
 .countBox *{
    width: 30px;
    height: 30px;
+}
+
+.self-product-hint {
+  width: fit-content;
+  padding: 10px 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  color: #999;
+  font-size: 14px;
+  cursor: not-allowed;
+  user-select: none;
 }
 </style>

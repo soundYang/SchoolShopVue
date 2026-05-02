@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { getImageUrl } from '@/unit/getImagerUrl'
+import { formatPrice } from '@/unit/format'
 
 const router = useRouter()
 
@@ -24,8 +25,8 @@ defineProps({
       <div class="content">
         <p class="title">{{ product.shopName }}</p>
         <div class="price-wrapper">
-          <span class="price">￥{{ product.shopPrice.toFixed(2) }}</span>
-          <span v-if="product.shopOldPrice" class="old-price">￥{{ product.shopOldPrice.toFixed(2) }}</span>
+          <span class="price">￥{{ formatPrice(product.shopPrice) }}</span>
+          <span v-if="product.shopOldPrice" class="old-price">￥{{ formatPrice(product.shopOldPrice) }}</span>
         </div>
       </div>
 

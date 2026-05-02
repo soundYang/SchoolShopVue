@@ -1,10 +1,6 @@
 <script setup>
-defineOptions({
-  name: 'shopOrder'
-})
-
-import { useRoute } from 'vue-router'
-import { ref, provide, watch, onMounted, nextTick } from 'vue'
+import { ref, provide, watch, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
@@ -15,9 +11,16 @@ import PopupLayerCom from '@/component/PopupLayerCom.vue'
 import manageAddress from '@/component/manageAddress.vue'
 import addressFrom from '@/component/addressFrom.vue'
 import OrderBox from './component/OrderBox.vue'
+import SelectAddressButtom from './component/SelectAddressButtom.vue'
+import { useToast } from '@/composables/useToast'
 
+defineOptions({
+  name: 'shopOrder'
+})
 
 const route = useRoute()
+const router = useRouter()
+const { showToast } = useToast()
 const shopId = route.query.id
 const count = +route.query.count
 
@@ -27,111 +30,168 @@ const { Account } = storeToRefs(userStore)
 const showPopup = ref(false)
 const manageAddressRef = ref(null)
 
+const productInfo = ref({
+  shopId: '',
+  shopName: '',
+  shopPrice: 0,
+  shopImages: [],
+  isBlindBox: false
+})
+
 const showAddress = ref({
-  detail:'',
+  detail: '',
   receiver: '',
   phone: '',
-  _id: '',
-  [Symbol.iterator]: function * (){ 
-    yield* Object.keys(showAddress.value)
-  }
+  _id: ''
 })
 
 const postOrder = ref({
-     sellerId: '',
-     productId: '',
-     deliverAddress: '',
-     isBlindBox: true,
-     unitPrice: 0,
-     quantity: 0
-})  // 提交订单的数据
+  sellerId: '',
+  productId: '',
+  deliverAddress: '',
+  isBlindBox: false,
+  unitPrice: 0,
+  quantity: 0
+})
 
-// 获取商品信息
+const hasAddress = computed(() => !!showAddress.value.detail)
+const addressButtonText = computed(() => hasAddress.value ? '修改地址' : '请选择地址')
+// const canCreateOrder = computed(() => !!postOrder.value.deliverAddress)
+
 const getProduct = async () => {
+  if (!shopId) return
   const res = await ProductGetOneServer(shopId)
   const product = res.data
 
+  productInfo.value = {
+    shopId: product._id,
+    shopName: product.shopName,
+    shopPrice: product.shopPrice,
+    shopImages: product.shopImg || [],
+    isBlindBox: product.isBlindBox
+  }
+
   postOrder.value.sellerId = product.userId
-  postOrder.value.productId = product.shopId
-  postOrder.value.isBlindBox = product.isBlindBox
+  postOrder.value.productId = product._id
   postOrder.value.unitPrice = product.shopPrice
   postOrder.value.quantity = +count
 }
-getProduct()
 
-// 获取展示地址信息
-const getShowAddress = (obj) => { 
-  if(!Account.value?.Addresses.length) {
-    return
-  } 
+const getShowAddress = (obj) => {
+  if (!obj) return
 
-  for(const key of showAddress.value){
-    showAddress.value[key] = obj[key]
+  showAddress.value = {
+    detail: obj.detail || '',
+    receiver: obj.receiver || '',
+    phone: obj.phone || '',
+    _id: obj._id || ''
+  }
+  postOrder.value.deliverAddress = obj._id || ''
+}
+
+const createOrder = async () => {
+  if (!postOrder.value.deliverAddress) {
+    showToast('请选择收货地址')
+    return false
+  }
+
+  try {
+   const orderData = {
+      sellerId: postOrder.value.sellerId,
+      productId: postOrder.value.productId,
+      deliverAddress: postOrder.value.deliverAddress,
+      isBlindBox: postOrder.value.isBlindBox,
+      unitPrice: postOrder.value.unitPrice,
+      quantity: postOrder.value.quantity
+    }
+    const res = await OrderCreateServer(orderData)
+    return res.data
+  } catch (error) {
+    console.error('订单创建失败:', error)
+
+    return false
   }
 }
-getShowAddress(Account.value.defaultAddress)
 
-// 生成订单
-// const createOrder = async () => {
-//   OrderCreateServer(postOrder.value)
-// }
+const handleSubmitOrder = async () => {
+  const orderData = await createOrder()
+  if (orderData) {
+    router.push({
+      path: '/pay',
+      query: {
+        orderId: orderData._id,
+        totalPrice: Math.round(productInfo.value.shopPrice * count * 100) / 100
+      }
+    })
+  }
+}
 
-// 地址管理
-const putCount = ref(0) // 修改标记
-const openAddressFrom = (value) => { 
+const putCount = ref(0)
+const openAddressFrom = (value) => {
   putCount.value = value
 }
 provide('openAddressFrom', openAddressFrom)
 
-// 将要修改的数据传入addressFrom子组件
 const putAddress = ref({})
-const openPutAddressFrom = (address) => { 
-  putAddress.value = {
-    ...address
-  }
+const openPutAddressFrom = (address) => {
+  putAddress.value = { ...address }
   putCount.value = 4
 }
 provide('openPutAddressFrom', openPutAddressFrom)
 
-const close = () => { showPopup.value = false }
-
-const showAddressFrom =() => {
-  showPopup.value = true
-  putCount.value = 1 
+const close = () => {
+  showPopup.value = false
 }
 
-watch(() => manageAddressRef.value?.selectedAddress,() => {
-  if(manageAddressRef.value?.selectedAddress){
-   const address = manageAddressRef.value.addresses.find(item => item._id === manageAddressRef.value.selectedAddress)
-   getShowAddress(address)
-   postOrder.value.deliverAddress = showAddress.value._id
+const showAddressFrom = () => {
+  showPopup.value = true
+  putCount.value = 1
+}
+
+watch(() => manageAddressRef.value?.selectedAddress, () => {
+  if (manageAddressRef.value?.selectedAddress) {
+    const address = manageAddressRef.value.addresses.find(
+      item => item._id === manageAddressRef.value.selectedAddress
+    )
+    if (address) {
+      getShowAddress(address)
+    }
+  }
+})
+
+onMounted(() => {
+  getProduct()
+  if (Account.value?.defaultAddress) {
+    getShowAddress(Account.value.defaultAddress)
   }
 })
 </script>
 
 <template>
   <div>
-    <!-- 选择地址 -->
+    <ReturnPage />
     <div class="address-box">
       <p class="order-title">订单信息</p>
       <div class="card">
         <div class="order-header">
-          <div v-if="showAddress.detail" class="address-info">
+          <div v-if="hasAddress" class="address-info">
             <h4 class="address-item">收货地址：{{ showAddress.detail }}</h4>
             <h4 class="address-item">收货人：{{ showAddress.receiver }}</h4>
             <h4 class="address-item">手机号：{{ showAddress.phone }}</h4>
           </div>
-          <button 
+          <SelectAddressButtom
             @click="showAddressFrom"
-            class="ui-btn">
-              <span>
-                {{ showAddress.detail? "修改地址" : "请选择地址"  }}
-              </span>
-          </button>
+            :str="addressButtonText"
+            style="position: absolute; bottom: -15px; left: 30px; "
+          />
         </div>
 
         <div class="description">
-           <OrderBox />
+          <OrderBox
+            :product="productInfo"
+            :quantity="count || 1"
+            @submit-order="handleSubmitOrder"
+          />
         </div>
 
         <div class="social-media"></div>
@@ -139,13 +199,11 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
     </div>
 
     <PopupLayerCom v-model:visible="showPopup" @close="close">
-      <!-- 管理地址 -->
-      <manageAddress 
+      <manageAddress
         ref="manageAddressRef"
-        v-if="putCount === 1" 
+        v-if="putCount === 1"
       />
-      <!-- 修改地址 -->
-      <addressFrom 
+      <addressFrom
         v-else-if="putCount === 4"
         :putAddress="putAddress"
       />
@@ -168,13 +226,13 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
 
 .card {
   width: 100%;
-  height: 80vh;
+  min-height: 80vh;
   background: rgb(38, 38, 38);
   box-shadow: 7px 5px 10px rgba(0, 0, 0, 0.333);
 }
 
 .order-header {
-  height: 200px;
+  min-height: 200px;
   background-color: #ff5858;
   position: relative;
 }
@@ -197,7 +255,7 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
   color: white;
   font-size: 15px;
   font-weight: bold;
-  margin: 0; /* 重置 h4 默认边距 */
+  margin: 0;
 }
 
 .description {
@@ -205,7 +263,7 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
   background-color: #414141;
   transform: translate(5px, 6px);
   width: 100%;
-  min-height: 500px;
+  min-height: 400px;
   border-radius: 5px;
   margin-left: -7px;
 }
@@ -217,163 +275,6 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
   height: 2px;
   transform: translatey(10px);
   background: #414141;
-}
-
-/* 选择地址 */
-.selectaddress{
-  color: white;
-}
-
-.ui-btn {
-  --btn-default-bg: rgb(41, 41, 41);
-  --btn-padding: 15px 20px;
-  --btn-hover-bg: rgb(51, 51, 51);
-  --btn-transition: .3s;
-  --btn-letter-spacing: .1rem;
-  --btn-animation-duration: 1.2s;
-  --btn-shadow-color: rgba(0, 0, 0, 0.137);
-  --btn-shadow: 0 2px 10px 0 var(--btn-shadow-color);
-  --hover-btn-color: #FAC921;
-  --font-size: 16px;
-  /* 👆 this field should not be empty */
-  --font-weight: 600;
-  --font-family: Menlo,Roboto Mono,monospace;
-  /* 👆 this field should not be empty */
-}
-
-.ui-btn {
-  box-sizing: border-box;
-  padding: var(--btn-padding);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--default-btn-color);
-  font: var(--font-weight) var(--font-size) var(--font-family);
-  border: none;
-  cursor: pointer;
-  transition: var(--btn-transition);
-  overflow: hidden;
-  background: transparent;
-  position: absolute;
-  bottom: 0;
-}
-
-.ui-btn span {
-  letter-spacing: var(--btn-letter-spacing);
-  transition: var(--btn-transition);
-  box-sizing: border-box;
-  position: relative;
-  background: inherit;
-}
-
-.ui-btn span::before {
-  box-sizing: border-box;
-  position: absolute;
-  content: "";
-  background: inherit;
-}
-
-.ui-btn:hover span, .ui-btn:focus span {
-  color: var(--hover-btn-color);
-}
-
-.ui-btn:hover span::before, .ui-btn:focus span::before {
-  animation: chitchat linear both var(--btn-animation-duration);
-}
-
-@keyframes chitchat {
-  0% {
-    content: "#";
-  }
-
-  5% {
-    content: ".";
-  }
-
-  10% {
-    content: "^{";
-  }
-
-  15% {
-    content: "-!";
-  }
-
-  20% {
-    content: "#$_";
-  }
-
-  25% {
-    content: "№:0";
-  }
-
-  30% {
-    content: "#{+.";
-  }
-
-  35% {
-    content: "@}-?";
-  }
-
-  40% {
-    content: "?{4@%";
-  }
-
-  45% {
-    content: "=.,^!";
-  }
-
-  50% {
-    content: "?2@%";
-  }
-
-  55% {
-    content: "\;1}]";
-  }
-
-  60% {
-    content: "?{%:%";
-    right: 0;
-  }
-
-  65% {
-    content: "|{f[4";
-    right: 0;
-  }
-
-  70% {
-    content: "{4%0%";
-    right: 0;
-  }
-
-  75% {
-    content: "'1_0<";
-    right: 0;
-  }
-
-  80% {
-    content: "{0%";
-    right: 0;
-  }
-
-  85% {
-    content: "]>'";
-    right: 0;
-  }
-
-  90% {
-    content: "4";
-    right: 0;
-  }
-
-  95% {
-    content: "2";
-    right: 0;
-  }
-
-  100% {
-    content: "";
-    right: 0;
-  }
 }
 
 </style>

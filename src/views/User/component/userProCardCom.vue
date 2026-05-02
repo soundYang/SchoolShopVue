@@ -1,5 +1,6 @@
 <script setup>
 import { getImageUrl } from '@/unit/getImagerUrl'
+import { formatPrice } from '@/unit/format'
 defineProps({
   product: Object
 })
@@ -9,7 +10,7 @@ defineProps({
   <div class="card">
     <img v-img-lazy="getImageUrl(product.shopImg[0])" alt="">
     <h2>{{ product.shopName }}</h2>
-    <h3>￥{{ product.shopPrice.toFixed(2) }}</h3>
+    <h3>￥{{ formatPrice(product.shopPrice) }}</h3>
   </div>
 </template>
 

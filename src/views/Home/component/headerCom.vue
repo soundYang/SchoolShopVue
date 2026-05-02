@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import ButtonOneCom from '@/component/ButtonOneCom.vue'
 import TitleCom from '@/component/TitleCom.vue'
 import NavbarCom from './NavbarCom.vue'
+import NotificationIcon from './NotificationIcon.vue'
 import { useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
@@ -80,6 +81,7 @@ watch(
     <nav>
       <div class="nav-link" style="margin-top: 10px;" @click="toggleMenu">
         <ButtonOneCom str="Navbar" />
+        <NotificationIcon />
       </div>
       <TitleCom style="margin-right: 150px; margin-bottom: 10px;" :str="title" />
     </nav>

@@ -1,6 +1,7 @@
 <script setup>
 // 使用 defineProps 声明 props，并设置默认值
 import { getImageUrl } from '@/unit/getImagerUrl'
+import { formatPrice } from '@/unit/format'
 defineProps({
   badgeText: {
     type: String,
@@ -19,7 +20,7 @@ defineProps({
       <div class="proDemo">
         <img v-img-lazy="getImageUrl(product.shopImg[0])" alt="">
         <h2>{{ product.shopName }}</h2>
-        <h3>￥{{ product.shopPrice.toFixed(2) }}</h3>
+        <h3>￥{{ formatPrice(product.shopPrice) }}</h3>
       </div>
     </div>
   </div>

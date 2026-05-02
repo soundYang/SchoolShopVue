@@ -6,28 +6,35 @@ import { ref } from 'vue'
 import { useBlindBoxStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
+import goldenImg from '@/assets/Golden.png'
+import purpleImg from '@/assets/Purple.png'
+import blueImg from '@/assets/blue.png'
+import greenImg from '@/assets/green.png'
+
 /**
  * 价格数据 [0.99  6.99 9.99  19.9 39.9  69.9]
  */
 
 const blindBoxStore = useBlindBoxStore()
 const { blindBox } = storeToRefs(blindBoxStore)
-if(!blindBox.value.length){
-  blindBoxStore.getBlindBox()
-}
+blindBoxStore.getBlindBox()
 
 const color = ref([
   {
-    bgGradient: 'linear-gradient(145deg, #fbbf24, #b45309)'
+    bgGradient: 'linear-gradient(145deg, #fbbf24, #b45309)',
+    image: goldenImg
   },
   {
-    bgGradient: 'linear-gradient(145deg, #B223FB, #4A08B4)'
+    bgGradient: 'linear-gradient(145deg, #B223FB, #4A08B4)',
+    image: purpleImg
   },
   {
-    bgGradient: 'linear-gradient(145deg, #236BFB, #0872B4)'
+    bgGradient: 'linear-gradient(145deg, #236BFB, #0872B4)',
+    image: blueImg
   },
   {
-    bgGradient: 'linear-gradient(145deg, #23FB23, #3CB408)'
+    bgGradient: 'linear-gradient(145deg, #23FB23, #3CB408)',
+    image: greenImg
   },
 ])
 
@@ -60,7 +67,11 @@ const colorSelect = (price) => {
         :blindBox="item"
         :bg-gradient="color[colorSelect(item.randomPrice)].bgGradient"
         :bg-shape-color="color[colorSelect(item.randomPrice)].bgShapeColor"
+        :bg-image="color[colorSelect(item.randomPrice)].image"
       />
+    </div>
+    <div v-else class="empty-tip">
+      <span>暂时无盲盒</span>
     </div>
   </section>
 </template>
@@ -95,6 +106,17 @@ const colorSelect = (price) => {
 }
 .time{
   font-size: 40px;
+  font-family: '华文新魏';
+}
+.empty-tip {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.empty-tip span {
+  font-size: 28px;
+  color: #999;
   font-family: '华文新魏';
 }
 </style>

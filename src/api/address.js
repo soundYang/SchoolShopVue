@@ -19,3 +19,8 @@ export const AddressDeleteServer = (id) =>{
 export const AddressUpdateServer = (data) =>{
   return request.post('/address/update', data)
 }
+
+// 获取单个的地址（卖家查看订单地址需传 orderId）
+export const AddressGetOneServer = (id, orderId) =>{
+  return request.get(`/address/one?id=${id}${orderId ? `&orderId=${orderId}` : ''}`)
+}

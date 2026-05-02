@@ -94,6 +94,7 @@ defineOptions({
 <template>
   <!-- 模板内容不变 -->
   <div class="userBox">
+    <ReturnPage />
     <div class="userinfo">
       <!-- 如果 sellerInfo 为 null，则使用 Account；否则使用 sellerInfo -->
       <infoCardCom :userInfo="sellerInfo !== null ? sellerInfo : Account" />

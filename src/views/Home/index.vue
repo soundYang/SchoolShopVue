@@ -11,7 +11,11 @@ import tailCom from './component/tailCom.vue'
    <div>
     <headerCom></headerCom>
 
-    <RouterView/>
+    <router-view v-slot="{ Component }">
+      <keep-alive :include="['allProductPage']">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
     
     <tailCom></tailCom>
    </div>

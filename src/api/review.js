@@ -10,3 +10,6 @@ export const ReviewGetlistServer = ({page, pageSize, sellerId, productId, userId
       userId
     }
 })
+
+export const ReviewAddServer = ({ productId, sellerId, orderId, content, proPhoto, avatar }) =>
+  request.post('/review/add', { productId, sellerId, orderId, content, proPhoto, avatar })

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useToast } from '@/composables/useToast'
 import { useUserStore, useLoadingStore } from '@/stores'
 import { storeToRefs } from 'pinia'
-import router from '@/router'          
+import router from '@/router'
 
 const { showToast } = useToast()
 let loadingStore
@@ -26,7 +26,7 @@ request.interceptors.request.use(function (config) {
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type']
     }
-    
+
     return config
   }, function (error) {
     // 对请求错误做些什么
@@ -51,7 +51,8 @@ request.interceptors.response.use(function (response) {
       router.replace('/login')
       showToast('登录过期')
     }
-    
+    showToast(error.response.data.msg)
+
     return Promise.reject(error);
 })
 

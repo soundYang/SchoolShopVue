@@ -12,6 +12,7 @@ import PutFrom from './PutFrom.vue'
 
 import { fileToBase64 } from '@/unit/fileToBase64'
 import ToTime from '@/unit/ToTime'
+import { formatPrice } from '@/unit/format'
 import { useToast } from '@/composables/useToast'
 
 const { showToast } = useToast()
@@ -27,7 +28,7 @@ defineProps({
 })
 
 // 退出登陆
-const logOut = () => { 
+const logOut = () => {
   clearUser()
   blindBoxStore.clearBlindBox()
   router.push('/login')
@@ -39,7 +40,7 @@ const close = () => { showPopup.value = false }
 provide('close', close)
 
 // 头像修改
-const putAvatar = async (e) => { 
+const putAvatar = async (e) => {
   const file = e.target.files[0]
   if (!file) return
 
@@ -52,7 +53,7 @@ const putAvatar = async (e) => {
     showToast('图片大小不能超过 1MB')
     return
   }
-  
+
   const base64 = await fileToBase64(file)
 
   await UserPutInfoServer({
@@ -62,14 +63,14 @@ const putAvatar = async (e) => {
 }
 
 // 地址管理
-const openAddressFrom = (value) => { 
+const openAddressFrom = (value) => {
   putCount.value = value
 }
 provide('openAddressFrom', openAddressFrom)
 
 // 将要修改的数据传入addressFrom子组件
 const putAddress = ref({})
-const openPutAddressFrom = (address) => { 
+const openPutAddressFrom = (address) => {
   putAddress.value = {
     ...address
   }
@@ -139,7 +140,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
           <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
         </svg>
         <p class="userName"> {{ userInfo.UserName }} </p>
-        <p class="userinfo" v-if="userInfo.CreatedTime">用户余额:    {{ userInfo.Balance }}￥</p>
+        <p class="userinfo" v-if="userInfo.CreatedTime">用户余额:    {{ formatPrice(userInfo.Balance) }}￥</p>
         <p v-if="userInfo.CreatedTime" class="userinfo">创建时间: {{ ToTime(userInfo.CreatedTime) }}</p>
       </div>
     </div>
@@ -147,11 +148,11 @@ provide('openPutAddressFrom', openPutAddressFrom)
     <!-- 弹层信息修改 -->
     <PopupLayerCom v-model:visible="showPopup" @close="close">
       <!-- 管理地址 -->
-      <manageAddress 
-        v-if="putCount === 1" 
+      <manageAddress
+        v-if="putCount === 1"
       />
       <!-- 修改地址 -->
-      <addressFrom 
+      <addressFrom
         v-else-if="putCount === 4"
         :putAddress="putAddress"
       />
