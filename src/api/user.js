@@ -9,11 +9,13 @@ export const UserLoginServer = ({ UserName, PassWord }) => {
 }
 
 // 用户注册
-export const UserRegisterServer = ({ UserName, PassWord, PhoneNumber }) => {
+export const UserRegisterServer = ({ UserName, PassWord, PhoneNumber, captchaId, captchaText }) => {
   return request.post('user/userInfo',{
     UserName,
     PassWord,
-    PhoneNumber
+    PhoneNumber,
+    captchaId,
+    captchaText
   })
 }
 

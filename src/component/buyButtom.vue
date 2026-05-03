@@ -3,6 +3,10 @@ defineProps({
   str: {
     type: String,
     default: 'Button'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -14,7 +18,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="box-button" @click="handleClick">
+  <div class="box-button" :class="{ 'is-disabled': disabled }" @click="!disabled && handleClick()">
     <div class="button"><span>{{ str }}</span></div>
   </div>
 </template>
@@ -28,6 +32,12 @@ const handleClick = () => {
     padding-bottom: 10px;
     transition: 0.1s ease-in-out;
     user-select: none;
+  }
+
+  .box-button.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 
   .button {

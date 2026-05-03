@@ -221,7 +221,7 @@ const submitReview = async () => {
   isSubmittingReview.value = true
   try {
     const imgs = productInfo.value.shopImg
-    await ReviewAddServer({
+    const res = await ReviewAddServer({
       productId: order.value.productId?._id || order.value.productId,
       sellerId: order.value.sellerId,
       orderId: order.value._id,
@@ -229,11 +229,18 @@ const submitReview = async () => {
       proPhoto: imgs?.length ? getImageUrl(imgs[0]) : '',
       avatar: Account.value?.Avatar || ''
     })
+    if (res.msg && res.msg.includes('图片待管理员审核')) {
+      showToast('评论成功，图片待管理员审核通过后展示')
+    }
     await OrderUpdateStatusServer(order.value._id, 3)
     order.value.status = 3
     showReviewPopup.value = false
     reviewContent.value = ''
   } catch (error) {
+    const data = error?.response?.data || error
+    if (data?.code === 400 && data?.msg?.includes('不当信息')) {
+      return
+    }
     console.error('提交评价失败:', error)
   } finally {
     isSubmittingReview.value = false

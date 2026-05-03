@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useToast } from '@/composables/useToast'
 import { UserLoginServer, UserRegisterServer } from '@/api/user'
+import { getCaptcha } from '@/api/captcha'
 import { useUserStore } from '@/stores'
 import { useRouter, useRoute } from 'vue-router'
 
@@ -58,10 +59,10 @@ const RegisterfromModel = ref({
     rex: /^[1][3-9]\d{9}$/,
     msg: '手机号格式不正确'
   },
-  verificationCode: {
+  captchaText: {
     value: "",
-    rex: /.*/, // 暂不验证，可根据需要修改
-    msg: ''
+    rex: /^[A-Za-z0-9]{1,6}$/,
+    msg: '验证码格式不正确'
   },
   [Symbol.iterator]: function* () {
     yield* Object.values(this)
@@ -81,7 +82,7 @@ const login = async () => {
   })
   userStore.setUser(res.data.data)
   userStore.setToken(res.data.token)
-  
+
   if(route.query.backPath){
     return router.go(-1)
   }
@@ -100,51 +101,60 @@ const register = async () => {
       return showToast(field.msg, 3000)
     }
   }
-  
-  await UserRegisterServer({
-    UserName: RegisterfromModel.value.userName.value,
-    PassWord: RegisterfromModel.value.passWord.value,
-    PhoneNumber: RegisterfromModel.value.phoneNumber.value
-  })
 
-  showFrom.value = true
-  LoginfromModel.value.userName.value = RegisterfromModel.value.userName.value
-  LoginfromModel.value.passWord.value = RegisterfromModel.value.passWord.value
-  // 实际注册逻辑...
-}
+  try {
+    await UserRegisterServer({
+      UserName: RegisterfromModel.value.userName.value,
+      PassWord: RegisterfromModel.value.passWord.value,
+      PhoneNumber: RegisterfromModel.value.phoneNumber.value,
+      captchaId: captchaId.value,
+      captchaText: RegisterfromModel.value.captchaText.value
+    })
 
-const btndisabled = ref(false)
-const count = ref(60)
-let codeTimer = null
-
-// 获取验证码
-const getVerificationCode = () => {
-  if(!RegisterfromModel.value.phoneNumber.value){
-    return showToast('请先填写手机号', 3000)
-  }
-  if (!RegisterfromModel.value.phoneNumber.rex.test(+RegisterfromModel.value.phoneNumber.value)) {
-    return showToast('手机号格式不正确', 3000)
-  }
-  /**
-   * 短信验证逻辑
-   */ 
-  
-  showToast('验证码已发送', 3000)
-  btndisabled.value = true
-  count.value = 60
-  codeTimer = setInterval(() => {
-    if (count.value > 0) {
-      count.value--
-    } else {
-      clearInterval(codeTimer)
-      btndisabled.value = false
+    showFrom.value = true
+    LoginfromModel.value.userName.value = RegisterfromModel.value.userName.value
+    LoginfromModel.value.passWord.value = RegisterfromModel.value.passWord.value
+    RegisterfromModel.value.captchaText.value = ""
+    fetchCaptcha()
+  } catch (error) {
+    if (error.response?.status === 429) {
+      showToast('注册过于频繁，请1小时后再试', 3000)
     }
-  }, 1000)
+    RegisterfromModel.value.captchaText.value = ""
+    fetchCaptcha()
+  }
 }
 
-onBeforeUnmount(() => {
-  codeTimer && clearInterval(codeTimer)
+const captchaId = ref('')
+const captchaSvg = ref('')
+const captchaType = ref('text')
+
+const fetchCaptcha = async () => {
+  try {
+    const res = await getCaptcha()
+    captchaId.value = res.data.captchaId
+    captchaSvg.value = res.data.svg
+    captchaType.value = res.data.type || 'text'
+  } catch (error) {
+    console.error('获取验证码失败:', error)
+  }
+}
+
+const captchaPlaceholder = computed(() => {
+  return captchaType.value === 'math' ? '请输入计算结果' : '请输入验证码'
 })
+
+function toBase64Svg(svg) {
+  if (!svg) return ''
+  try {
+    const encoded = btoa(unescape(encodeURIComponent(svg)))
+    return 'data:image/svg+xml;base64,' + encoded
+  } catch {
+    return ''
+  }
+}
+
+onMounted(() => fetchCaptcha())
 
 </script>
 
@@ -248,23 +258,25 @@ onBeforeUnmount(() => {
           <label for="register-phone" class="form-label" data-text="电话">电话</label>
         </div>
 
-        <!-- 验证码行（输入框 + 按钮） -->
+        <!-- 图形验证码 -->
         <div class="form-group form-group--code">
           <input
             type="text"
-            id="register-code"
-            name="verificationCode"
+            id="register-captcha"
+            name="captchaText"
             required=""
             placeholder=" "
-            v-model="RegisterfromModel.verificationCode.value"
+            maxlength="6"
+            v-model="RegisterfromModel.captchaText.value"
           />
-          <label for="register-code" class="form-label" data-text="验证码">验证码</label>
-          <button 
-           :disabled="btndisabled"
-            class="code-btn" 
-            @click.prevent="getVerificationCode">
-            {{ btndisabled ? `重新发送 ${count}s` : '获取验证码' }}
-          </button>
+          <label for="register-captcha" class="form-label" data-text="验证码">验证码</label>
+          <img
+            class="captcha-img"
+            :src="toBase64Svg(captchaSvg)"
+            alt="验证码"
+            title="点击刷新验证码"
+            @click="fetchCaptcha"
+          />
         </div>
 
         <button data-text="注册" type="submit" class="submit-btn">
@@ -418,26 +430,20 @@ onBeforeUnmount(() => {
   width: auto; /* override width:100% */
 }
 
-/* Code button style */
-.form-group--code .code-btn {
+/* Captcha image style */
+.form-group--code .captcha-img {
   flex-shrink: 0;
-  width: 100px; /* adjust as needed */
-  color: var(--primary-color);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-align: center;
   cursor: pointer;
-  border: 1px solid var(--primary-color);
-  padding: 0.4em 0.6em;
-  background-color: transparent;
-  transition: all 0.3s;
-  white-space: nowrap;
+  border: 1px solid rgba(0, 242, 234, 0.3);
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  width: 160px;
+  height: 50px;
+  object-fit: contain;
 }
 
-.form-group--code .code-btn:hover {
-  background-color: var(--primary-color);
-  color: var(--bg-color);
+.form-group--code .captcha-img:hover {
+  border-color: var(--primary-color);
 }
 
 /* Ensure label stays left-aligned (relative to the whole group) */

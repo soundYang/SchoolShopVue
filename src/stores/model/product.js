@@ -27,12 +27,18 @@ export const useProductStore = defineStore("product",() => {
     sellTotal.value = total
   } 
 
+  const clearSellProduct = () => {
+    SellProduct.value = []
+    sellTotal.value = 0
+  }
+
   return {
     SellProduct,
     BuyProduct,
     sellTotal,
     setSellProduct,
     setBuyProduct,
-    getSellProductList
+    getSellProductList,
+    clearSellProduct
    }
 })

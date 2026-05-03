@@ -96,8 +96,28 @@ const imgShowRef = ref(null)
 
 // 上传商品
 const pushProduct = async (formData) => {
+  try {
     const res = await ProductPublishServer(formData)
+    if (res.msg && res.msg.includes('图片待管理员审核')) {
+      showToast('商品已发布成功，图片待管理员审核通过后展示，请耐心等待')
+    }
     router.push('/publishedPro')
+  } catch (err) {
+    const data = err?.response?.data || err
+    if (data?.code === 400) {
+      if (data.msg && data.msg.includes('不当信息')) {
+        return
+      }
+      if (data.msg && data.msg.includes('图片包含违规内容')) {
+        imgUrls.value.forEach(url => URL.revokeObjectURL(url))
+        imgUrls.value = []
+        imgFiles.value = []
+        proFrom.value.shopImg = []
+        return
+      }
+    }
+    console.error('发布商品失败:', err)
+  }
 }
 provide('pushProduct', pushProduct)
 

@@ -45,8 +45,12 @@ const handlePay = async () => {
       router.push('/layout')
     }, 2000)
   } catch (error) {
-    console.error('支付失败:', error)
-    showToast('支付失败，请重试')
+    const errMsg = error?.response?.data?.msg || ''
+    if (errMsg === '订单状态异常或已被支付') {
+      showToast('该订单已支付，请勿重复操作')
+    } else {
+      showToast('支付失败，请重试')
+    }
   } finally {
     isPaying.value = false
   }
@@ -93,9 +97,11 @@ const handlePay = async () => {
         </div>
 
         <div class="pay-actions">
+          <div v-if="isPaying" class="paying-text">支付中...</div>
           <BuyButtom
             v-if="!paySuccess"
             str="确认支付"
+            :disabled="isPaying"
             @click="handlePay"
           />
         </div>
@@ -234,8 +240,18 @@ const handlePay = async () => {
   font-size: 16px;
 }
 
+.paying-text {
+  text-align: center;
+  color: #ff5858;
+  font-size: 14px;
+  padding: 10px 0;
+}
+
 .pay-actions {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   justify-content: center;
 }
 

@@ -7,13 +7,11 @@ export const ProductGetlistServer = (key) => {
 
 // 获取单个用户发布的商品列表
 export const productGetUserListServer = (id, page = 1, pageSize = 10) => {
-  return request.get(`/product/getUserProducts`,{
-    params:{
-      id,
-      page,
-      pageSize
-    }
-  })
+  const params = { page, pageSize }
+  if (id) {
+    params.id = id
+  }
+  return request.get(`/product/getUserProducts`, { params })
 }
 
 // 获取单个商品

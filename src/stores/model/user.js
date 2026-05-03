@@ -24,6 +24,7 @@ export const useUserStore = defineStore("user",() => {
 
   return { Account, setUser, putUser, token, setToken, clearUser }
 },{
-  persist: ['user'],
-  key: 'school_user'
+  persist: {
+    key: 'school_user'
+  }
 })

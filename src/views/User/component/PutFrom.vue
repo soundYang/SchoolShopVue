@@ -1,5 +1,5 @@
 <script setup>
-import { UserPutInfoServer, UserGetPswServer } from '@/api/user'
+import { UserPutInfoServer } from '@/api/user'
 import { useToast } from '@/composables/useToast'
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
@@ -22,43 +22,44 @@ const close = inject('close')
 const props = defineProps({
   putCount: Number
 })
+
 const putFrom = ref({
   oldPassword: '',
   PassWord: '',
-  UserName: '',
-  [Symbol.iterator]: function * () {
-    yield* Object.entries(putFrom.value)
-  }
+  UserName: ''
 })
 
-const isLogin = ref(false)
 const putInfo = async () => {
   if(props.putCount === 2) {
+    if(!putFrom.value.oldPassword) return showToast('请输入原密码')
     if(putFrom.value.PassWord === putFrom.value.oldPassword) return showToast('新密码不能与旧密码相同')
-    const res = await UserGetPswServer(putFrom.value.oldPassword)
-    if(!res.data.isExist) return   
+    await UserPutInfoServer({
+      oldPassWord: putFrom.value.oldPassword,
+      PassWord: putFrom.value.PassWord
+    })
+    router.push('/login')
+    putUser()
+    return close()
   }
 
-  for (const [key, value] of putFrom.value) { 
-     if(key !== 'oldPassword' && value){
-      ( key === 'PassWord' ) && (isLogin.value = true)
-      await UserPutInfoServer({
-        [key]: value
-      })
-      if(isLogin.value) router.push('/login')
-      putUser()
-      return close()
-     }     
+  const data = {}
+  if (props.putCount === 3 && putFrom.value.UserName) {
+    data.UserName = putFrom.value.UserName
   }
+  if (Object.keys(data).length) {
+    await UserPutInfoServer(data)
+    putUser()
+  }
+  close()
 }
 </script>
 
 <template>
   <form class="form">
     <div class="title">修改信息<br><span>Edit Information</span></div>
-     
+
     <!-- 电话 -->
-  
+
     <!-- 密码 -->
     <input v-if="putCount === 2" v-model="putFrom.oldPassword" placeholder="原密码" required="" name="oldPassword" class="input">
     <input v-if="putCount === 2" v-model="putFrom.PassWord" placeholder="新密码" required="" name="newPassword" class="input">

@@ -28,48 +28,50 @@ const sellProductList = ref([])       // 卖家商品列表
 const judgeUser = ref(false)          // 判断用户是否为卖家 默认为非卖家
 // 统一的数据获取函数
 const fetchData = async () => {
-  const currentSellerId = route.query.id
-  sellerId.value = currentSellerId
-  
-  if(currentSellerId && currentSellerId !== Account.value?._id) {
-    judgeUser.value = true
-  } else {
-    judgeUser.value = false
-  }
+  try {
+    const currentSellerId = route.query.id
+    sellerId.value = currentSellerId
 
-  // 1. 获取卖家信息
-  if (judgeUser.value) {
-    const res = await UserGetSimpleInfoServer(currentSellerId)
-    sellerInfo.value = res.data
-  } else {
-    sellerInfo.value = null // 使用null表示当前是自己的主页，模板中会回退到Account
-  }
+    if (currentSellerId && currentSellerId !== Account.value?._id) {
+      judgeUser.value = true
+    } else {
+      judgeUser.value = false
+    }
 
-  // 2. 获取当前用户购买的已完成商品（仅自己主页）
-  if (judgeUser.value) {
-    buyerOrderList.value = null // 他人主页清空已购商品（或可保留为空）
-  } else {
-    const res = await OrderGetlistServer({ role: 'buyer', status: 3 })
-    buyerOrderList.value = res.data
-  }
+    // 1. 获取卖家信息
+    if (judgeUser.value) {
+      const res = await UserGetSimpleInfoServer(currentSellerId)
+      sellerInfo.value = res.data
+    } else {
+      sellerInfo.value = null
+    }
 
-  // 3. 获取卖家发布的商品
-  // 假设 getSellProductList 接受一个 userId 参数，为空时获取当前登录用户的
-  if(judgeUser.value){
-    const res = await productGetUserListServer(currentSellerId)
-    sellProductList.value = res.data
-    
-  }else {    
-    await getSellProductList({})
-  }
+    // 2. 获取当前用户购买的已完成商品（仅自己主页）
+    if (judgeUser.value) {
+      buyerOrderList.value = null
+    } else {
+      const res = await OrderGetlistServer({ role: 'buyer', status: 3 })
+      buyerOrderList.value = res.data
+    }
 
-  // 4. 获取评价列表
-  const targetUserId = currentSellerId || Account.value?._id
-  if (targetUserId) {
-    const res = await ReviewGetlistServer({ sellerId: targetUserId })
-    reviewList.value = res.data
-  } else {
-    reviewList.value = []
+    // 3. 获取卖家发布的商品
+    if (judgeUser.value) {
+      const res = await productGetUserListServer(currentSellerId)
+      sellProductList.value = res.data
+    } else {
+      await getSellProductList({ id: Account.value?._id })
+    }
+
+    // 4. 获取评价列表
+    const targetUserId = currentSellerId || Account.value?._id
+    if (targetUserId) {
+      const res = await ReviewGetlistServer({ sellerId: targetUserId })
+      reviewList.value = res.data
+    } else {
+      reviewList.value = []
+    }
+  } catch (error) {
+    console.error('User page data fetch error:', error)
   }
 }
 
@@ -103,8 +105,8 @@ defineOptions({
         <proListBox title="已购商品" :proList="buyerOrderList" />
       </div>
       <div class="postedBox">
-        <proListBox 
-        title="已发布商品" 
+        <proListBox
+        title="已发布商品"
         :proList=" judgeUser ? sellProductList : SellProduct" />
       </div>
       <div class="reviewBox">

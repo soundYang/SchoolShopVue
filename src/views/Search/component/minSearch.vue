@@ -22,6 +22,7 @@ putMsg()
       placeholder="Search the internet..."
       name="text"
       class="input"
+      maxlength="20"
       :value="searchMessage"
       @input="handleInput"
       @keyup.enter="goSearchPage()"

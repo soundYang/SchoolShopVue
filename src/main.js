@@ -7,6 +7,8 @@ import ReturnPage from '@/component/ReturnPage.vue'
 import App from './App.vue'
 import router from './router'
 
+import logPng from '@/assets/log.png'
+
 const app = createApp(App)
 
 app.config.globalProperties.$imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL
@@ -19,6 +21,12 @@ app.use(lazyPlugin)
 
 // 启动盲盒自动清除调度器（每天 8:20 清除本地存储）
 startBlindBoxScheduler()
+
+// 设置网页图标
+const link = document.querySelector('link[rel="icon"]')
+if (link) {
+  link.href = logPng
+}
 
 app.mount('#app')
 

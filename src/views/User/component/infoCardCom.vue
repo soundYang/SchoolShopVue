@@ -1,5 +1,5 @@
 <script setup>
-import { useUserStore, useBlindBoxStore } from '@/stores'
+import { useUserStore, useBlindBoxStore, useProductStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import { ref, provide } from 'vue'
 import { UserPutInfoServer } from '@/api/user'
@@ -19,6 +19,7 @@ const { showToast } = useToast()
 const userStore = useUserStore()
 const { clearUser, putUser } = userStore
 const blindBoxStore = useBlindBoxStore()
+const productStore = useProductStore()
 const router = useRouter()
 
 const putCount = ref(0) // 修改标记
@@ -31,6 +32,7 @@ defineProps({
 const logOut = () => {
   clearUser()
   blindBoxStore.clearBlindBox()
+  productStore.clearSellProduct()
   router.push('/login')
 }
 
