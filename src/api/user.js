@@ -40,10 +40,10 @@ export const UserGetInfoServer = () => {
 
 // 通过id获取用户简要信息
 export const UserGetSimpleInfoServer = (id) => {
-  return request.get(`/user/UserSimpleInfo?id=${id}`)
+  return request.get('/user/UserSimpleInfo', { params: { id } })
 }
 
 // 确认用户是否存在
 export const UserGetExistServer = (id) => {
-  return request.get(`/user/checkUser?id=${id}`)
+  return request.get('/user/checkUser', { params: { id } })
 }

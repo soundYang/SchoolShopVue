@@ -32,19 +32,23 @@ getList(newList,'new')
          <SearchMsgCom />
          <SearchCom />
       </div>
-      
+
       <!-- 每日盲盒 -->
       <blindBox />
 
       <!-- 热门商品 -->
-       <shopShowListCom 
-       v-if="hotList.length"
-       :list="hotList" 
-       badge-text="热门好物"
-       />
+      <template v-if="hotList.length">
+        <shopShowListCom
+        :list="hotList"
+        badge-text="热门好物"
+        />
+      </template>
+      <div v-else class="empty-hint">
+        <span>暂无热门好物，敬请期待</span>
+      </div>
 
        <!-- 每日好物 -->
-        <newProCom 
+        <newProCom
         :list="newList"
         style="margin-top: 200px;"/>
    </div>
@@ -60,6 +64,16 @@ getList(newList,'new')
    height: 80vh;
    flex-direction: column;
    gap: 20px;
+ }
+
+ .empty-hint {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 200px;
+   color: #999;
+   font-size: 18px;
+   letter-spacing: 2px;
  }
 
 </style>

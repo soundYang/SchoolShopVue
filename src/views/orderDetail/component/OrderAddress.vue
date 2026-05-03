@@ -1,42 +1,15 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { AddressGetListServer } from '@/api/address'
-
-const props = defineProps({
+defineProps({
   order: { type: Object, required: true },
   addressInfo: { type: Object, default: null },
   isBuyer: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['change-address'])
+const emit = defineEmits(['change-address', 'show-address-picker'])
 
-const showAddressDialog = ref(false)
-const addressList = ref([])
-const loadingList = ref(false)
-
-const loadAddressList = async () => {
-  if (loadingList.value) return
-  loadingList.value = true
-  try {
-    const res = await AddressGetListServer()
-    addressList.value = res.data || []
-    showAddressDialog.value = true
-  } catch (e) {
-    console.error('获取地址列表失败:', e)
-  } finally {
-    loadingList.value = false
-  }
+const handleOpenPicker = () => {
+  emit('show-address-picker')
 }
-
-const handleSelectAddress = (addr) => {
-  emit('change-address', addr)
-  showAddressDialog.value = false
-}
-
-const deliverAddressId = computed(() => {
-  const da = props.order?.deliverAddress
-  return typeof da === 'string' ? da : da?._id
-})
 </script>
 
 <template>
@@ -54,34 +27,12 @@ const deliverAddressId = computed(() => {
       <div v-else class="address-info no-address-msg">
         <h4 class="info-item">暂未设置收货地址</h4>
       </div>
-      <button v-if="order.status === 0" class="change-address-btn" @click="loadAddressList">{{ order.deliverAddress ? '修改地址' : '设置地址' }}</button>
-    </div>
-
-    <div v-if="showAddressDialog" class="dialog-overlay" @click.self="showAddressDialog = false">
-      <div class="address-dialog">
-        <div class="dialog-header">
-          <span>选择收货地址</span>
-          <button class="dialog-close" @click="showAddressDialog = false">✕</button>
-        </div>
-        <div class="dialog-body">
-          <div
-            v-for="addr in addressList"
-            :key="addr._id"
-            class="address-item"
-            :class="{ active: addr._id === deliverAddressId }"
-            @click="handleSelectAddress(addr)"
-          >
-            <div class="address-item-main">
-              <span class="address-receiver">{{ addr.receiver }}</span>
-              <span class="address-phone">{{ addr.phone }}</span>
-              <span v-if="addr.isDefault" class="default-tag">默认</span>
-            </div>
-            <div class="address-detail">{{ addr.detail }}</div>
-          </div>
-          <div v-if="!addressList.length && !loadingList" class="no-address">暂无收货地址</div>
-          <div v-if="loadingList" class="no-address">加载中...</div>
-        </div>
-      </div>
+      <button v-if="order.status === 0" class="button" @click="handleOpenPicker">
+        <span class="button_lg">
+          <span class="button_sl"></span>
+          <span class="button_text">{{ order.deliverAddress ? '修改地址' : '设置地址' }}</span>
+        </span>
+      </button>
     </div>
   </div>
 </template>
@@ -120,125 +71,126 @@ const deliverAddressId = computed(() => {
   margin: 0;
 }
 
-.change-address-btn {
-  margin-top: 12px;
-  padding: 8px 20px;
-  background: #FAC921;
-  color: #333;
+
+.button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.change-address-btn:hover {
-  opacity: 0.8;
-}
-
-.dialog-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.address-dialog {
-  background: #2a2a2a;
-  border-radius: 12px;
-  width: 420px;
-  max-width: 90vw;
-  max-height: 70vh;
-  display: flex;
-  flex-direction: column;
-  color: #fff;
-}
-
-.dialog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  font-size: 18px;
-  font-weight: bold;
-  border-bottom: 1px solid #444;
-}
-
-.dialog-close {
   background: none;
-  border: none;
-  color: #aaa;
-  font-size: 18px;
+  color: #0f1923;
   cursor: pointer;
+  position: relative;
+  padding: 8px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all .15s ease;
+  margin-top: 20px;
 }
 
-.dialog-close:hover {
+.button::before,
+.button::after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: calc(50% - 5px);
+  border: 1px solid #7D8082;
+  transition: all .15s ease;
+}
+
+.button::before {
+  top: 0;
+  border-bottom-width: 0;
+}
+
+.button::after {
+  bottom: 0;
+  border-top-width: 0;
+}
+
+.button:active,
+.button:focus {
+  outline: none;
+}
+
+.button:active::before,
+.button:active::after {
+  right: 3px;
+  left: 3px;
+}
+
+.button:active::before {
+  top: 3px;
+}
+
+.button:active::after {
+  bottom: 3px;
+}
+
+.button_lg {
+  position: relative;
+  display: block;
+  padding: 10px 20px;
   color: #fff;
+  background-color: #0f1923;
+  overflow: hidden;
+  box-shadow: inset 0px 0px 0px 1px transparent;
 }
 
-.dialog-body {
-  padding: 12px 20px 20px;
-  overflow-y: auto;
-  flex: 1;
+.button_lg::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background-color: #0f1923;
 }
 
-.address-item {
-  padding: 12px 16px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+.button_lg::after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  background-color: #0f1923;
+  transition: all .2s ease;
 }
 
-.address-item:hover {
-  border-color: #FAC921;
-  background: rgba(250, 201, 33, 0.08);
+.button_sl {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+  left: -8px;
+  width: 0;
+  background-color: #ff4655;
+  transform: skew(-15deg);
+  transition: all .2s ease;
 }
 
-.address-item.active {
-  border-color: #FAC921;
-  background: rgba(250, 201, 33, 0.15);
+.button_text {
+  position: relative;
 }
 
-.address-item-main {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
+.button:hover {
+  color: #0f1923;
 }
 
-.address-receiver {
-  font-weight: bold;
-  font-size: 15px;
+.button:hover .button_sl {
+  width: calc(100% + 15px);
 }
 
-.address-phone {
-  color: #aaa;
-  font-size: 14px;
+.button:hover .button_lg::after {
+  background-color: #fff;
 }
 
-.default-tag {
-  background: #FAC921;
-  color: #333;
-  font-size: 11px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 3px;
-}
 
-.address-detail {
-  font-size: 14px;
-  color: #ccc;
-}
-
-.no-address {
-  text-align: center;
-  padding: 30px 0;
-  color: #888;
-}
 </style>

@@ -58,12 +58,11 @@ const pushImg = async (e) => {
     return showToast('请选择图片文件')
   }
   const newFile = await compressImage(img)
-  console.log(newFile)
   if (newFile.size > 1 * 1024 * 1024) {
     return showToast('图片大小不能超过 1MB')
   }
 
-  
+
   // 存储 File 对象
   imgFiles.value.push(newFile)
   // 创建临时 URL 用于预览
@@ -98,7 +97,6 @@ const imgShowRef = ref(null)
 // 上传商品
 const pushProduct = async (formData) => {
     const res = await ProductPublishServer(formData)
-    console.log(res)
     router.push('/publishedPro')
 }
 provide('pushProduct', pushProduct)
@@ -133,23 +131,23 @@ onUnmounted(() => {
     <ReturnPage />
     <h1 class="title">上传商品图片</h1>
     <div class="photoBox">
-      <input 
-        @change="pushImg" 
-        type="file" 
-        id="file" 
-        name="file" 
-        accept="image/*" 
-        class="postImg" 
+      <input
+        @change="pushImg"
+        type="file"
+        id="file"
+        name="file"
+        accept="image/*"
+        class="postImg"
       />
       <div class="imgShow" ref="imgShowRef">
-        <div 
-          v-for="(item, index) in imgUrls" 
-          :key="index" 
+        <div
+          v-for="(item, index) in imgUrls"
+          :key="index"
           class="image-item"
         >
           <img :src="item" alt="商品图片">
-          <button 
-            class="remove-btn" 
+          <button
+            class="remove-btn"
             @click.stop="removeImage(index)"
             type="button"
           >

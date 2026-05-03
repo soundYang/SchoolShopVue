@@ -49,8 +49,8 @@ const putAvatar = async (e) => {
     return
   }
 
-  if (file.size > 1 * 1024 * 1024) {
-    showToast('图片大小不能超过 1MB')
+  if (file.size > 10 * 1024 * 1024) {
+    showToast('图片大小不能超过 10MB')
     return
   }
 

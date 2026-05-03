@@ -1,10 +1,12 @@
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
 import { BlindBoxGetAllServer } from "@/api/blindBox"
-import { useUserStore } from "./user"  
+import { useUserStore } from "./user"
 
 export const useBlindBoxStore = defineStore("blindBox", () => {
   const blindBox = ref([])
+  const blindBoxOpen = ref(true)
+  const blindBoxCount = ref(0)
   // 移除 lastClearDate 全局 ref，改用 computed 或方法基于当前用户
   const userStore = useUserStore()
 
@@ -32,6 +34,15 @@ export const useBlindBoxStore = defineStore("blindBox", () => {
 
   const getBlindBox = async () => {
     const res = await BlindBoxGetAllServer()
+
+    if (res.open === false) {
+      blindBoxOpen.value = false
+      blindBoxCount.value = res.count || 0
+      blindBox.value = []
+      return
+    }
+
+    blindBoxOpen.value = true
     const boxes = res.data
     const current = Array.isArray(blindBox.value) ? blindBox.value : []
     boxes.forEach(box => {
@@ -90,6 +101,8 @@ export const useBlindBoxStore = defineStore("blindBox", () => {
 
   return {
     blindBox,
+    blindBoxOpen,
+    blindBoxCount,
     getBlindBox,
     setBlindBoxOrderId,
     setBlindBoxRevealed,

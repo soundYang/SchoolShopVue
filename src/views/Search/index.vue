@@ -159,6 +159,7 @@ useInfiniteScroll(
   justify-content: center;
   overflow-y: auto;          /* 允许滚动，用于无限滚动监听 */
   max-height: 100vh;         /* 可调整，或由父级控制高度 */
+  padding-top: 80px;         /* 为 fixed 头部留出空间，避免返回按钮被遮挡 */
 }
 
 .shopBox {

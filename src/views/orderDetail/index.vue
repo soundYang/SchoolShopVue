@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, provide, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { OrderGetOneServer, OrderCancelServer, OrderRefundServer, OrderUpdateStatusServer, OrderUpdateAddressServer } from '@/api/order'
 import { AddressGetOneServer } from '@/api/address'
@@ -9,6 +9,10 @@ import blindBoxImg from '@/assets/盲盒.png'
 import { useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import CancelOrderDialog from '@/component/CancelOrderDialog.vue'
+import ReturnPage from '@/component/ReturnPage.vue'
+import PopupLayerCom from '@/component/PopupLayerCom.vue'
+import manageAddress from '@/component/manageAddress.vue'
+import addressFrom from '@/component/addressFrom.vue'
 import { useToast } from '@/composables/useToast'
 
 import OrderHeader from './component/OrderHeader.vue'
@@ -41,6 +45,43 @@ const showReviewPopup = ref(false)
 const reviewContent = ref('')
 const isConfirming = ref(false)
 const isSubmittingReview = ref(false)
+
+const showPopup = ref(false)
+const putCount = ref(0)
+const putAddress = ref({})
+const manageAddressRef = ref(null)
+
+const openAddressFrom = (value) => {
+  putCount.value = value
+}
+provide('openAddressFrom', openAddressFrom)
+
+const openPutAddressFrom = (address) => {
+  putAddress.value = { ...address }
+  putCount.value = 4
+}
+provide('openPutAddressFrom', openPutAddressFrom)
+
+const closePopup = () => {
+  showPopup.value = false
+}
+
+const showAddressPicker = () => {
+  showPopup.value = true
+  putCount.value = 1
+}
+
+watch(() => manageAddressRef.value?.selectedAddress, () => {
+  if (manageAddressRef.value?.selectedAddress) {
+    const address = manageAddressRef.value.addresses.find(
+      item => item._id === manageAddressRef.value.selectedAddress
+    )
+    if (address) {
+      handleChangeAddress(address)
+      showPopup.value = false
+    }
+  }
+})
 
 const isBlindBox = computed(() => order.value?.isBlindBox)
 
@@ -237,6 +278,9 @@ onMounted(() => {
     <p class="page-title">订单详情</p>
 
     <div class="card">
+      <div class="order-header-bar">
+        <ReturnPage />
+      </div>
       <OrderHeader
         :order="order"
         :status-text="statusText"
@@ -260,6 +304,7 @@ onMounted(() => {
           :address-info="addressInfo"
           :is-buyer="isBuyer"
           @change-address="handleChangeAddress"
+          @show-address-picker="showAddressPicker"
         />
 
         <OrderCancelInfo :order="order" />
@@ -302,6 +347,17 @@ onMounted(() => {
     @submit="submitReview"
     @skip="handleSkipReview"
   />
+
+  <PopupLayerCom v-model:visible="showPopup" @close="closePopup">
+    <manageAddress
+      ref="manageAddressRef"
+      v-if="putCount === 1"
+    />
+    <addressFrom
+      v-else-if="putCount === 4"
+      :putAddress="putAddress"
+    />
+  </PopupLayerCom>
 </template>
 
 <style scoped>
@@ -352,5 +408,12 @@ onMounted(() => {
 
 .section-title:first-of-type {
   margin-top: 0;
+}
+
+.order-header-bar {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background-color: #ff5858;
 }
 </style>

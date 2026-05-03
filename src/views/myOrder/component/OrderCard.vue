@@ -101,7 +101,7 @@ const formatTime = (time) => {
           <span class="summary-value">{{ formatTime(order.orderTime) }}</span>
         </div>
       </div>
-      <div v-if="order.status === 0" class="order-countdown">
+      <div v-if="order.status === 0 && !order.isBlindBox" class="order-countdown">
         <CountDown
           :deadline="new Date(order.expireAt).getTime()"
           size="small"

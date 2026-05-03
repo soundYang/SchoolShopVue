@@ -52,11 +52,8 @@ const getOrderId = () => {
 }
 
 const handleClick = async () => {
-  console.log(props.blindBox);
-
   if (props.blindBox.isRevealed) {
     const orderId = getOrderId()
-    console.log(orderId);
     if (orderId) {
       router.push(`/orderDetail?id=${orderId}`)
     } else {

@@ -24,7 +24,7 @@ defineProps({
       </div>
     </div>
 
-    <div v-if="order.status === 0" class="countdown-section">
+    <div v-if="order.status === 0 && !order.isBlindBox" class="countdown-section">
       <CountDown :deadline="new Date(order.expireAt).getTime()" />
     </div>
   </div>

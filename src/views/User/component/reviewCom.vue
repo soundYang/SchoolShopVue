@@ -9,8 +9,11 @@ defineProps({
 <template>
   <div class="card">
     <div class="card_load">
-      <img 
-      class="card_avatar" v-img-lazy="reviewUser.Avatar" alt="">
+      <img v-if="reviewUser.Avatar" class="card_avatar" v-img-lazy="reviewUser.Avatar" alt="">
+      <svg v-else xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#888" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+      </svg>
     </div>
     <div class="card_msg">
       <div class="card_load_extreme_title">{{ reviewUser.userName }}</div>

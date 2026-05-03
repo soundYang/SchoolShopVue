@@ -21,7 +21,7 @@ const getCardStyle = (index, total) => {
   <section>
     <h2 class="title">新鲜好物</h2>
     <div v-if="list && list.length" class="card-3d">
-     <shopCard 
+     <shopCard
          v-for="(item, index) in list"
         :key="item._id"
         :style="getCardStyle(index, list.length)"
@@ -29,10 +29,24 @@ const getCardStyle = (index, total) => {
         @click="router.push(`/productDetail/${item._id}`)"
      />
     </div>
+    <div v-else class="empty-hint">
+      <span>暂无新鲜好物，敬请期待</span>
+    </div>
   </section>
 </template>
 
 <style scoped>
+/* 空状态提示 */
+.empty-hint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #999;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
 /* 标题样式保持不变 */
 .title {
   margin-left: 70px;

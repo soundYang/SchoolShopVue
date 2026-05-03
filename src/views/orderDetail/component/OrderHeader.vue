@@ -22,7 +22,6 @@ const formatTime = (time) => {
 <template>
   <div class="order-header">
     <div class="header-top">
-      <ReturnPage />
       <div class="header-status-group">
         <span v-if="order.isBlindBox" class="blind-box-badge">盲盒订单</span>
         <span class="order-status" :style="{ color: statusColor }">
@@ -50,7 +49,7 @@ const formatTime = (time) => {
 
 .header-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 

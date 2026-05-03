@@ -16,7 +16,7 @@ import greenImg from '@/assets/green.png'
  */
 
 const blindBoxStore = useBlindBoxStore()
-const { blindBox } = storeToRefs(blindBoxStore)
+const { blindBox, blindBoxOpen, blindBoxCount } = storeToRefs(blindBoxStore)
 blindBoxStore.getBlindBox()
 
 const color = ref([
@@ -70,6 +70,12 @@ const colorSelect = (price) => {
         :bg-image="color[colorSelect(item.randomPrice)].image"
       />
     </div>
+    <div v-else-if="!blindBoxOpen" class="empty-tip">
+      <div class="closed-tip">
+        <span class="closed-title">盲盒暂未开放</span>
+        <span class="closed-desc">当前 <em>{{ blindBoxCount }}</em> 种盲盒商品，满 150 种开放</span>
+      </div>
+    </div>
     <div v-else class="empty-tip">
       <span>暂时无盲盒</span>
     </div>
@@ -118,5 +124,27 @@ const colorSelect = (price) => {
   font-size: 28px;
   color: #999;
   font-family: '华文新魏';
+}
+.closed-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.closed-title {
+  font-size: 32px;
+  color: #ff6b6b;
+  font-family: '华文新魏';
+}
+.closed-desc {
+  font-size: 20px;
+  color: #bbb;
+  font-family: '华文新魏';
+}
+.closed-desc em {
+  font-style: normal;
+  font-size: 26px;
+  color: #fbbf24;
+  font-weight: bold;
 }
 </style>

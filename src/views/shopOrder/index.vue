@@ -169,10 +169,12 @@ onMounted(() => {
 
 <template>
   <div>
-    <ReturnPage />
     <div class="address-box">
       <p class="order-title">订单信息</p>
       <div class="card">
+        <div class="order-header-bar">
+          <ReturnPage />
+        </div>
         <div class="order-header">
           <div v-if="hasAddress" class="address-info">
             <h4 class="address-item">收货地址：{{ showAddress.detail }}</h4>
@@ -275,6 +277,13 @@ onMounted(() => {
   height: 2px;
   transform: translatey(10px);
   background: #414141;
+}
+
+.order-header-bar {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background-color: #ff5858;
 }
 
 </style>

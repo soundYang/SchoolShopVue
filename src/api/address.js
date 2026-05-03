@@ -12,7 +12,7 @@ export const AddressAddServer = (data) =>{
 
 // 删除地址
 export const AddressDeleteServer = (id) =>{
-  return request.delete(`/address/del?addressId=${id}`)
+  return request.delete('/address/del', { params: { addressId: id } })
 }
 
 // 修改地址
@@ -22,5 +22,7 @@ export const AddressUpdateServer = (data) =>{
 
 // 获取单个的地址（卖家查看订单地址需传 orderId）
 export const AddressGetOneServer = (id, orderId) =>{
-  return request.get(`/address/one?id=${id}${orderId ? `&orderId=${orderId}` : ''}`)
+  const params = { id }
+  if (orderId) params.orderId = orderId
+  return request.get('/address/one', { params })
 }

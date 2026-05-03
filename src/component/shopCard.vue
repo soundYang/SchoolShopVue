@@ -26,7 +26,6 @@ defineProps({
         <p class="title">{{ product.shopName }}</p>
         <div class="price-wrapper">
           <span class="price">￥{{ formatPrice(product.shopPrice) }}</span>
-          <span v-if="product.shopOldPrice" class="old-price">￥{{ formatPrice(product.shopOldPrice) }}</span>
         </div>
       </div>
 

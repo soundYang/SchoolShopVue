@@ -30,8 +30,7 @@ const judgeUser = ref(false)          // 判断用户是否为卖家 默认为�
 const fetchData = async () => {
   const currentSellerId = route.query.id
   sellerId.value = currentSellerId
-  console.log(currentSellerId , Account.value?._id)
-   
+  
   if(currentSellerId && currentSellerId !== Account.value?._id) {
     judgeUser.value = true
   } else {

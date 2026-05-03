@@ -2,11 +2,11 @@ import request from "@/unit/request"
 
 // 根据关键字获取商品列表
 export const ProductGetlistServer = (key) => {
-  return request.get(`/product/keyProList?key=${key}`)
+  return request.get('/product/keyProList', { params: { key } })
 }
 
 // 获取单个用户发布的商品列表
-export const productGetUserListServer = (id, page = 1, pageSize = 10) => {  
+export const productGetUserListServer = (id, page = 1, pageSize = 10) => {
   return request.get(`/product/getUserProducts`,{
     params:{
       id,
@@ -18,7 +18,7 @@ export const productGetUserListServer = (id, page = 1, pageSize = 10) => {
 
 // 获取单个商品
 export const ProductGetOneServer = (id) => {
-  return request.get(`/product/getPro?id=${id}`)
+  return request.get('/product/getPro', { params: { id } })
 }
 
 // 根据商品标签获得商品
@@ -53,7 +53,7 @@ export const ProductPublishServer = (formData) => {
 
 // 修改商品状态
 export const ProductUpdateStatusServer = ({id, status}) => {
-  return request.post('product/updatePro', { 
+  return request.post('product/updatePro', {
     _id: id,
     shopStatus: status
    })
@@ -62,7 +62,7 @@ export const ProductUpdateStatusServer = ({id, status}) => {
 
 // 删除商品
 export const ProductDeleteServer = (_id) => {
-  
+
   return request.delete('/product/delPro',{
     params:{
       _id
