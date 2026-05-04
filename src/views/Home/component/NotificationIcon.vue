@@ -43,11 +43,20 @@ const handleMarkAllRead = () => {
   notificationStore.markAllAsRead()
 }
 
-// 点击单条通知：标记已读并跳转到订单详情
+// 系统通知详情弹窗
+const showDetailDialog = ref(false)
+const currentNotification = ref(null)
+
+// 点击单条通知：有 orderId 则跳转订单详情，否则弹窗显示通知内容
 const handleItemClick = (item) => {
   notificationStore.markAsRead(item._id)
   showPopup.value = false
-  router.push(`/orderDetail?id=${item.orderId}`)
+  if (item.orderId) {
+    router.push(`/orderDetail?id=${item.orderId}`)
+  } else {
+    currentNotification.value = item
+    showDetailDialog.value = true
+  }
 }
 
 // 格式化通知时间为相对时间（刚刚/N分钟前/N小时前/日期）
@@ -153,6 +162,27 @@ onUnmounted(() => {
         </div>
       </div>
     </Transition>
+
+    <!-- 系统通知详情弹窗 -->
+    <Teleport to="body">
+      <Transition name="dialog">
+        <div v-if="showDetailDialog" class="dialog-overlay" @click.self="showDetailDialog = false">
+          <div class="dialog-box">
+            <div class="dialog-header">
+              <span class="dialog-title">{{ currentNotification?.title }}</span>
+              <button class="dialog-close" @click="showDetailDialog = false">&times;</button>
+            </div>
+            <div class="dialog-body">
+              <p class="dialog-message">{{ currentNotification?.msg }}</p>
+            </div>
+            <div class="dialog-footer">
+              <span class="dialog-time">发送时间：{{ formatTime(currentNotification?.createdAt) }}</span>
+              <button class="dialog-btn" @click="showDetailDialog = false">我知道了</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -347,5 +377,115 @@ onUnmounted(() => {
 .popup-leave-to {
   opacity: 0;
   transform: translateX(-50%) translateY(-8px);
+}
+
+/* ==================== 系统通知详情弹窗 ==================== */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dialog-box {
+  background: #fff;
+  border-radius: 12px;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 0;
+}
+
+.dialog-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.dialog-close:hover {
+  color: #333;
+}
+
+.dialog-body {
+  padding: 16px 24px;
+}
+
+.dialog-message {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.8;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 20px;
+}
+
+.dialog-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.dialog-btn {
+  background: #FAC921;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dialog-btn:hover {
+  background: #e8b81e;
+}
+
+/* 弹窗动画 */
+.dialog-enter-active {
+  animation: dialog-in 0.25s ease-out;
+}
+.dialog-leave-active {
+  animation: dialog-in 0.2s ease-in reverse;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 </style>

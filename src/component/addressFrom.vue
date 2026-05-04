@@ -31,8 +31,8 @@ const fromRegx = ref({
     message: '请输入正确的手机号码'
   },
   detail: {
-    regx:/^[\u4e00-\u9fa5a-zA-Z0-9]{2,20}$/,
-    message: '请输入2-20位中文或英文名'
+    regx:/^[\u4e00-\u9fa5a-zA-Z0-9\s\-·,.]{2,50}$/,
+    message: '请输入2-50位详细地址'
   },
   [Symbol.iterator]: function * (){
     yield* Object.entries(fromRegx.value)
@@ -48,7 +48,7 @@ if(props.putAddress.receiver){
 
 const openAddressFrom = inject('openAddressFrom')
 // 添加地址
-const addInfo = async () => { 
+const addInfo = async () => {
   for(let [key,value] of addressFrom.value){
     if(key === 'isDefault') continue
     if(!value){
@@ -56,7 +56,7 @@ const addInfo = async () => {
     }
   }
   if(!checkInfo()) return
-  
+
   await AddressAddServer(addressFrom.value)
   openAddressFrom(1)
   addressFrom.value = {
@@ -76,7 +76,7 @@ const putInfo = async () => {
 }
 
 // 数据验证
-const checkInfo = () => {   
+const checkInfo = () => {
   for(let [ key, value ] of fromRegx.value){
     if(!value.regx.test(addressFrom.value[key])){
       showToast(value.message)

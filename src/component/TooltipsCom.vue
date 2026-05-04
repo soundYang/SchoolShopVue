@@ -10,7 +10,7 @@
     </div>
 
     <!-- 图标区域（触发弹框） -->
-    <a class="icon" href="#">
+    <div class="icon">
       <div class="layer">
         <span></span>
         <span></span>
@@ -23,7 +23,7 @@
         </span>
       </div>
       <!-- 底部标签已移除 -->
-    </a>
+    </div>
   </div>
 </template>
 

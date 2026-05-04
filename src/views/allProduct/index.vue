@@ -5,6 +5,7 @@ import selectCom from './component/selectCom.vue'
 import shopCard from '@/component/shopCard.vue'
 import { LabelGetlistServer } from '@/api/label'
 import { ProductGetByLabelServer, ProductGetAllServer } from '@/api/product'
+import { safeArray } from '@/unit/safeArray'
 
 defineOptions({ name: "allProductPage" })
 
@@ -12,7 +13,7 @@ defineOptions({ name: "allProductPage" })
 const mainLabelList = ref([])
 const getLabelList = async () => {
   const res = await LabelGetlistServer('mainLabel')
-  mainLabelList.value = res.data
+  mainLabelList.value = safeArray(res.data?.items)
   mainLabelList.value.unshift('全部')
 }
 getLabelList()

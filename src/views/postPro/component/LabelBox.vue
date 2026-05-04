@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { useToast } from '@/composables/useToast'
 
 const { showToast } = useToast()
@@ -7,78 +7,60 @@ const labels = inject('labels')
 const proFrom = inject('proFrom')
 const close = inject('close')
 
-const labelList = ref({
-  mainLabel: {
-    name: '主标签',
-    list: []
-  },
-  attributeLabel: {
-    name: '副标签',
-    list: []
-  },
-  hotLabel: {
-    name: '热门标签',
-    list: []
-  },
-  [Symbol.iterator]: function* () {
-    yield* Object.entries(this)
-  }
+const selectedLabels = ref({
+  mainLabel: { list: [] },
+  attributeLabel: { list: [] },
+  hotLabel: { list: [] }
 })
-const mainAcvive = ref('')  // 主标签激活
 
-const addLable = (e, key) => {
+const labelEntries = computed(() => Object.entries(selectedLabels.value))
 
-  // 主标签只允许存在一个
-  if(key === 'mainLabel'){
-    if(labelList.value[key].list.length >= 1){
-       labelList.value[key].list = []
-    }
-    labelList.value[key].list.push(e.target.innerHTML)
-    mainAcvive.value = e.target.innerHTML
+const mainActive = ref('')
+
+const totalCount = computed(() => {
+  let count = 0
+  for (const [, value] of labelEntries.value) {
+    count += value.list.length
+  }
+  return count
+})
+
+const isSelected = (label, key) => {
+  if (key === 'mainLabel') return mainActive.value === label
+  return selectedLabels.value[key].list.includes(label)
+}
+
+const toggleLabel = (label, key) => {
+  if (key === 'mainLabel') {
+    selectedLabels.value.mainLabel.list = [label]
+    mainActive.value = label
     return
   }
-  
-  // 副标签二次点击则删除
-  if(labelList.value[key].list.includes(e.target.innerHTML)){
-    if(key === 'mainLabel') return
-    e.target.classList.toggle('active')
-    return labelList.value[key].list.splice(labelList.value[key].list.indexOf(e.target.innerHTML), 1)
+
+  const list = selectedLabels.value[key].list
+  if (list.includes(label)) {
+    list.splice(list.indexOf(label), 1)
+    return
   }
 
-  // 最多存在四个标签
-  if(!judegLength()){
+  if (totalCount.value >= 4) {
     return showToast('最多添加四个标签')
   }
 
-  labelList.value[key].list.push(e.target.innerHTML)
-  e.target.classList.toggle('active')
-  
+  list.push(label)
 }
 
-// 判断标签长度
-const judegLength = () => {
-  let length = 0
-  for(let [key, value] of labelList.value){
-    length += value.list.length
-  }
-  
-  if(length >= 4){
-    return false
-  }
-  return true
-}
-
-const comfirmlabel = () => {
+const confirmLabel = () => {
   proFrom.value.shopType = []
-  for(let [key, value] of labelList.value){
-    if(key === 'mainLabel' && value.list.length === 0){
-        return showToast('请选择主标签')
+  for (const [key, value] of labelEntries.value) {
+    if (key === 'mainLabel' && value.list.length === 0) {
+      return showToast('请选择主标签')
     }
-    if(value.list.length > 0){
+    if (value.list.length > 0) {
       proFrom.value.shopType.push(...value.list)
     }
-  } 
-  close() 
+  }
+  close()
 }
 </script>
 
@@ -86,24 +68,21 @@ const comfirmlabel = () => {
   <form class="form">
     <div class="title">选择标签<br><span>Select Tag</span></div>
 
-    <div 
-    v-for="( [key, value], index ) in labelList"
-    :key="index"
-    >
-      <h3>{{ value.name }}</h3>
+    <div v-for="([key, value]) in labelEntries" :key="key">
+      <h3>{{ labels[key]?.name }}</h3>
       <ul id="mainLable">
-        <li 
-        @click="e => addLable(e, key)" 
-        v-for="label in labels[key]" 
-        :key="label"
-        :class="{active: key === 'mainLabel' && mainAcvive === label}"
+        <li
+          v-for="label in labels[key]?.items"
+          :key="label"
+          :class="{ active: isSelected(label, key) }"
+          @click="toggleLabel(label, key)"
         >
           {{ label }}
         </li>
       </ul>
     </div>
 
-    <button class="button-confirm" @click.prevent="comfirmlabel">确定</button>
+    <button class="button-confirm" @click.prevent="confirmLabel">确定</button>
   </form>
 </template>
 
