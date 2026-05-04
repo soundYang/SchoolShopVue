@@ -79,11 +79,11 @@ watch(
 <template>
   <div class="header">
     <nav>
-      <div class="nav-link" style="margin-top: 10px;" @click="toggleMenu">
+      <div class="nav-link" @click="toggleMenu">
         <ButtonOneCom str="Navbar" />
         <NotificationIcon />
       </div>
-      <TitleCom style="margin-right: 150px; margin-bottom: 10px;" :str="title" />
+      <TitleCom class="nav-title" :str="title" />
     </nav>
     <!-- 展开菜单区域，初始高度为0，由GSAP控制展开 -->
     <div id="expanded-menu" ref="expandedMenu">
@@ -108,10 +108,15 @@ watch(
 nav {
   margin-bottom: 10px;
   height: 55px;
-  padding-left: 24px;
+  padding: 0 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.nav-title {
+  flex-shrink: 0;
+  margin-right: 120px;
 }
 
 .nav-link {
@@ -127,5 +132,21 @@ nav {
 
 .content {
   padding: 24px;
+}
+
+[data-device="mobile"] nav {
+  height: 44px;
+  padding: 0 12px;
+}
+[data-device="mobile"] .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+[data-device="mobile"] .nav-title {
+  margin-right: 8px;
+}
+[data-device="mobile"] .content {
+  padding: 12px;
 }
 </style>

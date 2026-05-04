@@ -121,4 +121,26 @@ const getCardStyle = (index, total) => {
 }
 
 /* 移除所有静态的 nth-child 样式，现在通过内联样式动态控制 */
+
+[data-device="mobile"] .title {
+  margin-left: 20px;
+  font-size: 20px;
+}
+[data-device="mobile"] .title::before {
+  width: 80px;
+  margin-bottom: -28px;
+  margin-left: -5px;
+}
+[data-device="mobile"] .card-3d {
+  height: 40vw;
+  margin: 50px auto;
+  animation-duration: 30s;
+  transform: perspective(400px);
+}
+[data-device="mobile"] .card-3d div {
+  width: 130px;
+  height: 220px;
+  animation: none;
+  filter: brightness(1) !important;
+}
 </style>

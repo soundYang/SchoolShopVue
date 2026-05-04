@@ -488,4 +488,32 @@ onUnmounted(() => {
     transform: scale(1);
   }
 }
+
+[data-device="mobile"] .notification-wrapper {
+  margin-left: 4px;
+}
+[data-device="mobile"] .notification-icon {
+  font-size: 18px;
+}
+[data-device="mobile"] .badge {
+  min-width: 14px;
+  height: 14px;
+  line-height: 14px;
+  font-size: 9px;
+  top: -5px;
+  right: -8px;
+  padding: 0 3px;
+  border-radius: 7px;
+}
+[data-device="mobile"] .notification-popup {
+  width: calc(100vw - 24px);
+  max-width: 360px;
+  left: auto;
+  right: -8px;
+  transform: none;
+}
+[data-device="mobile"] .popup-enter-from,
+[data-device="mobile"] .popup-leave-to {
+  transform: translateY(-8px);
+}
 </style>

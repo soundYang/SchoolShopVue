@@ -281,4 +281,44 @@ const handlePay = async () => {
   pointer-events: none;
   opacity: 0.6;
 }
+
+[data-device="mobile"] .pay-container {
+  padding-top: 60px;
+  padding: 12px;
+  padding-top: 60px;
+}
+
+[data-device="mobile"] .pay-card {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+[data-device="mobile"] .pay-header {
+  padding: 14px;
+}
+
+[data-device="mobile"] .pay-title {
+  font-size: 18px;
+}
+
+[data-device="mobile"] .pay-content {
+  padding: 16px;
+}
+
+[data-device="mobile"] .order-info {
+  padding: 14px;
+}
+
+[data-device="mobile"] .info-row {
+  padding: 10px 0;
+}
+
+[data-device="mobile"] .info-value.price {
+  font-size: 22px;
+}
+
+[data-device="mobile"] .info-value.order-id {
+  max-width: 120px;
+  font-size: 11px;
+}
 </style>

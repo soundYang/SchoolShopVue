@@ -12,7 +12,7 @@ const jumpUser = () => {
   router.push('/user')
 }
 
-const jumpProductManagement = () => { 
+const jumpProductManagement = () => {
   if(!userStore.token){
     return router.push('/login')
   }
@@ -85,5 +85,18 @@ const jumpProductManagement = () => {
 .container .glass i {
   font-size: 2.5em;
   fill: #fff;
+}
+
+[data-device="mobile"] .container .glass {
+  width: 120px;
+  height: 130px;
+  margin: 0 -25px;
+}
+[data-device="mobile"] .container .glass i {
+  font-size: 1.8em;
+}
+[data-device="mobile"] .container .glass::before {
+  height: 30px;
+  font-size: 12px;
 }
 </style>

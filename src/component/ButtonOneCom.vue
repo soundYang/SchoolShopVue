@@ -316,4 +316,15 @@ const arrStr = strToArr(props.str)
   animation: none;
 }
 
+[data-device="mobile"] .btn {
+  padding: 0.2em 0.3em 0.2em 0.6em;
+  font-size: 0.75em;
+}
+[data-device="mobile"] .btn-svg {
+  height: 16px;
+  margin-right: 0.25rem;
+}
+[data-device="mobile"] .txt-wrapper {
+  min-width: 3.6em;
+}
 </style>

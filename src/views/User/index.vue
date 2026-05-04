@@ -204,4 +204,55 @@ defineOptions({
   .reviewList::-webkit-scrollbar {
     display: none;
   }
+
+  [data-device="mobile"] .userBox{
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  [data-device="mobile"] .userBox>div{
+    padding: 12px;
+  }
+
+  [data-device="mobile"] .userinfo{
+    flex: none;
+    height: auto;
+    padding: 16px !important;
+  }
+
+  [data-device="mobile"] .proInfoBox{
+    flex: none;
+    margin-top: 0;
+  }
+
+  [data-device="mobile"] .boughtBox,
+  [data-device="mobile"] .postedBox{
+    flex: none;
+  }
+
+  [data-device="mobile"] .reviewBox{
+    flex: none;
+    padding: 12px;
+    margin-top: 12px;
+  }
+
+  [data-device="mobile"] .reviewTitle{
+    font-size: 18px;
+    margin-left: 0;
+  }
+
+  [data-device="mobile"] .noReview{
+    line-height: 100px;
+    margin-left: 0;
+    font-size: 16px;
+  }
+
+  [data-device="mobile"] .reviewBox::before {
+    width: 100%;
+  }
+
+  [data-device="mobile"] .reviewList{
+    height: 250px;
+  }
 </style>

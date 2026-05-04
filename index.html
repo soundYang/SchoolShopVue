@@ -3,9 +3,26 @@
   <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>盒心</title>
     <link rel="stylesheet" href="//at.alicdn.com/t/c/font_5131548_ehd2ey71k1u.css">
+    <script>
+      function updateDevice() {
+        var w = window.innerWidth
+        if (w <= 768) {
+          var base = Math.max(w / 375 * 16, 12)
+          document.documentElement.style.fontSize = base + 'px'
+          document.documentElement.setAttribute('data-device', 'mobile')
+          window.__IS_MOBILE__ = true
+        } else {
+          document.documentElement.style.fontSize = '16px'
+          document.documentElement.setAttribute('data-device', 'desktop')
+          window.__IS_MOBILE__ = false
+        }
+      }
+      updateDevice()
+      window.addEventListener('resize', updateDevice)
+    </script>
   </head>
   <body>
     <div id="app"></div>

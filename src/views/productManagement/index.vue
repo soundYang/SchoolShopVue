@@ -32,4 +32,27 @@ import navbarCom from './component/navbarCom.vue'
 .body{
   flex: 5;
 }
+
+[data-device="mobile"] .manageBox {
+  height: auto;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+[data-device="mobile"] .manageBox>div{
+  margin-top: 56px;
+}
+
+[data-device="mobile"] .navbar{
+  flex: none;
+  border-right: none;
+  border-bottom: 1px solid white;
+  width: 100%;
+  overflow-x: auto;
+}
+
+[data-device="mobile"] .body{
+  flex: none;
+  width: 100%;
+}
 </style>

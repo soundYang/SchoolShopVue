@@ -147,4 +147,37 @@ const colorSelect = (price) => {
   color: #fbbf24;
   font-weight: bold;
 }
+
+[data-device="mobile"] .title {
+  margin-left: 20px;
+  margin-bottom: 50px;
+  font-size: 20px;
+}
+[data-device="mobile"] .title::before {
+  width: 80px;
+  margin-bottom: -28px;
+}
+[data-device="mobile"] .blindBox>div {
+  flex-direction: column;
+  gap: 12px;
+  padding: 0.5rem;
+}
+[data-device="mobile"] .time {
+  font-size: 20px;
+}
+[data-device="mobile"] .empty-tip {
+  min-height: 150px;
+}
+[data-device="mobile"] .empty-tip span {
+  font-size: 18px;
+}
+[data-device="mobile"] .closed-title {
+  font-size: 22px;
+}
+[data-device="mobile"] .closed-desc {
+  font-size: 14px;
+}
+[data-device="mobile"] .closed-desc em {
+  font-size: 18px;
+}
 </style>

@@ -9,9 +9,9 @@ const arrStr = computed(() => strToArr(props.str))
 
 <template>
   <div class="loader-wrapper">
-  <span 
+  <span
   class="loader-letter"
-  v-for="(item, index) in arrStr" 
+  v-for="(item, index) in arrStr"
   :key="index">
     {{ item }}
   </span>
@@ -27,17 +27,17 @@ const arrStr = computed(() => strToArr(props.str))
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 120px;
+  height: 72px;
   width: auto;
-  margin: 2rem;
+  margin: 0 0.5rem;
 
   font-family: "Poppins", sans-serif;
   font-size: 1.6em;
-  font-weight: 600;
+  font-weight: 700;
   user-select: none;
   color: #fff;
 
-  scale: 2;
+  scale: 2.2;
 }
 
 .loader {
@@ -158,5 +158,12 @@ const arrStr = computed(() => strToArr(props.str))
   100% {
     opacity: 0;
   }
+}
+
+[data-device="mobile"] .loader-wrapper {
+  height: 40px;
+  margin: 0 0.2rem;
+  font-size: 1.2em;
+  scale: 1;
 }
 </style>

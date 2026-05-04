@@ -63,7 +63,7 @@ getList(newList,'new')
    align-items: center;
    height: 80vh;
    flex-direction: column;
-   gap: 20px;
+   gap: var(--gap, 20px);
  }
 
  .empty-hint {
@@ -74,6 +74,17 @@ getList(newList,'new')
    color: #999;
    font-size: 18px;
    letter-spacing: 2px;
+ }
+
+ [data-device="mobile"] .searchBox {
+   height: 60vh;
+   gap: var(--gap, 12px);
+   padding: 20px;
+ }
+
+ [data-device="mobile"] .empty-hint {
+   font-size: 14px;
+   height: 120px;
  }
 
 </style>

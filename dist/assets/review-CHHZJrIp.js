@@ -1,1 +1,0 @@
-import{r as i}from"./index-DlwkKlU9.js";const v=({page:e,pageSize:r,sellerId:s,productId:t,userId:a})=>i.get("/review/list",{params:{page:e||1,pageSize:r||10,sellerId:s,productId:t,userId:a}}),d=({productId:e,sellerId:r,orderId:s,content:t,proPhoto:a,avatar:o})=>i.post("/review/add",{productId:e,sellerId:r,orderId:s,content:t,proPhoto:a,avatar:o});export{v as R,d as a};

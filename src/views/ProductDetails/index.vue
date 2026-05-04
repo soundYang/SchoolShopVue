@@ -218,4 +218,67 @@ const buyShop = () => {
   cursor: not-allowed;
   user-select: none;
 }
+
+[data-device="mobile"] .detailBox {
+  padding: 16px;
+  padding-top: 60px;
+  flex-direction: column;
+  height: auto;
+  min-height: 100vh;
+}
+
+[data-device="mobile"] .proImgBox {
+  flex: none;
+  width: 100%;
+}
+
+[data-device="mobile"] .proImgBox p {
+  margin-top: -20px !important;
+  font-size: 12px;
+}
+
+[data-device="mobile"] .proMsgBox {
+  flex: none;
+  width: 100%;
+  padding: 16px;
+}
+
+[data-device="mobile"] .top {
+  flex-direction: column;
+}
+
+[data-device="mobile"] .header > h1 {
+  margin-left: 0;
+  font-size: 28px;
+}
+
+[data-device="mobile"] .header > p {
+  margin-top: 16px;
+  margin-left: 0;
+  font-size: 14px;
+}
+
+[data-device="mobile"] .sellInfoBox {
+  padding: 20px;
+}
+
+[data-device="mobile"] .sellInfoBox img {
+  width: 100px;
+  height: 100px;
+}
+
+[data-device="mobile"] .label {
+  gap: 10px;
+  padding-left: 0;
+  flex-wrap: wrap;
+}
+
+[data-device="mobile"] .bottom {
+  margin-top: 24px;
+  row-gap: 24px;
+}
+
+[data-device="mobile"] .bottom h1 {
+  font-size: 24px;
+}
 </style>

@@ -144,4 +144,40 @@ defineProps({
 .card:hover {
   background-color: white;
 }
+
+[data-device="mobile"] .card {
+  width: 100%;
+  height: auto;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+[data-device="mobile"] .wrapper {
+  gap: 10px;
+}
+
+[data-device="mobile"] .card-image {
+  height: 160px;
+}
+
+[data-device="mobile"] .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+[data-device="mobile"] .title {
+  font-size: 0.85em;
+}
+
+[data-device="mobile"] .price {
+  font-size: 1.1em;
+}
+
+[data-device="mobile"] .card-btn {
+  height: 40px;
+  font-size: 1em;
+  margin-top: 8px;
+  border-radius: 40px;
+}
 </style>

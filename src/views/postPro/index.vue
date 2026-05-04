@@ -33,7 +33,12 @@ const proFrom = ref({
 const labels = ref()
 const getAllLabel = async () => {
   const res = await LabelGetAllServer()
-  labels.value = res.data[0]
+  const raw = Array.isArray(res.data) ? res.data[0] : res.data
+  const result = {}
+  for (const key of ['mainLabel', 'attributeLabel', 'hotLabel']) {
+    result[key] = Array.isArray(raw[key]) ? raw[key][0] : raw[key]
+  }
+  labels.value = result
 }
 getAllLabel()
 
@@ -288,5 +293,39 @@ onUnmounted(() => {
 .remove-btn:hover {
   background: rgba(255, 0, 0, 0.8);
   transform: scale(1.1);
+}
+
+[data-device="mobile"] .postProBox {
+  padding: 12px;
+}
+
+[data-device="mobile"] .title {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+[data-device="mobile"] .photoBox {
+  height: 180px;
+  padding: 12px;
+  gap: 12px;
+  flex-direction: column;
+}
+
+[data-device="mobile"] .photoBox::before {
+  left: 12px;
+  top: 12px;
+  width: calc(33.33% - 16px);
+  min-width: 60px;
+  height: calc(100% - 24px);
+  font-size: 48px;
+}
+
+[data-device="mobile"] .imgShow {
+  flex: 1;
+  gap: 10px;
+}
+
+[data-device="mobile"] .imgShow img {
+  width: 160px;
 }
 </style>

@@ -275,4 +275,45 @@ defineOptions({
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   padding-right: 16px;
 }
+
+[data-device="mobile"] .box {
+  padding: 12px;
+  gap: 12px;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+}
+
+[data-device="mobile"] .title {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+[data-device="mobile"] .title span {
+  font-size: 14px;
+}
+
+[data-device="mobile"] .proBox {
+  row-gap: 16px;
+}
+
+[data-device="mobile"] .pagination {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+[data-device="mobile"] .cta span {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+[data-device="mobile"] .page-info-wrapper {
+  gap: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+[data-device="mobile"] .page-info {
+  padding-right: 8px;
+}
 </style>

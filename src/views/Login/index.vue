@@ -539,4 +539,37 @@ onMounted(() => fetchCaptcha())
     opacity: 1;
   }
 }
+
+[data-device="mobile"] .glitch-form-wrapper {
+  min-height: 100dvh;
+  padding: 0 12px;
+}
+
+[data-device="mobile"] .glitch-card {
+  max-width: 100%;
+  margin: 0.5rem;
+}
+
+[data-device="mobile"] .card-body {
+  padding: 1rem;
+}
+
+[data-device="mobile"] .form-group {
+  margin-bottom: 1rem;
+}
+
+[data-device="mobile"] .form-group input {
+  font-size: 0.9rem;
+  padding: 0.6em 0;
+}
+
+[data-device="mobile"] .form-group--code .captcha-img {
+  width: 120px;
+  height: 40px;
+}
+
+[data-device="mobile"] .submit-btn {
+  font-size: 0.9rem;
+  padding: 0.7em;
+}
 </style>

@@ -58,4 +58,17 @@ const handleClick = () => {
     margin-bottom: 10px;
     transform: translateY(10px);
   }
+
+  [data-device="mobile"] .box-button {
+    padding-bottom: 6px;
+  }
+
+  [data-device="mobile"] .button {
+    padding: 4px 12px;
+    border-width: 3px;
+  }
+
+  [data-device="mobile"] .button span {
+    font-size: 1em;
+  }
 </style>

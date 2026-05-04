@@ -9,6 +9,8 @@ const router = useRouter()
 
 gsap.registerPlugin(ScrollTrigger)
 
+const isMobile = () => window.__IS_MOBILE__ === true
+
 // 获取画廊外层容器
 const galleryWrapper = ref(null)
 
@@ -17,12 +19,12 @@ let scrollTriggerInstance = null
 
 onMounted(() => {
   if (!galleryWrapper.value) return
+  if (isMobile()) return
 
-  const sec = galleryWrapper.value // 对应原代码中的 .horiz-gallery-wrapper
+  const sec = galleryWrapper.value
   const pinWrap = sec.querySelector('.horiz-gallery-strip')
   if (!pinWrap) return
 
-  // 计算滚动宽度
   let pinWrapWidth
   let horizontalScrollLength
 
@@ -33,7 +35,6 @@ onMounted(() => {
 
   refresh()
 
-  // 创建水平滚动动画
   scrollTween = gsap.to(pinWrap, {
     scrollTrigger: {
       trigger: sec,
@@ -42,7 +43,7 @@ onMounted(() => {
       end: () => `+=${pinWrapWidth}`,
       scrub: true,
       invalidateOnRefresh: true,
-      onRefresh: refresh, // 每次刷新时重新计算宽度
+      onRefresh: refresh,
     },
     x: () => -horizontalScrollLength,
     ease: 'none',
@@ -153,5 +154,28 @@ defineProps({
 }
 .more-details>span{
   text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px rgba(255,255,255,0.5);
+}
+
+[data-device="mobile"] .horiz-gallery-strip {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+[data-device="mobile"] .project-wrap {
+  width: 45vw;
+  padding: 0.5rem;
+}
+[data-device="mobile"] .more-details {
+  margin-left: 0;
+  min-height: 200px;
+}
+[data-device="mobile"] .text-center {
+  margin-left: 20px;
+  font-size: 20px;
+}
+[data-device="mobile"] .text-center::before {
+  width: 80px;
+  margin-bottom: -28px;
+  margin-left: -5px;
 }
 </style>

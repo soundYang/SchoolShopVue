@@ -498,41 +498,64 @@ onMounted(() => {
   padding-right: 16px;
 }
 
-@media (max-width: 768px) {
-  .box {
-    padding: 15px;
-    margin-top: 60px;
-  }
+[data-device="mobile"] .box {
+  margin-top: 56px;
+  padding: 12px;
+  gap: 12px;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  min-height: 100dvh;
+}
 
-  .role-tabs {
-    flex-direction: column;
-    gap: 10px;
-  }
+[data-device="mobile"] .title {
+  font-size: 16px;
+}
 
-  .role-tab {
-    width: 100%;
-    text-align: center;
-  }
+[data-device="mobile"] .title span {
+  font-size: 14px;
+}
 
-  .status-tabs {
-    justify-content: center;
-  }
+[data-device="mobile"] .role-tabs {
+  gap: 10px;
+  padding-bottom: 10px;
+}
 
-  .pagination {
-    gap: 20px;
-  }
+[data-device="mobile"] .role-tab {
+  padding: 8px 14px;
+  font-size: 14px;
+}
 
-  .page-info-wrapper {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
+[data-device="mobile"] .status-tabs {
+  gap: 6px;
+}
 
-  .page-info {
-    border-right: none;
-    padding-right: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    padding-bottom: 8px;
-  }
+[data-device="mobile"] .status-tab {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+[data-device="mobile"] .order-box {
+  row-gap: 12px;
+}
+
+[data-device="mobile"] .pagination {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+[data-device="mobile"] .cta span {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+[data-device="mobile"] .page-info-wrapper {
+  gap: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+[data-device="mobile"] .page-info {
+  padding-right: 8px;
 }
 </style>

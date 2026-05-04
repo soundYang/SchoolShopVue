@@ -78,4 +78,15 @@ useIntersectionObserver(
   outline-offset: 5px;
   border-radius: 10px;
 }
+
+[data-device="mobile"] .tail {
+  min-height: 60vh;
+}
+
+[data-device="mobile"] .text {
+  height: 200px;
+  padding: 10% 5%;
+  font-size: 1rem;
+  max-width: 90vw;
+}
 </style>

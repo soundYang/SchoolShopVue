@@ -14,6 +14,7 @@ const props = defineProps({
 
 const containerStyle = computed(() => ({
   width: props.width,
+  maxWidth: '100%',
   height: props.height
 }))
 
@@ -105,20 +106,20 @@ class Particle {
 }
 
 // 根据画布尺寸动态计算粒子大小范围、采样间隔
-const getAdaptiveParams = (canvasWidth, canvasHeight) => {
-  const area = canvasWidth * canvasHeight
+const getAdaptiveParams = (cssWidth, cssHeight) => {
+  const area = cssWidth * cssHeight
   let particleSizeMin, particleSizeMax, sampleGap
   if (area < 200 * 200) {
     particleSizeMin = 1
-    particleSizeMax = 2.5
+    particleSizeMax = 2
     sampleGap = 3
   } else if (area < 500 * 500) {
-    particleSizeMin = 1.5
-    particleSizeMax = 3.5
+    particleSizeMin = 1
+    particleSizeMax = 2.5
     sampleGap = 4
   } else {
-    particleSizeMin = 2
-    particleSizeMax = 5
+    particleSizeMin = 1.5
+    particleSizeMax = 3.5
     sampleGap = 6
   }
   return { particleSizeRange: { min: particleSizeMin, max: particleSizeMax }, sampleGap }
@@ -202,12 +203,13 @@ const getWhitePixelPoints = (sampleGap) => {
 }
 
 const updateParticlesTargets = () => {
-  if (!ctx || !canvasRef.value) return
+  if (!ctx || !canvasRef.value || !containerRef.value) return
   const newText = getCountdownString()
   if (currentText === newText) return
   currentText = newText
   const canvas = canvasRef.value
-  const { sampleGap } = getAdaptiveParams(canvas.width, canvas.height)
+  const rect = containerRef.value.getBoundingClientRect()
+  const { sampleGap } = getAdaptiveParams(rect.width, rect.height)
 
   // 绘制文字并采样
   ctx.fillStyle = getBodyBackgroundColor()
@@ -231,7 +233,7 @@ const updateParticlesTargets = () => {
     if (particles[i]) {
       particles[i].setTarget(x, y)
     } else {
-      const { particleSizeRange } = getAdaptiveParams(canvas.width, canvas.height)
+      const { particleSizeRange } = getAdaptiveParams(rect.width, rect.height)
       const newParticle = new Particle(canvas.width, canvas.height, particleSizeRange)
       newParticle.setTarget(x, y)
       particles.push(newParticle)
@@ -307,11 +309,16 @@ onUnmounted(() => cleanup())
   position: relative;
   overflow: hidden;
   border-radius: 8px;
+  max-width: 100%;
 }
 .countdown-canvas {
   display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+
+[data-device="mobile"] .countdown-container {
+  height: 100px !important;
 }
 </style>

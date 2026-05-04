@@ -13,7 +13,8 @@ defineOptions({ name: "allProductPage" })
 const mainLabelList = ref([])
 const getLabelList = async () => {
   const res = await LabelGetlistServer('mainLabel')
-  mainLabelList.value = safeArray(res.data?.items)
+  const raw = Array.isArray(res.data) ? res.data[0] : res.data
+  mainLabelList.value = safeArray(raw?.items)
   mainLabelList.value.unshift('全部')
 }
 getLabelList()
@@ -178,5 +179,27 @@ useInfiniteScroll(
   text-align: center;
   padding: 20px;
   color: #999;
+}
+
+[data-device="mobile"] .header {
+  padding: 80px 16px 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: 0;
+}
+
+[data-device="mobile"] .proBox {
+  width: 100%;
+  gap: 12px;
+  justify-content: center;
+}
+
+[data-device="mobile"] .body {
+  padding: 12px;
+}
+
+[data-device="mobile"] .noPro {
+  font-size: 24px;
+  margin-top: 40px;
 }
 </style>

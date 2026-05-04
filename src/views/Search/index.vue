@@ -130,7 +130,7 @@ useInfiniteScroll(
     <ReturnPage />
     <!-- 搜索栏 -->
     <div class="searchBox">
-      
+
       <minSearch class="searchCom" v-model:searchMessage="searchMessage" />
 
     </div>
@@ -191,5 +191,27 @@ useInfiniteScroll(
   font-size: 14px;
   color: #999;
   padding: 20px 0;
+}
+
+[data-device="mobile"] .box {
+  padding-top: 60px;
+}
+
+[data-device="mobile"] .searchBox {
+  width: 100%;
+  padding: 16px;
+  margin-top: 0;
+}
+
+[data-device="mobile"] .shopBox {
+  width: 100%;
+  padding: 16px;
+  gap: 12px;
+  margin-top: 0;
+}
+
+[data-device="mobile"] .promptMsg {
+  padding: 40px;
+  font-size: 16px;
 }
 </style>

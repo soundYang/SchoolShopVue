@@ -286,4 +286,38 @@ onMounted(() => {
   background-color: #ff5858;
 }
 
+[data-device="mobile"] .address-box {
+  padding: 12px;
+  padding-top: 60px;
+}
+
+[data-device="mobile"] .order-title {
+  font-size: 20px;
+  padding-bottom: 12px;
+}
+
+[data-device="mobile"] .card {
+  min-height: auto;
+}
+
+[data-device="mobile"] .order-header {
+  min-height: 140px;
+}
+
+[data-device="mobile"] .address-info {
+  padding: 16px;
+  row-gap: 4px;
+}
+
+[data-device="mobile"] .address-item {
+  font-size: 13px;
+  height: 26px;
+  line-height: 26px;
+  padding-right: 16px;
+  padding-left: 12px;
+}
+
+[data-device="mobile"] .description {
+  min-height: 200px;
+}
 </style>

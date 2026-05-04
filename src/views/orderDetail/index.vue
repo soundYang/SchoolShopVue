@@ -423,4 +423,32 @@ onMounted(() => {
   padding: 0;
   background-color: #ff5858;
 }
+
+[data-device="mobile"] .detail-box {
+  padding: 12px;
+  padding-top: 60px;
+}
+
+[data-device="mobile"] .page-title {
+  font-size: 22px;
+  padding-bottom: 12px;
+}
+
+[data-device="mobile"] .card {
+  min-height: auto;
+}
+
+[data-device="mobile"] .body-content {
+  padding: 12px;
+}
+
+[data-device="mobile"] .section-title {
+  font-size: 15px;
+  margin: 12px 0 10px;
+}
+
+[data-device="mobile"] .loading-page {
+  padding-top: 60px;
+  font-size: 14px;
+}
 </style>
