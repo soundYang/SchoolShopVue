@@ -21,13 +21,14 @@ import navbarCom from './component/navbarCom.vue'
   width: 100%;
   height: 140vh;
   display: flex;
+  font-family: var(--mg-font);
 }
 .manageBox>div{
   margin-top: 66px;
 }
 .navbar{
   flex: 1;
-  border-right: 1px solid white;
+  border-right: var(--mg-border-light);
 }
 .body{
   flex: 5;
@@ -46,7 +47,7 @@ import navbarCom from './component/navbarCom.vue'
 [data-device="mobile"] .navbar{
   flex: none;
   border-right: none;
-  border-bottom: 1px solid white;
+  border-bottom: var(--mg-border-light);
   width: 100%;
   overflow-x: auto;
 }

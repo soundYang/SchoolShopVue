@@ -35,6 +35,7 @@ defineProps({
   display: flex;
   flex-direction: column;
   gap: 12px;
+  font-family: var(--mg-font);
 }
 
 .summary-row {
@@ -44,31 +45,33 @@ defineProps({
 }
 
 .summary-label {
-  color: #aaa;
+  color: var(--mg-black);
   font-size: 14px;
 }
 
 .summary-value {
-  color: #fff;
+  color: var(--mg-black);
   font-size: 14px;
+  font-family: var(--mg-font-mono);
 }
 
 .total-row {
   margin-top: 10px;
   padding-top: 15px;
-  border-top: 2px dashed #555;
+  border-top: 2px dashed var(--mg-black);
 }
 
 .total-price {
   font-size: 28px;
   font-weight: bold;
-  color: #ff5858;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
 .countdown-section {
   margin-top: 20px;
   padding: 15px 0;
-  border-top: 2px dashed #555;
+  border-top: 2px dashed var(--mg-black);
   display: flex;
   justify-content: flex-end;
 }

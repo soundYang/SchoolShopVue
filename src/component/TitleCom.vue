@@ -30,14 +30,14 @@ const arrStr = computed(() => strToArr(props.str))
   height: 72px;
   width: auto;
   margin: 0 0.5rem;
-
-  font-family: "Poppins", sans-serif;
-  font-size: 1.6em;
+  font-family: var(--mg-font-display);
+  font-size: 2em;
   font-weight: 700;
   user-select: none;
-  color: #fff;
-
-  scale: 2.2;
+  color: var(--mg-black);
+  scale: 1.6;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
 .loader {
@@ -47,7 +47,6 @@ const arrStr = computed(() => strToArr(props.str))
   height: 100%;
   width: 100%;
   z-index: 1;
-
   background-color: transparent;
   mask: repeating-linear-gradient(
     90deg,
@@ -65,12 +64,11 @@ const arrStr = computed(() => strToArr(props.str))
   left: 0;
   width: 100%;
   height: 100%;
-
-  background-image: radial-gradient(circle at 50% 50%, #ff0 0%, transparent 50%),
-    radial-gradient(circle at 45% 45%, #f00 0%, transparent 45%),
-    radial-gradient(circle at 55% 55%, #0ff 0%, transparent 45%),
-    radial-gradient(circle at 45% 55%, #0f0 0%, transparent 45%),
-    radial-gradient(circle at 55% 45%, #00f 0%, transparent 45%);
+  background-image: radial-gradient(circle at 50% 50%, var(--mg-accent) 0%, transparent 50%),
+    radial-gradient(circle at 45% 45%, #ff6b6b 0%, transparent 45%),
+    radial-gradient(circle at 55% 55%, #4ecdc4 0%, transparent 45%),
+    radial-gradient(circle at 45% 55%, #45b7d1 0%, transparent 45%),
+    radial-gradient(circle at 55% 45%, #f9ca24 0%, transparent 45%);
   mask: radial-gradient(
     circle at 50% 50%,
     transparent 0%,
@@ -84,25 +82,14 @@ const arrStr = computed(() => strToArr(props.str))
 }
 
 @keyframes transform-animation {
-  0% {
-    transform: translate(-55%);
-  }
-  100% {
-    transform: translate(55%);
-  }
+  0% { transform: translate(-55%); }
+  100% { transform: translate(55%); }
 }
 
 @keyframes opacity-animation {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  65% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 0; }
+  15% { opacity: 1; }
+  65% { opacity: 0; }
 }
 
 .loader-letter {
@@ -112,52 +99,26 @@ const arrStr = computed(() => strToArr(props.str))
   z-index: 2;
 }
 
-.loader-letter:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.loader-letter:nth-child(2) {
-  animation-delay: 0.205s;
-}
-.loader-letter:nth-child(3) {
-  animation-delay: 0.31s;
-}
-.loader-letter:nth-child(4) {
-  animation-delay: 0.415s;
-}
-.loader-letter:nth-child(5) {
-  animation-delay: 0.521s;
-}
-.loader-letter:nth-child(6) {
-  animation-delay: 0.626s;
-}
-.loader-letter:nth-child(7) {
-  animation-delay: 0.731s;
-}
-.loader-letter:nth-child(8) {
-  animation-delay: 0.837s;
-}
-.loader-letter:nth-child(9) {
-  animation-delay: 0.942s;
-}
-.loader-letter:nth-child(10) {
-  animation-delay: 1.047s;
-}
+.loader-letter:nth-child(1) { animation-delay: 0.1s; }
+.loader-letter:nth-child(2) { animation-delay: 0.205s; }
+.loader-letter:nth-child(3) { animation-delay: 0.31s; }
+.loader-letter:nth-child(4) { animation-delay: 0.415s; }
+.loader-letter:nth-child(5) { animation-delay: 0.521s; }
+.loader-letter:nth-child(6) { animation-delay: 0.626s; }
+.loader-letter:nth-child(7) { animation-delay: 0.731s; }
+.loader-letter:nth-child(8) { animation-delay: 0.837s; }
+.loader-letter:nth-child(9) { animation-delay: 0.942s; }
+.loader-letter:nth-child(10) { animation-delay: 1.047s; }
 
 @keyframes loader-letter-anim {
-  0% {
-    opacity: 0;
-  }
+  0% { opacity: 0; }
   5% {
     opacity: 1;
-    text-shadow: 0 0 4px #fff;
+    text-shadow: 2px 2px 0 var(--mg-accent);
     transform: scale(1.1) translateY(-2px);
   }
-  20% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0;
-  }
+  20% { opacity: 0.2; }
+  100% { opacity: 0; }
 }
 
 [data-device="mobile"] .loader-wrapper {

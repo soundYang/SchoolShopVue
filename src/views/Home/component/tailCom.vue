@@ -63,7 +63,7 @@ useIntersectionObserver(
 }
 
 .text {
-  font-family: 'Fraktion Mono', 'Courier New', monospace, 'PingFang SC', 'Microsoft YaHei';
+  font-family: var(--mg-font-display);
   box-sizing: border-box;
   padding: 10% 5% 5% 5%;
   width: 100%;
@@ -71,12 +71,15 @@ useIntersectionObserver(
   text-align: center;
   width: 90vw;
   max-width: 50ch;
+  font-size: 2em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mg-black);
 }
 
 .border {
-  outline: grey 2px dashed;
+  border: var(--mg-border);
   outline-offset: 5px;
-  border-radius: 10px;
 }
 
 [data-device="mobile"] .tail {
@@ -86,7 +89,7 @@ useIntersectionObserver(
 [data-device="mobile"] .text {
   height: 200px;
   padding: 10% 5%;
-  font-size: 1rem;
+  font-size: 1.2rem;
   max-width: 90vw;
 }
 </style>

@@ -38,140 +38,96 @@ const displayText = computed(() => {
 </script>
 
 <style scoped>
-@keyframes glitch-anim {
-  0% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-  }
-  10% {
-    transform: translate(-2px, 1px);
-    clip-path: inset(30% 0 15% 0);
-  }
-  20% {
-    transform: translate(1px, -1px);
-    clip-path: inset(10% 0 55% 0);
-  }
-  30% {
-    transform: translate(-1px, 2px);
-    clip-path: inset(70% 0 5% 0);
-  }
-  40% {
-    transform: translate(2px, -1px);
-    clip-path: inset(45% 0 30% 0);
-  }
-  50% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-  }
-  100% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-/* 伪元素专用关键帧：在动画过程中保持原有的透明度，
-   结束时透明度变为0，从而隐藏伪元素 */
-@keyframes glitch-pseudo-anim {
-  0% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-    opacity: var(--pseudo-opacity, 0.7);
-  }
-  10% {
-    transform: translate(-2px, 1px);
-    clip-path: inset(30% 0 15% 0);
-    opacity: var(--pseudo-opacity, 0.7);
-  }
-  20% {
-    transform: translate(1px, -1px);
-    clip-path: inset(10% 0 55% 0);
-    opacity: var(--pseudo-opacity, 0.7);
-  }
-  30% {
-    transform: translate(-1px, 2px);
-    clip-path: inset(70% 0 5% 0);
-    opacity: var(--pseudo-opacity, 0.7);
-  }
-  40% {
-    transform: translate(2px, -1px);
-    clip-path: inset(45% 0 30% 0);
-    opacity: var(--pseudo-opacity, 0.7);
-  }
-  50% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-    opacity: var(--pseudo-opacity, 0.7);
-  }
-  100% {
-    transform: translate(0);
-    clip-path: inset(0 0 0 0);
-    opacity: 0; /* 动画结束时完全透明，不再影响原文字 */
-  }
-}
-
-.glitch-toast {
+.toast-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  max-width: 300px;
-  background-color: #0d0d0d;
-  border: 1px solid rgba(0, 242, 234, 0.3);
-  box-shadow: 0 0 20px rgba(0, 242, 234, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.5);
-  padding: 12px 20px;
-  font-family: 'Fira Code', Consolas, 'Courier New', Courier, monospace;
-  color: #00f2ea;
-  overflow: hidden;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
 }
 
-.glitch-toast-content {
-  position: relative;
-}
-
-.glitch-toast-text {
-  position: relative;
-  display: inline-block;
-  color: #00f2ea;
+.toast-item {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 260px;
+  max-width: 380px;
+  padding: 14px 20px;
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
+  font-family: var(--mg-font);
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  /* 主文字动画：播放一次，结束后回到默认样式（无透明度问题） */
-  animation: glitch-anim 1.5s 1 cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  /* 注意：没有 forwards，动画结束后使用自身样式 */
+  color: var(--mg-black);
+  animation: toastEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.glitch-toast-text::before,
-.glitch-toast-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #0d0d0d;
-  clip-path: inset(0 0 0 0);
-  /* 使用伪元素专用关键帧，播放一次并保持最后一帧（透明） */
-  animation: glitch-pseudo-anim 1.5s 1 cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  /* 默认透明度由变量控制，动画过程会使用关键帧中定义的变量值 */
+.toast-item.removing {
+  animation: toastExit 0.3s ease-in forwards;
 }
 
-.glitch-toast-text::before {
-  --pseudo-opacity: 0.7; /* 原 before 的透明度 */
-  color: #a855f7;
+@keyframes toastEnter {
+  0% { opacity: 0; transform: translateX(120px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
-.glitch-toast-text::after {
-  --pseudo-opacity: 0.5; /* 原 after 的透明度 */
-  color: #00f2ea;
+@keyframes toastExit {
+  0% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(120px) scale(0.9); }
 }
 
-/* 淡入淡出过渡 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.toast-icon.success { color: #2ecc71; }
+.toast-icon.error { color: #e74c3c; }
+.toast-icon.warning { color: #f39c12; }
+.toast-icon.info { color: #3498db; }
+
+.toast-msg {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.toast-close {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--mg-black);
+  background: none;
+  border: none;
+  line-height: 1;
+}
+
+.toast-close:hover {
+  background: var(--mg-gray);
+}
+
+[data-device="mobile"] .toast-container {
+  bottom: 16px;
+  right: 16px;
+  left: 16px;
+}
+
+[data-device="mobile"] .toast-item {
+  min-width: 0;
+  max-width: 100%;
+  padding: 12px 16px;
+  font-size: 13px;
 }
 </style>

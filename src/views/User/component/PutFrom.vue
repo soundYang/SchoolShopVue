@@ -73,20 +73,19 @@ const putInfo = async () => {
 <style scoped>
   .form {
     --input-focus: #2d8cf0;
-    --font-color: #323232;
+    --font-color: #000;
     --font-color-sub: #666;
     --bg-color: #fff;
-    --main-color: #323232;
+    --main-color: #000;
     padding: 20px;
-    background: lightgrey;
+    background: var(--mg-white);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 20px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    box-shadow: 4px 4px var(--main-color);
+    border: var(--mg-border);
+    box-shadow: var(--mg-shadow);
   }
 
   .title {
@@ -94,26 +93,28 @@ const putInfo = async () => {
     font-weight: 900;
     font-size: 20px;
     margin-bottom: 25px;
+    font-family: var(--mg-font);
   }
 
   .title span {
     color: var(--font-color-sub);
     font-weight: 600;
     font-size: 17px;
+    font-family: var(--mg-font);
   }
 
   .input {
     width: 250px;
     height: 40px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
+    border: var(--mg-border-light);
     background-color: var(--bg-color);
-    box-shadow: 4px 4px var(--main-color);
+    box-shadow: var(--mg-shadow-sm);
     font-size: 15px;
     font-weight: 600;
     color: var(--font-color);
     padding: 5px 10px;
     outline: none;
+    font-family: var(--mg-font);
   }
 
   .input::placeholder {
@@ -122,20 +123,26 @@ const putInfo = async () => {
   }
 
   .input:focus {
-    border: 2px solid var(--input-focus);
+    border: 2px solid var(--mg-black);
   }
 
   .button-confirm {
     margin: 50px auto 0 auto;
     width: 120px;
     height: 40px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
+    border: var(--mg-border-light);
     background-color: var(--bg-color);
-    box-shadow: 4px 4px var(--main-color);
+    box-shadow: var(--mg-shadow-sm);
     font-size: 17px;
     font-weight: 600;
     color: var(--font-color);
     cursor: pointer;
+    font-family: var(--mg-font);
+    transition: all 0.1s;
+  }
+
+  .button-confirm:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--mg-shadow);
   }
 </style>

@@ -111,14 +111,13 @@ const handleDrop = (targetIndex, event) => {
   position: absolute;
   height: 392px;
   width: 264px;
-  background-color: #ebebeb;
-  border: 5px solid #ffffff;
-  border-bottom: 40px solid #ffffff;
+  background-color: var(--mg-white);
+  border: var(--mg-border);
+  border-bottom: 40px solid var(--mg-white);
   left: 50%;
   top: 50%;
   translate: -50% -50%;
-  border-radius: 8%;
-  box-shadow: #c7c7c7 -2px 2px 4px;
+  box-shadow: var(--mg-shadow);
   transform-origin: bottom left;
   scale: 1;
   transition-duration: 200ms;
@@ -133,8 +132,8 @@ const handleDrop = (targetIndex, event) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 20px;
   cursor: grab;
+  display: block;
 }
 
 .proImg:active {
@@ -146,20 +145,16 @@ const handleDrop = (targetIndex, event) => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #999;
+  color: var(--mg-black);
   font-size: 18px;
+  font-family: var(--mg-font);
 }
 
 [data-device="mobile"] .card {
   height: 196px;
   width: 132px;
-  border-width: 3px;
+  border-width: 2px;
   border-bottom-width: 20px;
-  border-radius: 6%;
-}
-
-[data-device="mobile"] .proImg {
-  border-radius: 10px;
 }
 
 [data-device="mobile"] .no-images {

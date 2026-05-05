@@ -133,16 +133,20 @@ const buyShop = () => {
 <style scoped>
 .detailBox{
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding: 100px;
   display: flex;
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
+  box-sizing: border-box;
 }
 .proImgBox{
    flex: 3;
 }
 .proMsgBox{
    flex: 2.5;
-   font-family: '华文新魏';
+   font-family: var(--mg-font);
    padding: 30px;
 }
 .top{
@@ -153,10 +157,11 @@ const buyShop = () => {
 .header>h1{
    margin-left: -50px;
    font-size: 50px;
+   font-family: var(--mg-font-display);
 }
 .header>p{
    margin-top: 30px;
-   color: rgb(192, 191, 191);
+   color: #666;
    font-size: 20px;
    word-wrap: break-word;
    overflow-wrap: break-word;
@@ -171,7 +176,7 @@ const buyShop = () => {
 .sellInfoBox>img{
   width: 200px;
   height: 200px;
-  border-radius: 50%;
+  border: var(--mg-border-light);
 }
 .bottom{
    width: 100%;
@@ -184,8 +189,10 @@ const buyShop = () => {
 }
 .label>span{
    display: block;
-   color: rgb(136, 134, 134);
-   border-bottom: 1px solid aqua;
+   color: var(--mg-black);
+   border-bottom: var(--mg-border-light);
+   font-weight: 600;
+   padding: 4px 0;
 }
 
 .bottom{
@@ -195,7 +202,10 @@ const buyShop = () => {
    row-gap: 50px;
 }
 
-/* 按钮 */
+.bottom h1, .bottom h3 {
+  font-family: var(--mg-font-display);
+}
+
 .countBox{
    display: flex;
    gap: 20px;
@@ -207,16 +217,37 @@ const buyShop = () => {
    width: 30px;
    height: 30px;
 }
+.countBox .button {
+  border: var(--mg-border-light);
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 30px;
+  transition: all 0.1s;
+}
+.countBox .button:hover {
+  background: var(--mg-black);
+  color: var(--mg-white);
+}
+.countBox span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: var(--mg-font-mono);
+}
 
 .self-product-hint {
   width: fit-content;
   padding: 10px 20px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  color: #999;
+  border: var(--mg-border-light);
+  color: var(--mg-black);
   font-size: 14px;
   cursor: not-allowed;
   user-select: none;
+  background: var(--mg-gray);
 }
 
 [data-device="mobile"] .detailBox {

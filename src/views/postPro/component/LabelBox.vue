@@ -88,71 +88,84 @@ const confirmLabel = () => {
 
 <style scoped>
   .form {
-    --input-focus: #2d8cf0;
-    --font-color: #323232;
-    --font-color-sub: #666;
-    --bg-color: #fff;
-    --main-color: #323232;
     padding: 20px;
-    background: lightgrey;
+    background: var(--mg-white);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 20px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    box-shadow: 4px 4px var(--main-color);
+    border: var(--mg-border);
+    box-shadow: var(--mg-shadow);
   }
 
   .title {
-    color: var(--font-color);
+    color: var(--mg-black);
     font-weight: 900;
     font-size: 20px;
     margin-bottom: 25px;
+    font-family: var(--mg-font-display);
   }
 
   .title span {
-    color: var(--font-color-sub);
+    color: var(--mg-black);
     font-weight: 600;
     font-size: 17px;
+    font-family: var(--mg-font);
+  }
+
+  h3 {
+    font-family: var(--mg-font);
+    color: var(--mg-black);
+    margin-bottom: 8px;
   }
 
   .input {
     width: 250px;
     height: 40px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    background-color: var(--bg-color);
-    box-shadow: 4px 4px var(--main-color);
+    border: var(--mg-border-light);
+    background-color: var(--mg-white);
+    box-shadow: var(--mg-shadow-sm);
     font-size: 15px;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--mg-black);
     padding: 5px 10px;
     outline: none;
+    font-family: var(--mg-font);
   }
 
   .input::placeholder {
-    color: var(--font-color-sub);
+    color: var(--mg-black);
     opacity: 0.8;
   }
 
   .input:focus {
-    border: 2px solid var(--input-focus);
+    border-color: var(--mg-black);
+    box-shadow: var(--mg-shadow-sm);
   }
 
   .button-confirm {
     margin: 50px auto 0 auto;
     width: 120px;
     height: 40px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    background-color: var(--bg-color);
-    box-shadow: 4px 4px var(--main-color);
+    border: var(--mg-border-light);
+    background-color: var(--mg-black);
+    box-shadow: var(--mg-shadow-sm);
     font-size: 17px;
     font-weight: 600;
-    color: var(--font-color);
+    color: var(--mg-white);
     cursor: pointer;
+    font-family: var(--mg-font);
+  }
+
+  .button-confirm:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--mg-shadow);
+  }
+
+  .button-confirm:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
   }
 
   ul{
@@ -161,7 +174,27 @@ const confirmLabel = () => {
     flex-wrap: wrap;
   }
 
+  li {
+    font-family: var(--mg-font);
+    color: var(--mg-black);
+    border: var(--mg-border-light);
+    padding: 4px 12px;
+    cursor: pointer;
+    box-shadow: var(--mg-shadow-sm);
+  }
+
+  li:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--mg-shadow);
+  }
+
+  li:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+  }
+
   .active{
-    color: aqua;
+    background: var(--mg-black);
+    color: var(--mg-white);
   }
 </style>

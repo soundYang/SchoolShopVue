@@ -39,27 +39,27 @@ const subPro = async () => {
   if (!setImgList()) {
     return showToast('请至少上传一张商品图片')
   }
-  
+
   // 验证字段
   for (let [key, value] of Object.entries(proFromRegx)) {
     if (!value.regx.test(proFrom.value[key])) {
       return showToast(value.message)
     }
   }
-  
+
   // 验证商品类型
   if (!proFrom.value.shopType.length) {
     return showToast('请选择商品类型')
   }
-  
+
   // 验证地址
   if (!proFrom.value.publishAddress || !Object.keys(proFrom.value.publishAddress).length) {
     return showToast('请选择发货地址')
   }
-  
+
   // 构建 FormData
   const formData = new FormData()
-  
+
   // 添加普通字段
   formData.append('shopName', proFrom.value.shopName)
   formData.append('shopPrice', proFrom.value.shopPrice)
@@ -69,14 +69,14 @@ const subPro = async () => {
   formData.append('isBlinBox', proFrom.value.isBlinBox)
   formData.append('shopType', JSON.stringify(proFrom.value.shopType))
   formData.append('publishAddress', JSON.stringify(proFrom.value.publishAddress))
-  
+
   // 添加图片文件
   if (proFrom.value.shopImg && proFrom.value.shopImg.length) {
     proFrom.value.shopImg.forEach((file) => {
       formData.append('shopImg', file)
     })
   }
-  
+
   // 调用上传接口
   await pushProduct(formData)
 }
@@ -84,7 +84,7 @@ const subPro = async () => {
 
 <template>
   <button @click.prevent="subPro">
-    <span> 
+    <span>
       提交
     </span>
   </button>
@@ -93,59 +93,28 @@ const subPro = async () => {
 <style scoped>
   button {
    position: relative;
-   height: 30px;
+   height: 36px;
    padding: 0 30px;
-   border: 2px solid #000;
-   background: #e8e8e8;
+   border: var(--mg-border-light);
+   background: var(--mg-black);
    user-select: none;
    white-space: nowrap;
-   transition: all .05s linear;
-   font-family: inherit;
-  }
-
-  button:before, button:after {
-   content: "";
-   position: absolute;
-   background: #e8e8e8;
-   transition: all .2s linear;
-  }
-
-  button:before {
-   width: calc(100% + 6px);
-   height: calc(100% - 16px);
-   top: 8px;
-   left: -3px;
-  }
-
-  button:after {
-   width: calc(100% - 16px);
-   height: calc(100% + 6px);
-   top: -3px;
-   left: 8px;
+   transition: all .15s;
+   font-family: var(--mg-font);
+   color: var(--mg-white);
+   font-weight: 600;
+   font-size: 14px;
+   cursor: pointer;
+   box-shadow: var(--mg-shadow-sm);
   }
 
   button:hover {
-   cursor: crosshair;
+   transform: translate(-2px, -2px);
+   box-shadow: var(--mg-shadow);
   }
 
   button:active {
-   transform: scale(0.95);
-  }
-
-  button:hover:before {
-   height: calc(100% - 32px);
-   top: 16px;
-  }
-
-  button:hover:after {
-   width: calc(100% - 32px);
-   left: 16px;
-  }
-
-  button span {
-   font-size: 15px;
-   z-index: 3;
-   position: relative;
-   font-weight: 600;
+   transform: translate(1px, 1px);
+   box-shadow: none;
   }
 </style>

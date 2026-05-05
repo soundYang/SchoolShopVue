@@ -39,15 +39,16 @@ putMsg()
 .input {
   width: 150px;
   padding: 10px 0px 10px 40px;
-  border-radius: 9999px;
-  border: solid 1px #333;
+  border: var(--mg-border-light);
   transition: all .2s ease-in-out;
   outline: none;
-  opacity: 0.8;
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .container-input i{
-  color: black;
+  color: var(--mg-black);
   position: absolute;
   top: 50%;
   left: 10px;
@@ -55,7 +56,7 @@ putMsg()
 }
 
 .input:focus {
-  opacity: 1;
   width: 250px;
+  box-shadow: var(--mg-shadow-sm);
 }
 </style>

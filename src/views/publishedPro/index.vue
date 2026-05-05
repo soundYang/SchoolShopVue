@@ -104,23 +104,22 @@ defineOptions({
 </template>
 
 <style scoped>
-/* 原有样式 */
 .box {
   --input-focus: #2d8cf0;
-  --font-color: #323232;
+  --font-color: #000;
   --font-color-sub: #666;
   --bg-color: #fff;
-  --main-color: #323232;
+  --main-color: #000;
   padding: 20px;
-  background: lightgrey;
+  background: var(--mg-white);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-radius: 5px;
-  border: 2px solid var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  font-family: var(--mg-font);
 }
 
 .title {
@@ -148,7 +147,6 @@ defineOptions({
   padding: 40px 0;
 }
 
-/* 分页样式 */
 .pagination {
   display: flex;
   justify-content: center;
@@ -156,12 +154,11 @@ defineOptions({
   gap: 32px;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #ddd;
+  border-top: var(--mg-border-light);
 }
 
-/* 按钮基础样式 */
 .cta {
-  position: relative;        /* 为伪元素定位提供参考 */
+  position: relative;
   border: none;
   background: none;
   cursor: pointer;
@@ -171,7 +168,7 @@ defineOptions({
   gap: 8px;
   padding: 0;
   transition: all 0.2s ease;
-  overflow: visible;        /* 确保箭头超出按钮时不被裁剪 */
+  overflow: visible;
 }
 
 .cta:disabled {
@@ -186,9 +183,9 @@ defineOptions({
   text-transform: uppercase;
   font-weight: 500;
   color: var(--font-color);
+  font-family: var(--mg-font);
 }
 
-/* 统一箭头样式（伪元素） */
 .cta::after {
   content: '';
   position: absolute;
@@ -201,25 +198,22 @@ defineOptions({
   transform-origin: center;
 }
 
-/* 下一页箭头：指向右，初始隐藏在右侧外部（向左偏移），悬停时归位 */
 .next::after {
-  right: -24px;                    /* 定位在按钮右侧外部，距离文字更远 */
+  right: -24px;
   transform: translateY(-50%) rotate(45deg) translateX(-12px);
 }
 .next:hover:not(:disabled)::after {
   transform: translateY(-50%) rotate(45deg) translateX(0);
 }
 
-/* 上一页箭头：指向左，初始隐藏在左侧外部（向右偏移），悬停时归位 */
 .prev::after {
-  left: -24px;                     /* 定位在按钮左侧外部，距离文字更远 */
+  left: -24px;
   transform: translateY(-50%) rotate(-135deg) translateX(12px);
 }
 .prev:hover:not(:disabled)::after {
   transform: translateY(-50%) rotate(-135deg) translateX(0);
 }
 
-/* 下划线动画 - 默认从左侧出现（右侧按钮用） */
 .hover-underline-animation {
   position: relative;
   padding-bottom: 20px;
@@ -234,35 +228,31 @@ defineOptions({
   bottom: 0;
   left: 0;
   background-color: var(--main-color);
-  transform-origin: bottom right;   /* 默认从右往左消失？实际需要控制方向 */
+  transform-origin: bottom right;
   transition: transform 0.25s ease-out;
 }
 
-/* 下一页按钮下划线：从左向右展开（默认动画） */
 .next:hover:not(:disabled) .hover-underline-animation:after {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
 
-/* 上一页按钮下划线：从右向左展开 */
 .prev .hover-underline-animation:after {
-  transform-origin: bottom left;    /* 初始从左边开始收缩（实际未展开） */
+  transform-origin: bottom left;
 }
 .prev:hover:not(:disabled) .hover-underline-animation:after {
   transform: scaleX(1);
-  transform-origin: bottom right;   /* 从右向左展开 */
+  transform-origin: bottom right;
 }
 
-/* 页码信息样式 */
 .page-info-wrapper {
   display: flex;
   gap: 16px;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--mg-gray);
   padding: 6px 16px;
-  border-radius: 40px;
-  backdrop-filter: blur(2px);
   font-size: 14px;
   color: var(--font-color);
+  border: var(--mg-border-light);
 }
 
 .page-info,
@@ -272,7 +262,7 @@ defineOptions({
 }
 
 .page-info {
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: var(--mg-border-light);
   padding-right: 16px;
 }
 

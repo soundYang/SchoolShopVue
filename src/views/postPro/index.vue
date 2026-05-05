@@ -188,16 +188,21 @@ onUnmounted(() => {
 <style scoped>
 .title {
   font-size: 25px;
-  font-family: '华文新魏';
-  font-weight: 100;
+  font-family: var(--mg-font-display);
+  font-weight: 700;
   margin-bottom: 20px;
+  color: var(--mg-black);
 }
 
 .postProBox {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
+  padding-top: 80px;
 }
 
 .photoBox {
@@ -207,20 +212,18 @@ onUnmounted(() => {
   display: flex;
   box-sizing: border-box;
   gap: 20px;
-  border-bottom: 1px solid white;
+  border-bottom: var(--mg-border-light);
   position: relative;
 }
 
 .postImg {
   flex: 1;
   position: relative;
-  border-radius: 20px;
   opacity: 0;
   z-index: 2;
   cursor: pointer;
 }
 
-/* 美化上传按钮 */
 .photoBox::before {
   content: '+';
   position: absolute;
@@ -229,15 +232,15 @@ onUnmounted(() => {
   width: calc((100% - 40px - 20px) / 6 - 10px);
   min-width: 100px;
   height: calc(100% - 40px);
-  background: #e8e8e8;
-  border-radius: 20px;
+  background: var(--mg-gray);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 100px;
-  color: #090909;
+  color: var(--mg-black);
   pointer-events: none;
   z-index: 1;
+  border: var(--mg-border-light);
 }
 
 .imgShow {
@@ -266,8 +269,7 @@ onUnmounted(() => {
 .imgShow img {
   height: 100%;
   width: 280px;
-  border: 1px solid white;
-  border-radius: 10px;
+  border: var(--mg-border-light);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -278,25 +280,26 @@ onUnmounted(() => {
   right: 5px;
   width: 25px;
   height: 25px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  background: var(--mg-black);
+  color: var(--mg-white);
   border: none;
   font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
+  transition: all 0.1s;
+  font-family: var(--mg-font-mono);
 }
 
 .remove-btn:hover {
-  background: rgba(255, 0, 0, 0.8);
+  background: #ff4444;
   transform: scale(1.1);
 }
 
 [data-device="mobile"] .postProBox {
   padding: 12px;
+  padding-top: 60px;
 }
 
 [data-device="mobile"] .title {

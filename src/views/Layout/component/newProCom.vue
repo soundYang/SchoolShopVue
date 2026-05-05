@@ -36,35 +36,37 @@ const getCardStyle = (index, total) => {
 </template>
 
 <style scoped>
-/* 空状态提示 */
 .empty-hint {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 200px;
-  color: #999;
+  color: var(--mg-gray-dark);
   font-size: 18px;
   letter-spacing: 2px;
+  font-family: var(--mg-font);
 }
 
-/* 标题样式保持不变 */
 .title {
   margin-left: 70px;
   margin-bottom: 20px;
   transform: skewX(-20deg);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--mg-font-display);
+  font-size: 2em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mg-black);
 }
 .title::before {
   content: "";
   display: block;
   width: 120px;
-  height: 2px;
-  background: white;
+  height: 3px;
+  background: var(--mg-black);
   margin-bottom: -40px;
   margin-left: -5px;
 }
 
-/* 全局动画定义不变 */
 @keyframes autoRun3d {
   from {
     transform: perspective(800px) rotateY(-360deg);
@@ -89,7 +91,7 @@ const getCardStyle = (index, total) => {
 .card-3d {
   position: relative;
   width: 100%;
-  height: 20vw;          /* 根据需求调整，例如 300px */
+  height: 20vw;
   transform-style: preserve-3d;
   transform: perspective(800px);
   animation: autoRun3d 20s linear infinite;
@@ -101,9 +103,8 @@ const getCardStyle = (index, total) => {
   position: absolute;
   width: 200px;
   height: 330px;
-  background-color: rgb(199, 199, 199);
-  border: solid 2px lightgray;
-  border-radius: 0.5rem;
+  background-color: var(--mg-white);
+  border: var(--mg-border-light);
   top: 50%;
   left: 50%;
   transform-origin: center center;
@@ -112,15 +113,12 @@ const getCardStyle = (index, total) => {
   will-change: transform, filter;
 }
 
-/* 悬停任意卡片时暂停所有动画 */
 .card-3d:has(div:hover) {
   animation-play-state: paused !important;
 }
 .card-3d:has(div:hover) div {
   animation-play-state: paused !important;
 }
-
-/* 移除所有静态的 nth-child 样式，现在通过内联样式动态控制 */
 
 [data-device="mobile"] .title {
   margin-left: 20px;

@@ -370,9 +370,9 @@ onMounted(() => {
 <style scoped>
 .page-title {
   padding-bottom: 20px;
-  font-family: '华文新魏';
+  font-family: var(--mg-font-display);
   font-size: 30px;
-  color: #323232;
+  color: var(--mg-black);
 }
 
 .loading-page {
@@ -381,9 +381,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--mg-black);
   font-size: 18px;
   padding-top: 80px;
+  font-family: var(--mg-font);
 }
 
 .detail-box {
@@ -395,22 +396,24 @@ onMounted(() => {
 .card {
   width: 100%;
   min-height: 60vh;
-  background: rgb(38, 38, 38);
-  box-shadow: 7px 5px 10px rgba(0, 0, 0, 0.333);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
 }
 
 .body-content {
   padding: 20px;
-  color: white;
+  color: var(--mg-black);
 }
 
 .section-title {
   font-size: 18px;
   font-weight: bold;
-  color: #FAC921;
+  color: var(--mg-black);
   margin: 20px 0 15px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #555;
+  border-bottom: var(--mg-border-light);
+  font-family: var(--mg-font);
 }
 
 .section-title:first-of-type {
@@ -421,7 +424,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   padding: 0;
-  background-color: #ff5858;
+  background-color: var(--mg-black);
 }
 
 [data-device="mobile"] .detail-box {

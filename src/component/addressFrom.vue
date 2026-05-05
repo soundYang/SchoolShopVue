@@ -116,20 +116,19 @@ const checkInfo = () => {
 <style scoped>
 .form {
   --input-focus: #2d8cf0;
-  --font-color: #323232;
+  --font-color: #000;
   --font-color-sub: #666;
   --bg-color: #fff;
-  --main-color: #323232;
+  --main-color: #000;
   padding: 20px;
-  background: lightgrey;
+  background: var(--mg-white);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 20px;
-  border-radius: 5px;
-  border: 2px solid var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
 }
 
 .title {
@@ -137,26 +136,28 @@ const checkInfo = () => {
   font-weight: 900;
   font-size: 20px;
   margin-bottom: 25px;
+  font-family: var(--mg-font);
 }
 
 .title span {
   color: var(--font-color-sub);
   font-weight: 600;
   font-size: 17px;
+  font-family: var(--mg-font);
 }
 
 .input {
   width: 250px;
   height: 40px;
-  border-radius: 5px;
-  border: 2px solid var(--main-color);
+  border: var(--mg-border-light);
   background-color: var(--bg-color);
-  box-shadow: 4px 4px var(--main-color);
+  box-shadow: var(--mg-shadow-sm);
   font-size: 15px;
   font-weight: 600;
   color: var(--font-color);
   padding: 5px 10px;
   outline: none;
+  font-family: var(--mg-font);
 }
 
 .input::placeholder {
@@ -165,24 +166,29 @@ const checkInfo = () => {
 }
 
 .input:focus {
-  border: 2px solid var(--input-focus);
+  border: 2px solid var(--mg-black);
 }
 
 .button-confirm {
   margin: 50px auto 0 auto;
   width: 120px;
   height: 40px;
-  border-radius: 5px;
-  border: 2px solid var(--main-color);
+  border: var(--mg-border-light);
   background-color: var(--bg-color);
-  box-shadow: 4px 4px var(--main-color);
+  box-shadow: var(--mg-shadow-sm);
   font-size: 17px;
   font-weight: 600;
   color: var(--font-color);
   cursor: pointer;
+  font-family: var(--mg-font);
+  transition: all 0.1s;
 }
 
-/* 自定义复选框容器 */
+.button-confirm:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
+}
+
 .checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -191,7 +197,6 @@ const checkInfo = () => {
   user-select: none;
 }
 
-/* 隐藏原生复选框 */
 .checkbox-hidden {
   position: absolute;
   opacity: 0;
@@ -201,41 +206,36 @@ const checkInfo = () => {
   pointer-events: none;
 }
 
-/* 自定义圆形复选框 */
 .checkbox-custom {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  border: 2px solid var(--main-color);
+  border: 2px solid var(--mg-black);
   background-color: var(--bg-color);
-  box-shadow: 4px 4px var(--main-color);
+  box-shadow: var(--mg-shadow-sm);
   transition: all 0.2s ease;
   display: inline-block;
   box-sizing: border-box;
 }
 
-/* 选中状态样式 */
 .checkbox-hidden:checked + .checkbox-custom {
-  background-color: var(--input-focus); /* 选中时背景色变蓝，可自定义 */
-  border-color: var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--mg-black);
+  border-color: var(--mg-black);
+  box-shadow: var(--mg-shadow-sm);
 }
 
-/* 可选：添加一个内圆点表示选中，更符合圆形的视觉习惯 */
 .checkbox-hidden:checked + .checkbox-custom::after {
   content: "";
   display: block;
   width: 8px;
   height: 8px;
   background: white;
-  border-radius: 50%;
-  margin: 5px auto; /* 居中，取决于实际尺寸 */
+  margin: 4px auto;
 }
 
-/* 文字样式 */
 .checkbox-text {
   color: var(--font-color);
   font-size: 15px;
   font-weight: 500;
+  font-family: var(--mg-font);
 }
 </style>

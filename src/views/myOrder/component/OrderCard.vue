@@ -134,17 +134,15 @@ const formatTime = (time) => {
 
 <style scoped>
 .order-card {
-  background: white;
-  border-radius: 8px;
-  border: 2px solid var(--main-color);
-  box-shadow: 3px 3px var(--main-color);
-  overflow: hidden;
-  transition: transform 0.3s;
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow-sm);
+  font-family: var(--mg-font);
 }
 
 .order-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 4px var(--main-color);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
 }
 
 .order-header-right {
@@ -154,12 +152,13 @@ const formatTime = (time) => {
 }
 
 .blind-box-tag {
-  background: #FAC921;
-  color: #333;
+  background: var(--mg-black);
+  color: var(--mg-white);
   font-size: 11px;
   font-weight: bold;
+  font-family: var(--mg-font-mono);
   padding: 2px 8px;
-  border-radius: 4px;
+  border: var(--mg-border-light);
 }
 
 .order-header {
@@ -167,13 +166,13 @@ const formatTime = (time) => {
   justify-content: space-between;
   align-items: center;
   padding: 12px 15px;
-  background: #f8f8f8;
-  border-bottom: 1px solid #ddd;
+  background: var(--mg-gray);
+  border-bottom: var(--mg-border-light);
 }
 
 .order-id {
   font-size: 14px;
-  color: var(--font-color-sub);
+  color: var(--mg-black);
 }
 
 .order-status {
@@ -190,16 +189,15 @@ const formatTime = (time) => {
   gap: 15px;
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: var(--mg-border-light);
 }
 
 .product-image {
   width: 80px;
   height: 80px;
-  border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
-  border: 1px solid #ddd;
+  border: var(--mg-border-light);
 }
 
 .product-image img {
@@ -211,12 +209,13 @@ const formatTime = (time) => {
 .image-placeholder {
   width: 100%;
   height: 100%;
-  background: #f0f0f0;
+  background: var(--mg-gray);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: var(--mg-black);
   font-size: 12px;
+  font-family: var(--mg-font-mono);
 }
 
 .product-details {
@@ -230,19 +229,20 @@ const formatTime = (time) => {
   margin: 0 0 8px 0;
   font-size: 14px;
   font-weight: bold;
-  color: var(--font-color);
+  color: var(--mg-black);
   line-height: 1.4;
 }
 
 .product-price {
   font-size: 16px;
   font-weight: bold;
-  color: #ff5858;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
 .product-quantity {
   font-size: 12px;
-  color: var(--font-color-sub);
+  color: var(--mg-black);
 }
 
 .order-summary {
@@ -253,7 +253,7 @@ const formatTime = (time) => {
 
 .order-countdown {
   padding: 8px 0;
-  border-top: 1px solid #f0f0f0;
+  border-top: var(--mg-border-light);
   display: flex;
   justify-content: flex-end;
 }
@@ -265,67 +265,73 @@ const formatTime = (time) => {
 }
 
 .summary-label {
-  color: var(--font-color-sub);
+  color: var(--mg-black);
   font-size: 12px;
 }
 
 .summary-value {
-  color: var(--font-color);
+  color: var(--mg-black);
   font-size: 12px;
+  font-family: var(--mg-font-mono);
 }
 
 .order-actions {
   display: flex;
   justify-content: flex-end;
   padding: 12px 15px;
-  background: #f8f8f8;
-  border-top: 1px solid #ddd;
+  background: var(--mg-gray);
+  border-top: var(--mg-border-light);
   gap: 8px;
 }
 
 .action-btn {
   padding: 4px 12px;
-  border: 2px solid var(--main-color);
-  border-radius: 4px;
+  border: var(--mg-border-light);
   font-size: 11px;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 1px 1px var(--main-color);
+  transition: all 0.2s;
+  box-shadow: var(--mg-shadow-sm);
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
+}
+
+.action-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow);
+}
+
+.action-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
 }
 
 .pay-btn {
-  background: #ff5858;
-  color: white;
-  border-color: #ff5858;
+  background: var(--mg-black);
+  color: var(--mg-white);
+  border-color: var(--mg-black);
   font-weight: bold;
 }
 
 .pay-btn:hover {
-  background: #ff3333;
-  transform: translateY(-1px);
-  box-shadow: 3px 3px #ff5858;
+  background: var(--mg-black);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow);
 }
 
 .view-btn {
-  background: white;
-  color: var(--font-color);
-}
-
-.view-btn:hover {
-  background: #f0f0f0;
-  transform: translateY(-1px);
-  box-shadow: 3px 3px var(--main-color);
+  background: var(--mg-white);
+  color: var(--mg-black);
 }
 
 .cancel-btn {
-  background: #ff5858;
-  color: white;
-  border: 2px solid #ff5858;
+  background: var(--mg-black);
+  color: var(--mg-white);
+  border-color: var(--mg-black);
 }
 
 .cancel-btn:hover {
-  background: #e04a4a;
-  border-color: #e04a4a;
+  background: var(--mg-black);
 }
 
 .order-actions :deep(.box-button) {

@@ -28,8 +28,9 @@ ul{
   list-style: none;
 }
 body{
-  background: rgb(33, 33, 33);
-  color: white;
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 html {
   overflow: scroll;
@@ -53,6 +54,20 @@ html::-webkit-scrollbar {
   --show-mobile: none;
   --base-font: 16px;
   --btn-scale: 1;
+
+  --mg-font: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --mg-font-display: 'Black Han Sans', 'Courier New', Courier, monospace;
+  --mg-font-mono: 'Courier New', 'Fira Code', monospace;
+  --mg-border: 3px solid #000;
+  --mg-border-light: 2px solid #000;
+  --mg-shadow: 6px 6px 0 #000;
+  --mg-shadow-sm: 3px 3px 0 #000;
+  --mg-shadow-hover: 8px 8px 0 #000;
+  --mg-white: #fff;
+  --mg-black: #000;
+  --mg-gray: #f5f5f5;
+  --mg-gray-dark: #e0e0e0;
+  --mg-accent: #ffd700;
 }
 
 [data-device="mobile"] {

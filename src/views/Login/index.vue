@@ -288,33 +288,21 @@ onMounted(() => fetchCaptcha())
 </template>
 
 <style scoped>
-/* --- Root Variables --- */
-.glitch-form-wrapper {
-  --bg-color: #0d0d0d;
-  --primary-color: #00f2ea;
-  --secondary-color: #a855f7;
-  --text-color: #e5e5e5;
-  --font-family: "Fira Code", Consolas, "Courier New", Courier, monospace;
-  --glitch-anim-duration: 0.5s;
-}
-
 .glitch-form-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: var(--font-family);
-  background-color: #050505;
+  font-family: var(--mg-font);
+  background-color: var(--mg-white);
   min-height: 100vh;
 }
 
-/* --- Card --- */
 .glitch-card {
-  background-color: var(--bg-color);
+  background-color: var(--mg-white);
   width: 100%;
-  max-width: 380px;
-  border: 1px solid rgba(0, 242, 234, 0.2);
-  box-shadow: 0 0 20px rgba(0, 242, 234, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+  max-width: 420px;
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   margin: 1rem;
 }
 
@@ -322,17 +310,18 @@ onMounted(() => fetchCaptcha())
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 0.5em 1em;
-  border-bottom: 1px solid rgba(0, 242, 234, 0.2);
+  background-color: var(--mg-gray);
+  padding: 0.8em 1.2em;
+  border-bottom: var(--mg-border-light);
 }
 
 .card-title {
-  color: var(--primary-color);
-  font-size: 0.8rem;
-  font-weight: 700;
+  color: var(--mg-black);
+  font-size: 1rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
+  font-family: var(--mg-font-display);
 }
 
 .changeBtn {
@@ -343,7 +332,6 @@ onMounted(() => fetchCaptcha())
   padding: 1.5rem;
 }
 
-/* --- Form Group Base --- */
 .form-group {
   position: relative;
   margin-bottom: 1.5rem;
@@ -351,74 +339,26 @@ onMounted(() => fetchCaptcha())
 
 .form-group input {
   width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid rgba(0, 242, 234, 0.3);
-  padding: 0.75em 0;
+  background: var(--mg-white);
+  border: var(--mg-border-light);
+  padding: 0.75em;
   font-size: 1rem;
-  color: var(--text-color);
-  font-family: inherit;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
-  border-color: var(--primary-color);
+  border-color: var(--mg-black);
+  box-shadow: var(--mg-shadow-sm);
 }
 
-/* --- Floating Label --- */
 .form-label {
-  position: absolute;
-  top: 0.75em;
-  left: 0;
-  font-size: 1rem;
-  color: var(--primary-color);
-  opacity: 0.6;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  pointer-events: none;
-  transition: all 0.3s ease;
+  display: none;
 }
 
-.form-group input:focus + .form-label,
-.form-group input:not(:placeholder-shown) + .form-label {
-  top: -1.2em;
-  font-size: 0.8rem;
-  opacity: 1;
-}
-
-/* Glitch effect on label when input focused */
-.form-group input:focus + .form-label::before,
-.form-group input:focus + .form-label::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--bg-color);
-}
-
-.form-group input:focus + .form-label::before {
-  color: var(--secondary-color);
-  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-.form-group input:focus + .form-label::after {
-  color: var(--primary-color);
-  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
-}
-
-@keyframes glitch-anim {
-  0% { transform: translate(0); clip-path: inset(0 0 0 0); }
-  20% { transform: translate(-5px, 3px); clip-path: inset(50% 0 20% 0); }
-  40% { transform: translate(3px, -2px); clip-path: inset(20% 0 60% 0); }
-  60% { transform: translate(-4px, 2px); clip-path: inset(80% 0 5% 0); }
-  80% { transform: translate(4px, -3px); clip-path: inset(30% 0 45% 0); }
-  100% { transform: translate(0); clip-path: inset(0 0 0 0); }
-}
-
-/* --- Special Form Group for Verification Code (input + button inline) --- */
 .form-group--code {
   display: flex;
   align-items: center;
@@ -427,117 +367,52 @@ onMounted(() => fetchCaptcha())
 
 .form-group--code input {
   flex: 1;
-  width: auto; /* override width:100% */
+  width: auto;
 }
 
-/* Captcha image style */
 .form-group--code .captcha-img {
   flex-shrink: 0;
   cursor: pointer;
-  border: 1px solid rgba(0, 242, 234, 0.3);
-  border-radius: 4px;
-  background-color: #1a1a1a;
+  border: var(--mg-border-light);
+  background-color: var(--mg-gray);
   width: 160px;
   height: 50px;
   object-fit: contain;
 }
 
 .form-group--code .captcha-img:hover {
-  border-color: var(--primary-color);
+  border-color: var(--mg-black);
 }
 
-/* Ensure label stays left-aligned (relative to the whole group) */
-.form-group--code .form-label {
-  left: 0;
-}
-
-/* --- Submit Button --- */
 .submit-btn {
   width: 100%;
   padding: 0.8em;
   margin-top: 1rem;
-  background-color: transparent;
-  border: 2px solid var(--primary-color);
-  color: var(--primary-color);
-  font-family: inherit;
-  font-size: 1rem;
+  background-color: var(--mg-black);
+  border: var(--mg-border);
+  color: var(--mg-white);
+  font-family: var(--mg-font-display);
+  font-size: 1.1rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   cursor: pointer;
-  position: relative;
-  transition: all 0.3s;
-  overflow: hidden;
+  transition: all 0.1s;
+  box-shadow: var(--mg-shadow-sm);
 }
 
-.submit-btn:hover,
-.submit-btn:focus {
-  background-color: var(--primary-color);
-  color: var(--bg-color);
-  box-shadow: 0 0 25px var(--primary-color);
-  outline: none;
+.submit-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
 }
 
 .submit-btn:active {
-  transform: scale(0.97);
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
-/* Glitch effect on button hover */
 .submit-btn .btn-text {
   position: relative;
-  z-index: 1;
-  transition: opacity 0.2s ease;
-}
-
-.submit-btn:hover .btn-text {
-  opacity: 0;
-}
-
-.submit-btn::before,
-.submit-btn::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  background-color: var(--primary-color);
-  transition: opacity 0.2s ease;
-}
-
-.submit-btn:hover::before,
-.submit-btn:focus::before {
-  opacity: 1;
-  color: var(--secondary-color);
-  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-.submit-btn:hover::after,
-.submit-btn:focus::after {
-  opacity: 1;
-  color: var(--bg-color);
-  animation: glitch-anim var(--glitch-anim-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both;
-}
-
-/* --- Reduced motion --- */
-@media (prefers-reduced-motion: reduce) {
-  .form-group input:focus + .form-label::before,
-  .form-group input:focus + .form-label::after,
-  .submit-btn:hover::before,
-  .submit-btn:focus::before,
-  .submit-btn:hover::after,
-  .submit-btn:focus::after {
-    animation: none;
-    opacity: 0;
-  }
-
-  .submit-btn:hover .btn-text {
-    opacity: 1;
-  }
 }
 
 [data-device="mobile"] .glitch-form-wrapper {
@@ -560,7 +435,7 @@ onMounted(() => fetchCaptcha())
 
 [data-device="mobile"] .form-group input {
   font-size: 0.9rem;
-  padding: 0.6em 0;
+  padding: 0.6em;
 }
 
 [data-device="mobile"] .form-group--code .captcha-img {

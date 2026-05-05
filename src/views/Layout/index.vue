@@ -55,8 +55,6 @@ getList(newList,'new')
 </template>
 
 <style scoped>
- /* .body{
- } */
  .searchBox{
    display: flex;
    justify-content: center;
@@ -64,6 +62,7 @@ getList(newList,'new')
    height: 80vh;
    flex-direction: column;
    gap: var(--gap, 20px);
+   font-family: var(--mg-font);
  }
 
  .empty-hint {
@@ -71,9 +70,10 @@ getList(newList,'new')
    justify-content: center;
    align-items: center;
    height: 200px;
-   color: #999;
+   color: var(--mg-black);
    font-size: 18px;
    letter-spacing: 2px;
+   font-family: var(--mg-font-mono);
  }
 
  [data-device="mobile"] .searchBox {

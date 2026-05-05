@@ -31,7 +31,7 @@ const close = () => {
 provide('close', close)
 
 // 地址管理
-const openAddress = () => { 
+const openAddress = () => {
   visible.value = true
   count.value = 1
 }
@@ -41,14 +41,14 @@ watch(() => manageAddressRef.value?.selectedAddress,() => {
     proFrom.value.publishAddress = manageAddressRef.value.addresses.find(item => item._id === manageAddressRef.value.selectedAddress)
   }
 })
-const openAddressFrom = (value) => { 
-  count.value = value  
+const openAddressFrom = (value) => {
+  count.value = value
 }
 provide('openAddressFrom', openAddressFrom)
 
 // 将要修改的数据传入addressFrom子组件
 const putAddress = ref({})
-const openPutAddressFrom = (address) => { 
+const openPutAddressFrom = (address) => {
   putAddress.value = {
     ...address
   }
@@ -63,7 +63,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
   <div>
     <form class="form">
       <div class="title">商品信息<br><span>Product Information</span></div>
-      
+
       <!-- 循环渲染输入框 -->
       <input
         v-for="field in fields"
@@ -79,7 +79,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
       <div class="label">
         <label @click="visible = true, count = 0">选择商品标签</label>
         <ul v-if="proFrom.shopType.length" class="lableList">
-          <li 
+          <li
           v-for="item in proFrom.shopType"
           :key="item">
             {{ item }}
@@ -125,12 +125,12 @@ provide('openPutAddressFrom', openPutAddressFrom)
     <!-- 选择标签弹层 -->
     <PopupLayerCom v-model:visible="visible" @close="close">
       <!-- 标签选择 -->
-      <LabelBox  v-if="count === 0"/> 
+      <LabelBox  v-if="count === 0"/>
       <!-- 修改地址 -->
-      <addressFrom 
+      <addressFrom
       v-if="count === 4"
       :putAddress="putAddress"
-      @openPutAddressFrom="openPutAddressFrom"/> 
+      @openPutAddressFrom="openPutAddressFrom"/>
       <!-- 地址管理 -->
       <manageAddress ref="manageAddressRef" v-if="count === 1"/>
     </PopupLayerCom>
@@ -139,23 +139,21 @@ provide('openPutAddressFrom', openPutAddressFrom)
 
 
 <style scoped>
-/* 表单 */
 .form {
     --input-focus: #2d8cf0;
-    --font-color: #323232;
+    --font-color: #000;
     --font-color-sub: #666;
     --bg-color: #fff;
-    --main-color: #323232;
+    --main-color: #000;
     padding: 20px;
-    background: lightgrey;
+    background: var(--mg-white);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 20px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
-    box-shadow: 4px 4px var(--main-color);
+    border: var(--mg-border);
+    box-shadow: var(--mg-shadow);
   }
 
   .title {
@@ -163,26 +161,28 @@ provide('openPutAddressFrom', openPutAddressFrom)
     font-weight: 900;
     font-size: 20px;
     margin-bottom: 25px;
+    font-family: var(--mg-font);
   }
 
   .title span {
     color: var(--font-color-sub);
     font-weight: 600;
     font-size: 17px;
+    font-family: var(--mg-font);
   }
 
   .input {
     width: 250px;
     height: 40px;
-    border-radius: 5px;
-    border: 2px solid var(--main-color);
+    border: var(--mg-border-light);
     background-color: var(--bg-color);
-    box-shadow: 4px 4px var(--main-color);
+    box-shadow: var(--mg-shadow-sm);
     font-size: 15px;
     font-weight: 600;
     color: var(--font-color);
     padding: 5px 10px;
     outline: none;
+    font-family: var(--mg-font);
   }
 
   .input::placeholder {
@@ -191,7 +191,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
   }
 
   .input:focus {
-    border: 2px solid var(--input-focus);
+    border: 2px solid var(--mg-black);
   }
 
   .proMsg{
@@ -199,15 +199,15 @@ provide('openPutAddressFrom', openPutAddressFrom)
     height: 100px;
   }
 
-/* 单选框样式 */
-.custom-checkbox {
+  .custom-checkbox {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   user-select: none;
   font-size: 16px;
-  color: #333;
+  color: var(--mg-black);
   transition: color 0.3s;
+  font-family: var(--mg-font);
 }
 
 .custom-checkbox input[type="checkbox"] {
@@ -217,8 +217,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
 .custom-checkbox .checkmark {
   width: 24px;
   height: 24px;
-  border: 2px solid #333;
-  border-radius: 4px;
+  border: var(--mg-border-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -235,13 +234,13 @@ provide('openPutAddressFrom', openPutAddressFrom)
 }
 
 .custom-checkbox input[type="checkbox"]:checked + .checkmark {
-  background-color: #333;
-  border-color: #333;
+  background-color: var(--mg-black);
+  border-color: var(--mg-black);
   transform: scale(1.1) rotateZ(360deg) rotateY(360deg);
 }
 
 .custom-checkbox input[type="checkbox"]:checked + .checkmark::before {
-  color: #fff;
+  color: var(--mg-white);
 }
 
 .custom-checkbox:hover {
@@ -250,7 +249,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
 
 .custom-checkbox:hover .checkmark {
   border-color: #666;
-  background-color: #f0f0f0;
+  background-color: var(--mg-gray);
   transform: scale(1.05);
 }
 
@@ -267,18 +266,19 @@ provide('openPutAddressFrom', openPutAddressFrom)
 .label,
 .address{
   cursor: pointer;
+  font-family: var(--mg-font);
+  color: var(--mg-black);
 }
 .label>label:hover,
 .address:hover{
-  color: black;
+  color: var(--mg-black);
   text-decoration: underline;
 }
 
-/* 标签列表样式 */
 .lableList{
   display: flex;
   flex-wrap: wrap;
-  color: black;
+  color: var(--mg-black);
   gap: 10px;
 }
 
@@ -288,6 +288,6 @@ provide('openPutAddressFrom', openPutAddressFrom)
 }
 .addressInfo>h5{
   line-height: 30px;
-  color: black;
+  color: var(--mg-black);
 }
 </style>

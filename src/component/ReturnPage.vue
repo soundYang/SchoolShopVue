@@ -45,8 +45,8 @@ const goBack = () => {
   .styled-wrapper .button {
     display: block;
     position: relative;
-    width: 76px;
-    height: 76px;
+    width: 56px;
+    height: 56px;
     margin: 0;
     overflow: hidden;
     outline: none;
@@ -58,20 +58,19 @@ const goBack = () => {
   .styled-wrapper .button:before {
     content: "";
     position: absolute;
-    border-radius: 50%;
-    inset: 7px;
-    border: 3px solid black; /* Update dynamically for light/dark mode */
+    inset: 4px;
+    border: var(--mg-border);
     transition:
       opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
       transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+    box-shadow: var(--mg-shadow-sm);
   }
 
   .styled-wrapper .button:after {
     content: "";
     position: absolute;
-    border-radius: 50%;
-    inset: 7px;
-    border: 4px solid #599a53;
+    inset: 4px;
+    border: 3px solid var(--mg-accent);
     transform: scale(1.3);
     transition:
       opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
@@ -106,17 +105,20 @@ const goBack = () => {
 
   .styled-wrapper .button-elem {
     display: block;
-    width: 30px;
-    height: 30px;
-    margin: 24px 18px 0 22px;
+    width: 24px;
+    height: 24px;
+    margin: 16px 12px 0 16px;
     transform: rotate(360deg);
-    fill: #f0eeef;
+  }
+
+  .styled-wrapper .button-elem svg path {
+    fill: var(--mg-black);
   }
 
   .styled-wrapper .button:hover .button-box,
   .styled-wrapper .button:focus .button-box {
     transition: 0.4s;
-    transform: translateX(-69px);
+    transform: translateX(-52px);
   }
 </style>
 

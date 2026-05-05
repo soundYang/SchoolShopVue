@@ -86,16 +86,19 @@ const colorSelect = (price) => {
 .title{
   margin-left: 70px;
   margin-bottom: 100px;
-  /* 字体倾斜 */
   transform: skewX(-20deg);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--mg-font-display);
+  font-size: 2em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mg-black);
 }
 .title::before{
   content: "";
   display: block;
   width: 120px;
-  height: 2px;
-  background: white;
+  height: 3px;
+  background: var(--mg-black);
   margin-bottom: -40px;
   margin-left: -5px;
 }
@@ -106,13 +109,15 @@ const colorSelect = (price) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  font-family: var(--mg-font);
   padding: 1rem;
   gap: 40px;
 }
 .time{
-  font-size: 40px;
-  font-family: '华文新魏';
+  font-size: 28px;
+  font-family: var(--mg-font-mono);
+  font-weight: 700;
+  color: var(--mg-black);
 }
 .empty-tip {
   min-height: 300px;
@@ -122,8 +127,8 @@ const colorSelect = (price) => {
 }
 .empty-tip span {
   font-size: 28px;
-  color: #999;
-  font-family: '华文新魏';
+  color: var(--mg-gray-dark);
+  font-family: var(--mg-font-display);
 }
 .closed-tip {
   display: flex;
@@ -133,18 +138,18 @@ const colorSelect = (price) => {
 }
 .closed-title {
   font-size: 32px;
-  color: #ff6b6b;
-  font-family: '华文新魏';
+  color: #e74c3c;
+  font-family: var(--mg-font-display);
 }
 .closed-desc {
   font-size: 20px;
-  color: #bbb;
-  font-family: '华文新魏';
+  color: var(--mg-gray-dark);
+  font-family: var(--mg-font);
 }
 .closed-desc em {
   font-style: normal;
   font-size: 26px;
-  color: #fbbf24;
+  color: var(--mg-accent);
   font-weight: bold;
 }
 
@@ -163,7 +168,7 @@ const colorSelect = (price) => {
   padding: 0.5rem;
 }
 [data-device="mobile"] .time {
-  font-size: 20px;
+  font-size: 16px;
 }
 [data-device="mobile"] .empty-tip {
   min-height: 150px;

@@ -36,19 +36,19 @@ defineProps({
 .card_box {
   width: 300px;
   height: 450px;
-  border-radius: 20px;
-  background: linear-gradient(170deg, rgba(58, 56, 56, 0.623) 0%, rgb(31, 31, 31) 100%);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   position: relative;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.55);
   cursor: pointer;
-  transition: all .3s;
+  transition: all 0.2s ease;
 }
 
 .card_box:hover {
-  transform: scale(0.9);
+  transform: translate(-3px, -3px);
+  box-shadow: var(--mg-shadow-hover);
 }
 
-/* 商品样式 */
 .proDemo{
   display: flex;
   flex-direction: column;
@@ -56,17 +56,43 @@ defineProps({
   justify-content: center;
   width: 100%;
   row-gap: 20px;
-  font-family:'方正舒体';
+  font-family: var(--mg-font);
+  padding: 20px;
 }
 .proDemo>img{
   width: 180px;
   height: 260px;
-  margin-top: 60px;
-  border-radius: 10px;
+  margin-top: 30px;
   object-fit: cover;
+  border: var(--mg-border-light);
+}
+.proDemo>h2{
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--mg-black);
+  text-align: center;
+  letter-spacing: 1px;
 }
 .proDemo>h3{
   font-size: 20px;
-  color: rgb(239, 239, 2);
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
+  font-weight: 700;
+}
+
+[data-device="mobile"] .card_box {
+  width: 220px;
+  height: 340px;
+}
+[data-device="mobile"] .proDemo>img {
+  width: 140px;
+  height: 200px;
+  margin-top: 20px;
+}
+[data-device="mobile"] .proDemo>h2 {
+  font-size: 14px;
+}
+[data-device="mobile"] .proDemo>h3 {
+  font-size: 16px;
 }
 </style>

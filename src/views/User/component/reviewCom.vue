@@ -26,11 +26,11 @@ defineProps({
 <style scoped>
   .card {
     width: 85%;
-    height: 140px;
-    background: #1e1e1e;
-    box-shadow: 0 1px 25px rgba(255, 255, 255, 0.1);
+    min-height: 140px;
+    background: var(--mg-white);
+    border: var(--mg-border-light);
+    box-shadow: var(--mg-shadow-sm);
     padding: 12px 10px;
-    border-radius: 10px;
     display: flex;
     gap: 10px;
     align-items: center;
@@ -43,67 +43,32 @@ defineProps({
   .card_load {
     width: 90px;
     height: 90px;
-    background: linear-gradient(
-      120deg,
-      #2a2a2a 30%,
-      #3a3a3a 38%,
-      #3a3a3a 40%,
-      #2a2a2a 48%
-    );
-    border-radius: 50%;
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    animation: load89234 2s infinite;
+    background: var(--mg-gray);
     display: flex;
     align-items: center;
     justify-content: center;
+    border: var(--mg-border-light);
   }
   .card_avatar{
     width: 80px;
     height: 80px;
-    border-radius: 50%;
     object-fit: cover;
   }
   .card_load_extreme_title {
-    width: 160px;
     height: 30px;
-    border-radius: 5px;
-    background: linear-gradient(
-      120deg,
-      #2a2a2a 30%,
-      #3a3a3a 38%,
-      #3a3a3a 40%,
-      #2a2a2a 48%
-    );
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    animation: load89234 2s infinite;
     text-align: center;
     line-height: 30px;
     font-size: 16px;
+    font-weight: 700;
+    color: var(--mg-black);
+    font-family: var(--mg-font);
   }
 
   .card_load_extreme_descripion {
-    width: 700px;
-    height: 60px;
-    border-radius: 5px;
-    background: linear-gradient(
-      120deg,
-      #2a2a2a 30%,
-      #3a3a3a 38%,
-      #3a3a3a 40%,
-      #2a2a2a 48%
-    );
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    animation: load89234 2s infinite;
     text-indent: 2rem;
     font-size: 15px;
-  }
-
-  @keyframes load89234 {
-    100% {
-      background-position: -100% 0;
-    }
+    color: var(--mg-black);
+    font-family: var(--mg-font);
+    line-height: 1.5;
   }
 </style>

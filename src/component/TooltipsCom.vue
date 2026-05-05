@@ -34,42 +34,33 @@
   cursor: pointer;
   transition: all 0.2s;
   font-size: 17px;
-  border-radius: 10px;
 }
 
-/* 顶部弹框盒子：现在自带背景、边框、内边距和阴影，内部完全由插槽控制 */
 .tooltip {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  padding: 10px; /* 从原 .profile 移入，确保内容不贴边 */
+  padding: 10px;
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s;
-  border-radius: 15px; /* 沿用原 .tooltip 的圆角，也可改为 10px 15px 但统一更简洁 */
-  box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
-    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
-    5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
-  /* 以下样式从原 .profile 移入，使盒子具有深色背景和边框 */
-  background: #2a2b2f;
-  border: 1px solid #52382f;
-
+  box-shadow: var(--mg-shadow);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  z-index: 100;
 }
 
 .tooltip-container:hover .tooltip {
-  top: -150px; /* 从顶部弹出 */
+  top: -150px;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-/* 原 .profile 相关样式已移除，现在由 .tooltip 统一提供视觉外壳 */
-/* 如果您需要保留默认卡片内容作为示例，可以自行添加，但当前已完全交给插槽 */
-
 .icon {
   text-decoration: none;
-  color: #fff;
+  color: var(--mg-black);
   display: block;
   position: relative;
 }
@@ -90,22 +81,20 @@
   left: 0;
   height: 100%;
   width: 100%;
-  border: 1px solid #fff;
-  border-radius: 15px;
+  border: 2px solid var(--mg-black);
   transition: all 0.3s;
 }
 
 .layer span,
 .icon .text {
-  color: #e6683c;
-  border-color: #e6683c;
+  color: var(--mg-black);
+  border-color: var(--mg-black);
 }
 
 .icon:hover .layer span {
-  box-shadow: -1px 1px 3px #e6683c;
+  box-shadow: 3px 3px 0 var(--mg-black);
 }
 
-/* 层叠效果：五个span依次偏移 */
 .icon:hover .layer span:nth-child(1) {
   opacity: 0.2;
 }
@@ -131,28 +120,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: -webkit-linear-gradient(
-    45deg,
-    #f09433 0%,
-    #e6683c 25%,
-    #dc2743 50%,
-    #cc2366 75%,
-    #bc1888 100%
-  );
-  background: linear-gradient(
-    45deg,
-    #f09433 0%,
-    #e6683c 25%,
-    #dc2743 50%,
-    #cc2366 75%,
-    #bc1888 100%
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+  background: var(--mg-white);
 }
 
 .tooltipBox{
   width: 200px;
-
+  font-family: var(--mg-font);
+  color: var(--mg-black);
 }
 
 </style>

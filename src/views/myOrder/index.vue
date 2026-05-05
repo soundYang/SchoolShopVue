@@ -253,71 +253,64 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* 基础样式 */
 .box {
-  --input-focus: #2d8cf0;
-  --font-color: #323232;
-  --font-color-sub: #666;
-  --bg-color: #fff;
-  --main-color: #323232;
+  --main-color: #000;
   padding: 20px;
-  background: lightgrey;
+  background: var(--mg-white);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-radius: 5px;
-  border: 2px solid var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   width: 100%;
   min-height: 100vh;
   margin-top: 80px;
+  font-family: var(--mg-font);
 }
 
 .title {
-  color: var(--font-color);
+  color: var(--mg-black);
   font-weight: 900;
   font-size: 20px;
   margin-bottom: 10px;
 }
 
 .title span {
-  color: var(--font-color-sub);
+  color: var(--mg-black);
   font-weight: 600;
   font-size: 17px;
 }
 
-/* 角色切换 */
 .role-tabs {
   display: flex;
   gap: 20px;
   margin-bottom: 10px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: var(--mg-border-light);
 }
 
 .role-tab {
   padding: 10px 20px;
-  background: white;
-  border: 2px solid var(--main-color);
-  border-radius: 5px;
-  color: var(--font-color);
+  background: var(--mg-white);
+  border: var(--mg-border-light);
+  color: var(--mg-black);
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 3px 3px var(--main-color);
+  transition: all 0.2s;
+  box-shadow: var(--mg-shadow-sm);
+  font-family: var(--mg-font);
 }
 
 .role-tab:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 4px var(--main-color);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
 }
 
 .role-tab.active {
-  background: var(--main-color);
-  color: white;
+  background: var(--mg-black);
+  color: var(--mg-white);
 }
 
-/* 状态筛选 */
 .status-tabs {
   display: flex;
   gap: 10px;
@@ -327,27 +320,24 @@ onMounted(() => {
 
 .status-tab {
   padding: 8px 16px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  color: var(--font-color);
+  background: var(--mg-white);
+  border: var(--mg-border-light);
+  color: var(--mg-black);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
+  font-family: var(--mg-font);
 }
 
 .status-tab:hover {
-  background: #f0f0f0;
-  border-color: var(--main-color);
+  background: var(--mg-gray);
 }
 
 .status-tab.active {
-  background: var(--main-color);
-  color: white;
-  border-color: var(--main-color);
+  background: var(--mg-black);
+  color: var(--mg-white);
 }
 
-/* 订单列表 */
 .order-box {
   display: flex;
   flex-direction: column;
@@ -357,20 +347,18 @@ onMounted(() => {
   list-style: none;
 }
 
-/* 空状态和加载状态 */
 .empty-tip,
 .loading-state {
   text-align: center;
   padding: 40px 0;
-  color: var(--font-color-sub);
+  color: var(--mg-black);
   font-size: 16px;
-  background: white;
-  border: 2px solid var(--main-color);
-  border-radius: 8px;
-  box-shadow: 3px 3px var(--main-color);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow-sm);
+  font-family: var(--mg-font);
 }
 
-/* 分页样式 */
 .pagination {
   display: flex;
   justify-content: center;
@@ -378,10 +366,9 @@ onMounted(() => {
   gap: 32px;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #ddd;
+  border-top: var(--mg-border-light);
 }
 
-/* 按钮基础样式 */
 .cta {
   position: relative;
   border: none;
@@ -407,23 +394,22 @@ onMounted(() => {
   font-size: 14px;
   text-transform: uppercase;
   font-weight: 500;
-  color: var(--font-color);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
-/* 统一箭头样式（伪元素） */
 .cta::after {
   content: '';
   position: absolute;
   top: 50%;
   width: 8px;
   height: 8px;
-  border-top: 2px solid var(--font-color);
-  border-right: 2px solid var(--font-color);
+  border-top: 2px solid var(--mg-black);
+  border-right: 2px solid var(--mg-black);
   transition: transform 0.3s ease;
   transform-origin: center;
 }
 
-/* 下一页箭头 */
 .next::after {
   right: -24px;
   transform: translateY(-50%) rotate(45deg) translateX(-12px);
@@ -432,7 +418,6 @@ onMounted(() => {
   transform: translateY(-50%) rotate(45deg) translateX(0);
 }
 
-/* 上一页箭头 */
 .prev::after {
   left: -24px;
   transform: translateY(-50%) rotate(-135deg) translateX(12px);
@@ -441,7 +426,6 @@ onMounted(() => {
   transform: translateY(-50%) rotate(-135deg) translateX(0);
 }
 
-/* 下划线动画 */
 .hover-underline-animation {
   position: relative;
   padding-bottom: 20px;
@@ -455,18 +439,16 @@ onMounted(() => {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: var(--main-color);
+  background-color: var(--mg-black);
   transform-origin: bottom right;
   transition: transform 0.25s ease-out;
 }
 
-/* 下一页按钮下划线 */
 .next:hover:not(:disabled) .hover-underline-animation:after {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
 
-/* 上一页按钮下划线 */
 .prev .hover-underline-animation:after {
   transform-origin: bottom left;
 }
@@ -475,16 +457,15 @@ onMounted(() => {
   transform-origin: bottom right;
 }
 
-/* 页码信息样式 */
 .page-info-wrapper {
   display: flex;
   gap: 16px;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--mg-gray);
   padding: 6px 16px;
-  border-radius: 40px;
-  backdrop-filter: blur(2px);
+  border: var(--mg-border-light);
   font-size: 14px;
-  color: var(--font-color);
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
 .page-info,
@@ -494,7 +475,7 @@ onMounted(() => {
 }
 
 .page-info {
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: var(--mg-border-light);
   padding-right: 16px;
 }
 
@@ -502,7 +483,6 @@ onMounted(() => {
   margin-top: 56px;
   padding: 12px;
   gap: 12px;
-  border-radius: 0;
   border: none;
   box-shadow: none;
   min-height: 100dvh;

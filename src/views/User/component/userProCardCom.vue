@@ -18,38 +18,37 @@ defineProps({
   .card {
    width: 150px;
    height: 220px;
-   background: rgb(40,40,55);
-   background: linear-gradient(344deg, rgba(40,40,55,1) 0%, rgba(16,16,18,1) 50%);
-   box-shadow: 4px 6px 14px #00000036;
-   border-radius: 3px;
-   color: #F9F9F9;
+   background: var(--mg-white);
+   box-shadow: var(--mg-shadow-sm);
+   color: var(--mg-black);
    padding: 16px;
    transition: all .3s;
-   border-radius: 10px;
+   border: var(--mg-border-light);
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   row-gap: 20px;
+   font-family: var(--mg-font);
   }
 
   .card:hover {
    margin-top: -30px;
-  }
-  .card{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 20px;
-    font-family:'方正舒体';
+   box-shadow: var(--mg-shadow);
   }
   .card>img{
     width: 100px;
     height: 100px;
-    border-radius: 10px;
     object-fit: cover;
+    border: var(--mg-border-light);
   }
   .card>h2{
     font-size: 16px;
+    font-weight: 700;
   }
   .card>h3{
     font-size: 14px;
-    color: red;
+    color: var(--mg-black);
+    font-family: var(--mg-font-mono);
   }
 </style>

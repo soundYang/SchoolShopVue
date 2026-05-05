@@ -107,10 +107,10 @@ defineExpose({
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--mg-font);
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: var(--mg-black);
   overflow: scroll;
   height: 300px; 
   overflow-x: hidden;
@@ -125,25 +125,27 @@ defineExpose({
   position: relative;
 }
 
-/* 隐藏原生 radio */
 .hidden-radio {
   display: none;
 }
 
-/* 卡片样式（继承原 label 的所有样式） */
 .address-card {
   display: flex;
   align-items: center;
-  padding: 10px 10px 10px 30px; /* 左内边距为圆形指示器留出空间 */
-  border: 1px solid #ccc;
-  background-color: #212121;
-  border-radius: 5px;
+  padding: 10px 10px 10px 30px;
+  border: var(--mg-border-light);
+  background-color: var(--mg-white);
   cursor: pointer;
   position: relative;
   transition: all 0.3s ease-in-out;
+  box-shadow: var(--mg-shadow-sm);
 }
 
-/* 圆形指示器（完全复制原 ::before 样式） */
+.address-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
+}
+
 .radio-indicator {
   content: "";
   display: block;
@@ -153,43 +155,26 @@ defineExpose({
   transform: translate(-50%, -50%);
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  background-color: #fff;
-  border: 2px solid #ccc;
+  background-color: var(--mg-white);
+  border: 2px solid var(--mg-black);
   transition: all 0.3s ease-in-out;
 }
 
-/* 选中状态下的卡片 */
 .address-card.active {
-  background-color: royalblue;
-  color: #fff;
-  border-color: rgb(129, 235, 129);
-  animation: radio-translate 0.5s ease-in-out;
+  background-color: var(--mg-black);
+  color: var(--mg-white);
+  border-color: var(--mg-black);
 }
 
-/* 选中状态下的圆形指示器 */
 .address-card.active .radio-indicator {
-  background-color: green;
-  top: 0; /* 完全保留原动画中的 top 变化 */
+  background-color: var(--mg-white);
+  border-color: var(--mg-white);
+  top: 0;
 }
 
-/* 原动画关键帧 */
-@keyframes radio-translate {
-  0% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-/* 地址信息区域样式（可自由定制） */
 .address-info {
   width: 100%;
-  margin-left: 20px; /* 确保不被绝对定位的圆形覆盖 */
+  margin-left: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -207,31 +192,31 @@ defineExpose({
 }
 
 .phone {
-  color: #ccc;
+  color: #666;
   font-size: 14px;
 }
 
 .address-card.active .phone {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .default-tag {
-  background-color: #ff9800;
-  color: white;
+  background-color: var(--mg-black);
+  color: var(--mg-white);
   font-size: 12px;
   padding: 2px 8px;
-  border-radius: 12px;
   font-weight: 500;
+  border: 2px solid var(--mg-black);
 }
 
 .address-detail {
   font-size: 14px;
-  color: #ddd;
+  color: #333;
   line-height: 1.5;
 }
 
 .address-card.active .address-detail {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.8);
 }
 .iconBox{
   display: flex;
@@ -240,10 +225,15 @@ defineExpose({
 }
 .iconBox>i{
   font-size: 25px;
+  color: var(--mg-black);
+}
+.address-card.active .iconBox>i{
+  color: var(--mg-white);
 }
 .noAddress{
   text-align: center;
-  color: #000;
+  color: var(--mg-black);
   line-height: 200px;
+  font-family: var(--mg-font);
 }
 </style>

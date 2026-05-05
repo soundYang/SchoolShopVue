@@ -216,27 +216,31 @@ onMounted(() => {
 <style scoped>
 .order-title {
   padding-bottom: 20px;
-  font-family: '华文新魏';
+  font-family: var(--mg-font-display);
   font-size: 30px;
+  color: var(--mg-black);
 }
 
 .address-box {
   width: 100%;
   padding: 20px;
   padding-top: 100px;
+  font-family: var(--mg-font);
 }
 
 .card {
   width: 100%;
   min-height: 80vh;
-  background: rgb(38, 38, 38);
-  box-shadow: 7px 5px 10px rgba(0, 0, 0, 0.333);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
 }
 
 .order-header {
   min-height: 200px;
-  background-color: #ff5858;
+  background-color: var(--mg-black);
   position: relative;
+  color: var(--mg-white);
 }
 
 .address-info {
@@ -247,27 +251,27 @@ onMounted(() => {
 }
 
 .address-item {
-  background-color: #414141;
+  background-color: var(--mg-gray);
   width: fit-content;
   padding-right: 30px;
   padding-left: 20px;
   height: 30px;
   line-height: 30px;
-  border-radius: 5px;
-  color: white;
+  color: var(--mg-black);
   font-size: 15px;
   font-weight: bold;
   margin: 0;
+  border: var(--mg-border-light);
+  font-family: var(--mg-font-mono);
 }
 
 .description {
-  border-color: #141414;
-  background-color: #414141;
+  background-color: var(--mg-white);
   transform: translate(5px, 6px);
   width: 100%;
   min-height: 400px;
-  border-radius: 5px;
   margin-left: -7px;
+  border: var(--mg-border);
 }
 
 .social-media:before {
@@ -276,14 +280,14 @@ onMounted(() => {
   width: 100%;
   height: 2px;
   transform: translatey(10px);
-  background: #414141;
+  background: var(--mg-black);
 }
 
 .order-header-bar {
   display: flex;
   align-items: center;
   padding: 0;
-  background-color: #ff5858;
+  background-color: var(--mg-black);
 }
 
 [data-device="mobile"] .address-box {

@@ -48,14 +48,15 @@ const imageUrl = computed(() => {
   display: flex;
   gap: 20px;
   padding-bottom: 20px;
+  font-family: var(--mg-font);
 }
 
 .product-image {
   width: 120px;
   height: 120px;
-  border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
+  border: var(--mg-border-light);
 }
 
 .product-image img {
@@ -66,18 +67,18 @@ const imageUrl = computed(() => {
 
 .product-image img[alt="盲盒"] {
   object-fit: contain;
-  background: #333;
+  background: var(--mg-gray);
   padding: 8px;
 }
 
 .image-placeholder {
   width: 100%;
   height: 100%;
-  background: #555;
+  background: var(--mg-gray);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: var(--mg-black);
   font-size: 12px;
 }
 
@@ -92,7 +93,8 @@ const imageUrl = computed(() => {
   margin: 0;
   font-size: 18px;
   font-weight: bold;
-  color: #fff;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .product-tags {
@@ -102,14 +104,15 @@ const imageUrl = computed(() => {
 
 .tag {
   padding: 4px 10px;
-  border-radius: 4px;
   font-size: 12px;
+  border: var(--mg-border-light);
 }
 
 .price-tag {
-  background: #FAC921;
-  color: #333;
+  background: var(--mg-gray);
+  color: var(--mg-black);
   font-weight: bold;
+  font-family: var(--mg-font-mono);
 }
 
 .quantity-section {
@@ -121,13 +124,14 @@ const imageUrl = computed(() => {
 }
 
 .quantity-label {
-  color: #888;
+  color: var(--mg-black);
   font-size: 14px;
 }
 
 .quantity-value {
   font-size: 24px;
   font-weight: bold;
-  color: #FAC921;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 </style>

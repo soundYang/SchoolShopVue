@@ -127,38 +127,32 @@ const goToDetail = () => {
 </template>
 
 <style scoped>
-/* 整体卡片容器 */
 .product-card {
-  background: white;
-  border-radius: 8px;
-  border: 2px solid var(--main-color);
-  box-shadow: 3px 3px var(--main-color);
-  overflow: hidden;
-  transition: transform 0.3s;
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow-sm);
   margin-bottom: 20px;
+  font-family: var(--mg-font);
 }
 
 .product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 4px var(--main-color);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
 }
 
-/* 卡片内部结构 */
 .card-inner {
   display: flex;
   gap: 15px;
   padding: 15px;
 }
 
-/* 图片区域 */
 .image-area {
   position: relative;
   flex-shrink: 0;
   width: 100px;
   height: 100px;
-  border-radius: 6px;
   overflow: hidden;
-  border: 1px solid #ddd;
+  border: var(--mg-border-light);
 }
 
 .image-wrapper {
@@ -178,44 +172,39 @@ const goToDetail = () => {
   transform: scale(1.05);
 }
 
-/* 状态徽章 */
 .status-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  top: 6px;
+  right: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
   font-weight: bold;
+  font-family: var(--mg-font-mono);
   white-space: nowrap;
-  border: 1px solid #ddd;
+  border: var(--mg-border-light);
 }
 
 .status-badge.selling {
-  background: #4caf50;
-  color: white;
-  border-color: #4caf50;
+  background: var(--mg-black);
+  color: var(--mg-white);
 }
 
 .status-badge.soldOut {
-  background: #9e9e9e;
-  color: white;
-  border-color: #9e9e9e;
+  background: var(--mg-gray);
+  color: var(--mg-black);
 }
 
 .status-badge.pending {
-  background: #ff9800;
-  color: white;
-  border-color: #ff9800;
+  background: var(--mg-white);
+  color: var(--mg-black);
+  border-style: dashed;
 }
 
 .status-badge.violation {
-  background: #f44336;
-  color: white;
-  border-color: #f44336;
+  background: var(--mg-white);
+  color: var(--mg-black);
 }
 
-/* 内容区域 */
 .content-area {
   flex: 1;
   display: flex;
@@ -235,20 +224,21 @@ const goToDetail = () => {
   margin: 0;
   font-size: 16px;
   font-weight: bold;
-  color: var(--font-color);
+  color: var(--mg-black);
   line-height: 1.4;
 }
 
 .price-main {
   font-size: 18px;
   font-weight: bold;
-  color: #ff5858;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
 .description {
   margin: 0;
   font-size: 14px;
-  color: var(--font-color-sub);
+  color: var(--mg-black);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -263,51 +253,50 @@ const goToDetail = () => {
 }
 
 .tag {
-  background: #f0f0f0;
-  padding: 4px 12px;
-  border-radius: 12px;
+  background: var(--mg-gray);
+  padding: 3px 10px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--font-color);
-  border: 1px solid #ddd;
+  color: var(--mg-black);
+  border: var(--mg-border-light);
+  font-family: var(--mg-font-mono);
 }
 
 .tag.blind-box {
-  background: #e1bee7;
-  color: #6a1b9a;
-  border-color: #ce93d8;
+  background: var(--mg-black);
+  color: var(--mg-white);
+  border-color: var(--mg-black);
 }
 
 .original-price-row {
   font-size: 12px;
-  color: var(--font-color-sub);
+  color: var(--mg-black);
   display: flex;
   gap: 6px;
   align-items: baseline;
 }
 
 .original-price-row .label {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .original-price-row .value {
   text-decoration: line-through;
+  font-family: var(--mg-font-mono);
 }
 
-/* 地址卡片 */
 .address-card {
-  background: #f8f8f8;
-  border-radius: 8px;
+  background: var(--mg-gray);
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  border: 1px solid #ddd;
+  border: var(--mg-border-light);
 }
 
 .address-line {
   font-size: 12px;
-  color: var(--font-color);
+  color: var(--mg-black);
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -323,7 +312,6 @@ const goToDetail = () => {
   line-height: 1.3;
 }
 
-/* 操作按钮 */
 .actions {
   display: flex;
   gap: 10px;
@@ -333,20 +321,35 @@ const goToDetail = () => {
 
 .action-btn {
   padding: 6px 16px;
-  border: 2px solid var(--main-color);
-  border-radius: 4px;
+  border: var(--mg-border-light);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 2px 2px var(--main-color);
-  background: white;
-  color: var(--font-color);
+  transition: all 0.2s;
+  box-shadow: var(--mg-shadow-sm);
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .action-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 3px 3px var(--main-color);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow);
+}
+
+.action-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.action-btn.delete-btn {
+  background: var(--mg-black);
+  color: var(--mg-white);
+}
+
+.action-btn.status-btn {
+  background: var(--mg-black);
+  color: var(--mg-white);
 }
 
 .view-btn:hover {
@@ -381,20 +384,20 @@ const goToDetail = () => {
     text-align: center;
     gap: 15px;
   }
-  
+
   .image-area {
     width: 120px;
     height: 120px;
   }
-  
+
   .title-row {
     justify-content: center;
   }
-  
+
   .actions {
     justify-content: center;
   }
-  
+
   .address-card {
     text-align: left;
     width: 100%;

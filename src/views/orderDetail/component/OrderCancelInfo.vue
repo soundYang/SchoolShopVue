@@ -42,15 +42,17 @@ const formatTime = (time) => {
 <style scoped>
 .cancel-info-section {
   margin-top: 10px;
+  font-family: var(--mg-font);
 }
 
 .section-title {
   font-size: 18px;
   font-weight: bold;
-  color: #FAC921;
+  color: var(--mg-black);
   margin: 20px 0 15px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #555;
+  border-bottom: var(--mg-border-light);
+  font-family: var(--mg-font);
 }
 
 .cancel-info {
@@ -60,16 +62,17 @@ const formatTime = (time) => {
 }
 
 .info-item {
-  background-color: #414141;
+  background-color: var(--mg-gray);
   width: fit-content;
   padding-right: 30px;
   padding-left: 20px;
   height: 30px;
   line-height: 30px;
-  border-radius: 5px;
-  color: white;
+  color: var(--mg-black);
   font-size: 14px;
   font-weight: bold;
   margin: 0;
+  font-family: var(--mg-font);
+  border: var(--mg-border-light);
 }
 </style>

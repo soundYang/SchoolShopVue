@@ -124,10 +124,11 @@ nav {
 }
 
 #expanded-menu {
-  background-color: transparent;
-  border-bottom: 1px solid var(--light, #ddd);
+  background-color: var(--mg-white);
+  border-bottom: var(--mg-border-light);
   overflow: hidden;
   height: 0;
+  will-change: height;
 }
 
 .content {

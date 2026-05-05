@@ -66,9 +66,10 @@ const emit = defineEmits(['update:visible', 'update:reviewContent', 'submit', 's
 .review-title {
   font-size: 20px;
   font-weight: bold;
-  color: #FAC921;
+  color: var(--mg-black);
   margin: 0;
   text-align: center;
+  font-family: var(--mg-font-display);
 }
 
 .review-product-info {
@@ -76,44 +77,46 @@ const emit = defineEmits(['update:visible', 'update:reviewContent', 'submit', 's
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background: #333;
-  border-radius: 8px;
+  background: var(--mg-gray);
+  border: var(--mg-border-light);
 }
 
 .review-product-img {
   width: 50px;
   height: 50px;
-  border-radius: 6px;
   object-fit: cover;
+  border: var(--mg-border-light);
 }
 
 .review-product-name {
   font-size: 14px;
-  color: #ddd;
+  color: var(--mg-black);
   font-weight: bold;
+  font-family: var(--mg-font);
 }
 
 .review-textarea {
   width: 100%;
   padding: 12px;
-  border: 1px solid #555;
-  border-radius: 8px;
-  background: #2a2a2a;
-  color: #fff;
+  border: var(--mg-border-light);
+  background: var(--mg-white);
+  color: var(--mg-black);
   font-size: 14px;
   resize: vertical;
   min-height: 100px;
-  font-family: inherit;
+  font-family: var(--mg-font);
   box-sizing: border-box;
+  box-shadow: var(--mg-shadow-sm);
 }
 
 .review-textarea::placeholder {
-  color: #888;
+  color: var(--mg-black);
+  opacity: 0.5;
 }
 
 .review-textarea:focus {
   outline: none;
-  border-color: #FAC921;
+  border-color: var(--mg-black);
 }
 
 .review-actions {
@@ -124,48 +127,50 @@ const emit = defineEmits(['update:visible', 'update:reviewContent', 'submit', 's
 
 .review-btn {
   padding: 10px 24px;
-  border: none;
-  border-radius: 6px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  transition: opacity 0.2s;
+  font-family: var(--mg-font);
+  border: var(--mg-border-light);
+  box-shadow: var(--mg-shadow-sm);
+}
+
+.review-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow);
+}
+
+.review-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
 }
 
 .review-btn.cancel {
-  background: #555;
-  color: #fff;
-}
-
-.review-btn.cancel:hover {
-  opacity: 0.8;
+  background: var(--mg-white);
+  color: var(--mg-black);
 }
 
 .review-btn.skip {
-  background: #888;
-  color: #fff;
-}
-
-.review-btn.skip:hover {
-  opacity: 0.8;
+  background: var(--mg-gray);
+  color: var(--mg-black);
 }
 
 .review-btn.skip:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--mg-shadow-sm);
 }
 
 .review-btn.submit {
-  background: #FAC921;
-  color: #333;
-}
-
-.review-btn.submit:hover {
-  opacity: 0.8;
+  background: var(--mg-black);
+  color: var(--mg-white);
 }
 
 .review-btn.submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--mg-shadow-sm);
 }
 </style>

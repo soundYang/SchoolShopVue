@@ -164,40 +164,39 @@ provide('openPutAddressFrom', openPutAddressFrom)
 </template>
 
 <style scoped>
-/* ========== 组件一：书本翻开效果 ========== */
 .book {
   position: relative;
-  border-radius: 2rem;           /* 与卡片圆角一致 */
   width: 450px;
   height: 700px;
-  background-color: transparent; /* 背景由内部元素决定 */
-  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+  background-color: transparent;
+  box-shadow: var(--mg-shadow);
   transform: preserve-3d;
   perspective: 2000px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000;
+  color: var(--mg-black);
+  border: var(--mg-border);
 }
 
 .cover {
   top: 0;
   left: 0;
   position: absolute;
-  background-color: black;        /* 与卡片正面背景一致 */
+  background-color: var(--mg-white);
   width: 100%;
   height: 100%;
-  border-radius: 2rem;
   cursor: pointer;
   transition: all 0.5s;
   transform-origin: 0;
-  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+  box-shadow: var(--mg-shadow);
   display: flex;
-  flex-direction: column;         /* 纵向排列内部元素 */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  color: white;                   /* 文字颜色 */
+  color: var(--mg-black);
+  border: var(--mg-border);
 }
 
 .book:hover .cover {
@@ -205,60 +204,59 @@ provide('openPutAddressFrom', openPutAddressFrom)
   transform: rotateY(-80deg);
 }
 
-/* 反面内容容器（翻开后显示） */
 .back-content {
   width: 100%;
   height: 100%;
-  background: black;
-  border-radius: 2rem;
+  background: var(--mg-white);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  color: white;
-  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+  color: var(--mg-black);
+  box-shadow: var(--mg-shadow);
+  border: var(--mg-border);
 }
 
-/* ========== 组件二原有样式（保留布局、颜色、动画，移除翻转相关） ========== */
 .card-top {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 10%;
   width: 50%;
-  background-color: transparent;
-  border: 2px solid black;
+  background-color: var(--mg-white);
+  border: var(--mg-border-light);
   border-top: none;
-  border-radius: 0 0 1rem 1rem;
-  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.7);
+  box-shadow: var(--mg-shadow-sm);
 }
 
 .card-top-para {
   font-size: 16px;
   font-weight: bold;
-  color: white;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .acatar {
   width: 200px;
   height: 200px;
-  border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: var(--mg-border-light);
 }
 
 .userName {
   font-size: 40px;
   font-weight: bold;
-  color: white;
+  color: var(--mg-black);
+  font-family: var(--mg-font-display);
 }
 
 .userinfo {
   font-size: 20px;
   font-weight: 500;
   margin-top: 10px;
-  color: white;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .icons {
@@ -269,63 +267,46 @@ provide('openPutAddressFrom', openPutAddressFrom)
 }
 
 .icons i {
-  color: white;
+  color: var(--mg-black);
   font-size: 30px;
 }
 
-/* 退出按钮样式 */
 .boton-elegante {
   padding: 15px 30px;
-  border: 2px solid #2c2c2c;
-  background-color: #1a1a1a;
-  color: #ffffff;
+  border: var(--mg-border);
+  background-color: var(--mg-black);
+  color: var(--mg-white);
   font-size: 1.2rem;
   cursor: pointer;
-  border-radius: 30px;
-  transition: all 0.4s ease;
+  transition: all 0.1s;
   outline: none;
-  position: relative;
-  overflow: hidden;
   font-weight: bold;
-}
-
-.boton-elegante::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0) 70%
-  );
-  transform: scale(0);
-  transition: transform 0.5s ease;
-}
-
-.boton-elegante:hover::after {
-  transform: scale(4);
+  font-family: var(--mg-font);
+  box-shadow: var(--mg-shadow-sm);
 }
 
 .boton-elegante:hover {
-  border-color: #666666;
-  background: #292929;
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
 }
 
-/* 头像修改区域 */
+.boton-elegante:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
 .avatar {
   position: relative;
 }
 .avatar:hover:before {
   content: '修改头像';
-  color: white;
+  color: var(--mg-black);
   position: absolute;
   width: 100px;
   transition: all 0.5s ease;
   right: -100px;
   top: 40px;
+  font-family: var(--mg-font);
 }
 .putInput {
   width: 100px;
@@ -334,8 +315,8 @@ provide('openPutAddressFrom', openPutAddressFrom)
   opacity: 0;
 }
 
-/* 其余辅助样式 */
 .heading {
-  color: white;
+  color: var(--mg-black);
+  font-family: var(--mg-font-display);
 }
 </style>

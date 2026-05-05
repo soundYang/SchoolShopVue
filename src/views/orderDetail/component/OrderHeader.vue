@@ -40,7 +40,7 @@ const formatTime = (time) => {
 
 <style scoped>
 .order-header {
-  background-color: #ff5858;
+  background-color: var(--mg-black);
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -60,17 +60,19 @@ const formatTime = (time) => {
 }
 
 .blind-box-badge {
-  background: #FAC921;
-  color: #333;
+  background: var(--mg-white);
+  color: var(--mg-black);
   font-size: 12px;
   font-weight: bold;
   padding: 4px 10px;
-  border-radius: 4px;
+  border: 2px solid var(--mg-black);
 }
 
 .order-status {
   font-size: 20px;
   font-weight: bold;
+  color: var(--mg-white);
+  font-family: var(--mg-font-display);
 }
 
 .header-info {
@@ -80,16 +82,17 @@ const formatTime = (time) => {
 }
 
 .info-item {
-  background-color: #414141;
+  background-color: var(--mg-gray);
   width: fit-content;
   padding-right: 30px;
   padding-left: 20px;
   height: 30px;
   line-height: 30px;
-  border-radius: 5px;
-  color: white;
+  color: var(--mg-black);
   font-size: 14px;
   font-weight: bold;
   margin: 0;
+  font-family: var(--mg-font);
+  border: var(--mg-border-light);
 }
 </style>

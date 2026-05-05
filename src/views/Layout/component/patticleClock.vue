@@ -21,281 +21,207 @@ const containerStyle = computed(() => ({
 const containerRef = ref(null)
 const canvasRef = ref(null)
 
+const isMobile = typeof window !== 'undefined' && window.__IS_MOBILE__
+const DPR = Math.min(devicePixelRatio || 1, isMobile ? 2 : 3)
+const BG = '#000000'
+const FG = '#ffffff'
+
 let ctx = null
+let w = 0
+let h = 0
 let animationId = null
-let timerInterval = null
+let timerId = null
 let resizeObserver = null
+let visibilityObserver = null
 let particles = []
-let currentText = null
+let prevText = ''
+let isActive = false
 
-// 获取 body 的实际背景色（支持 rgb / rgba / 渐变则取第一个颜色，简单处理）
-const getBodyBackgroundColor = () => {
-  const bg = getComputedStyle(document.body).backgroundColor
-  // 如果是透明或渐变等，默认使用黑色背景
-  if (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') return '#000000'
-  return bg
-}
+const rand = (min, max) => Math.random() * (max - min) + min
 
-// 计算亮度 (0-255)，用于决定粒子颜色
-const getLuminance = (rgbColor) => {
-  let r, g, b
-  if (rgbColor.startsWith('rgb')) {
-    const match = rgbColor.match(/\d+/g)
-    if (match) {
-      r = parseInt(match[0])
-      g = parseInt(match[1])
-      b = parseInt(match[2])
-    } else {
-      return 128
-    }
-  } else {
-    // 十六进制简化处理
-    const hex = rgbColor.replace('#', '')
-    r = parseInt(hex.substring(0, 2), 16)
-    g = parseInt(hex.substring(2, 4), 16)
-    b = parseInt(hex.substring(4, 6), 16)
-  }
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b
-}
-
-// 根据背景色返回粒子颜色（深色背景用白，浅色背景用黑）
-const getParticleColor = () => {
-  const bgColor = getBodyBackgroundColor()
-  const luminance = getLuminance(bgColor)
-  return luminance < 128 ? '#ffffff' : '#000000'
-}
-
-const getRandom = (min, max) => Math.random() * (max - min) + min
-
-class Particle {
-  constructor(canvasWidth, canvasHeight, sizeRange) {
-    this.size = getRandom(sizeRange.min, sizeRange.max) * devicePixelRatio
-    this.x = getRandom(0, canvasWidth)
-    this.y = getRandom(0, canvasHeight)
-    this.targetX = this.x
-    this.targetY = this.y
-  }
-
-  draw(context, color) {
-    context.beginPath()
-    context.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-    context.fillStyle = color
-    context.fill()
-  }
-
-  setTarget(tx, ty) {
-    this.targetX = tx
-    this.targetY = ty
-  }
-
-  updatePosition() {
-    const dx = this.targetX - this.x
-    const dy = this.targetY - this.y
-    const distance = Math.hypot(dx, dy)
-    if (distance < 0.5) {
-      this.x = this.targetX
-      this.y = this.targetY
-      return
-    }
-    let step = distance * 0.12
-    if (step > 5) step = 5
-    const angle = Math.atan2(dy, dx)
-    this.x += Math.cos(angle) * step
-    this.y += Math.sin(angle) * step
-  }
-}
-
-// 根据画布尺寸动态计算粒子大小范围、采样间隔
-const getAdaptiveParams = (cssWidth, cssHeight) => {
-  const area = cssWidth * cssHeight
-  let particleSizeMin, particleSizeMax, sampleGap
-  if (area < 200 * 200) {
-    particleSizeMin = 1
-    particleSizeMax = 2
-    sampleGap = 3
-  } else if (area < 500 * 500) {
-    particleSizeMin = 1
-    particleSizeMax = 2.5
-    sampleGap = 4
-  } else {
-    particleSizeMin = 1.5
-    particleSizeMax = 3.5
-    sampleGap = 6
-  }
-  return { particleSizeRange: { min: particleSizeMin, max: particleSizeMax }, sampleGap }
-}
-
-const getNextTargetTime = () => {
+const getCountdownStr = () => {
   const now = new Date()
   const target = new Date(now)
   target.setHours(8, 20, 0, 0)
   if (now > target) target.setDate(target.getDate() + 1)
-  return target
+  const diff = Math.max(0, Math.floor((target - now) / 1000))
+  const hh = String(Math.floor(diff / 3600)).padStart(2, '0')
+  const mm = String(Math.floor((diff % 3600) / 60)).padStart(2, '0')
+  const ss = String(diff % 60).padStart(2, '0')
+  return `${hh}:${mm}:${ss}`
 }
 
-const getCountdownString = () => {
-  const now = new Date()
-  let target = getNextTargetTime()
-  let diffMs = target - now
-  if (diffMs <= 0) {
-    const nextTarget = new Date(now)
-    nextTarget.setDate(now.getDate() + 1)
-    nextTarget.setHours(8, 20, 0, 0)
-    diffMs = nextTarget - now
-  }
-  const totalSeconds = Math.floor(diffMs / 1000)
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
-
-const updateCanvasSize = () => {
+const resize = () => {
   if (!containerRef.value || !canvasRef.value) return
-  const container = containerRef.value
-  const canvas = canvasRef.value
-  const rect = container.getBoundingClientRect()
-  const width = rect.width
-  const height = rect.height
-  if (width === 0 || height === 0) return
-  canvas.width = width * devicePixelRatio
-  canvas.height = height * devicePixelRatio
-  canvas.style.width = `${width}px`
-  canvas.style.height = `${height}px`
-  ctx = canvas.getContext('2d', { willReadFrequently: true })
+  const rect = containerRef.value.getBoundingClientRect()
+  if (!rect.width || !rect.height) return
+  const cssW = Math.round(rect.width)
+  const cssH = Math.round(rect.height)
+  w = cssW * DPR
+  h = cssH * DPR
+  canvasRef.value.width = w
+  canvasRef.value.height = h
+  canvasRef.value.style.width = cssW + 'px'
+  canvasRef.value.style.height = cssH + 'px'
+  ctx = canvasRef.value.getContext('2d', { alpha: false, willReadFrequently: true })
 }
 
-const getOptimalFontSize = (text, maxWidth, maxHeight) => {
-  if (!ctx) return 40 * devicePixelRatio
-  let fontSize = Math.min(maxHeight * 0.5, maxWidth / (text.length * 0.6))
-  fontSize = Math.max(fontSize, 30 * devicePixelRatio)
-  fontSize = Math.min(fontSize, maxHeight * 0.7)
+const getFontSize = (text) => {
+  if (!ctx) return 40 * DPR
+  const maxW = w * 0.92
+  const maxH = h * 0.7
+  let size = Math.min(maxH, maxW / (text.length * 0.55))
+  size = Math.max(size, 24 * DPR)
+  size = Math.min(size, maxH)
   ctx.save()
-  let testSize = fontSize
-  let testFont = `bold ${testSize}px 'Roboto Mono', monospace`
-  ctx.font = testFont
-  let metrics = ctx.measureText(text)
-  while (metrics.width > maxWidth * 0.9 && testSize > 20 * devicePixelRatio) {
-    testSize *= 0.95
-    testFont = `bold ${testSize}px 'Roboto Mono', monospace`
-    ctx.font = testFont
-    metrics = ctx.measureText(text)
+  ctx.font = `bold ${size}px "Courier New", monospace`
+  while (ctx.measureText(text).width > maxW && size > 16 * DPR) {
+    size *= 0.95
+    ctx.font = `bold ${size}px "Courier New", monospace`
   }
   ctx.restore()
-  return testSize
+  return size
 }
 
-const getWhitePixelPoints = (sampleGap) => {
-  if (!ctx || !canvasRef.value) return []
-  const canvas = canvasRef.value
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  const { data, width, height } = imageData
-  const gap = Math.max(2, Math.floor(sampleGap / devicePixelRatio))
-  const points = []
-  for (let y = 0; y < height; y += gap) {
-    for (let x = 0; x < width; x += gap) {
-      const idx = (y * width + x) * 4
-      const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3
-      if (brightness > 200 && data[idx + 3] > 200) points.push({ x, y })
+const samplePixels = (gap) => {
+  if (!ctx) return []
+  const imageData = ctx.getImageData(0, 0, w, h)
+  const { data } = imageData
+  const step = Math.max(2, gap)
+  const pts = []
+  for (let y = 0; y < h; y += step) {
+    for (let x = 0; x < w; x += step) {
+      const i = (y * w + x) * 4
+      if ((data[i] + data[i + 1] + data[i + 2]) / 3 > 200 && data[i + 3] > 200) {
+        pts.push({ x, y })
+      }
     }
   }
-  return points
+  return pts
 }
 
-const updateParticlesTargets = () => {
-  if (!ctx || !canvasRef.value || !containerRef.value) return
-  const newText = getCountdownString()
-  if (currentText === newText) return
-  currentText = newText
-  const canvas = canvasRef.value
-  const rect = containerRef.value.getBoundingClientRect()
-  const { sampleGap } = getAdaptiveParams(rect.width, rect.height)
+const getGap = () => {
+  const area = w * h
+  if (isMobile) return 6
+  if (area < 200 * 200 * DPR * DPR) return 3
+  if (area < 500 * 500 * DPR * DPR) return 4
+  return 6
+}
 
-  // 绘制文字并采样
-  ctx.fillStyle = getBodyBackgroundColor()
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
-  ctx.fillStyle = getParticleColor()
+const getParticleSize = () => {
+  const area = w * h
+  if (isMobile) return { min: 1.2, max: 2.2 }
+  if (area < 200 * 200 * DPR * DPR) return { min: 1, max: 2.5 }
+  if (area < 500 * 500 * DPR * DPR) return { min: 1.5, max: 3 }
+  return { min: 2, max: 4 }
+}
+
+const rebuildParticles = () => {
+  if (!ctx) return
+  const text = getCountdownStr()
+  if (text === prevText) return
+  prevText = text
+
+  ctx.fillStyle = BG
+  ctx.fillRect(0, 0, w, h)
+  ctx.fillStyle = FG
   ctx.textBaseline = 'middle'
   ctx.textAlign = 'center'
-  const fontSize = getOptimalFontSize(newText, canvas.width, canvas.height)
-  ctx.font = `bold ${fontSize}px 'Roboto Mono', monospace`
-  ctx.fillText(newText, canvas.width / 2, canvas.height / 2)
+  const fontSize = getFontSize(text)
+  ctx.font = `bold ${fontSize}px "Courier New", monospace`
+  ctx.fillText(text, w / 2, h / 2)
 
-  const targetPoints = getWhitePixelPoints(sampleGap)
+  const gap = getGap()
+  const pts = samplePixels(gap)
 
-  // 清空背景（动画每帧会重绘，这里清空避免残留）
-  ctx.fillStyle = getBodyBackgroundColor()
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fillStyle = BG
+  ctx.fillRect(0, 0, w, h)
 
-  // 调整粒子数量并分配目标位置
-  for (let i = 0; i < targetPoints.length; i++) {
-    const { x, y } = targetPoints[i]
+  const sizeRange = getParticleSize()
+  for (let i = 0; i < pts.length; i++) {
     if (particles[i]) {
-      particles[i].setTarget(x, y)
+      particles[i].tx = pts[i].x
+      particles[i].ty = pts[i].y
     } else {
-      const { particleSizeRange } = getAdaptiveParams(rect.width, rect.height)
-      const newParticle = new Particle(canvas.width, canvas.height, particleSizeRange)
-      newParticle.setTarget(x, y)
-      particles.push(newParticle)
+      particles.push({
+        x: rand(0, w), y: rand(0, h),
+        tx: pts[i].x, ty: pts[i].y,
+        r: rand(sizeRange.min, sizeRange.max) * DPR
+      })
     }
   }
-  if (targetPoints.length < particles.length) particles.splice(targetPoints.length)
+  if (pts.length < particles.length) particles.length = pts.length
 }
 
-const animate = () => {
-  if (!ctx || !canvasRef.value) return
-  const canvas = canvasRef.value
-  // 每帧获取当前 body 背景色并清空
-  const bgColor = getBodyBackgroundColor()
-  ctx.fillStyle = bgColor
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+const tick = () => {
+  if (!ctx || !isActive) return
+  ctx.fillStyle = BG
+  ctx.fillRect(0, 0, w, h)
+  ctx.fillStyle = FG
 
-  const particleColor = getParticleColor()
   for (const p of particles) {
-    p.updatePosition()
-    p.draw(ctx, particleColor)
+    const dx = p.tx - p.x
+    const dy = p.ty - p.y
+    const dist = Math.abs(dx) + Math.abs(dy)
+    if (dist > 0.5) {
+      const step = Math.min(dist * 0.12, 4)
+      const r = step / dist
+      p.x += dx * r
+      p.y += dy * r
+    } else {
+      p.x = p.tx
+      p.y = p.ty
+    }
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+    ctx.fill()
   }
-  animationId = requestAnimationFrame(animate)
+
+  animationId = requestAnimationFrame(tick)
 }
 
-const resetParticlesAndTargets = () => {
-  particles = []
-  currentText = null
-  if (ctx && canvasRef.value) updateParticlesTargets()
+const start = () => {
+  if (isActive) return
+  isActive = true
+  rebuildParticles()
+  animationId = requestAnimationFrame(tick)
 }
 
-const startTimer = () => {
-  timerInterval = setInterval(() => {
-    updateParticlesTargets()
-  }, 1000)
-}
-
-const initResizeObserver = () => {
-  if (!containerRef.value) return
-  resizeObserver = new ResizeObserver(() => {
-    updateCanvasSize()
-    resetParticlesAndTargets()
-  })
-  resizeObserver.observe(containerRef.value)
+const stop = () => {
+  isActive = false
+  if (animationId) {
+    cancelAnimationFrame(animationId)
+    animationId = null
+  }
 }
 
 const init = () => {
   if (!canvasRef.value || !containerRef.value) return
-  updateCanvasSize()
+  resize()
   if (!ctx) return
-  resetParticlesAndTargets()
-  animate()
-  startTimer()
-  initResizeObserver()
+  timerId = setInterval(rebuildParticles, 1000)
+  visibilityObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) start()
+    else stop()
+  }, { threshold: 0 })
+  visibilityObserver.observe(containerRef.value)
+  resizeObserver = new ResizeObserver(() => {
+    resize()
+    prevText = ''
+    rebuildParticles()
+  })
+  resizeObserver.observe(containerRef.value)
+  start()
 }
 
 const cleanup = () => {
-  if (animationId) cancelAnimationFrame(animationId)
-  if (timerInterval) clearInterval(timerInterval)
+  stop()
+  if (timerId) clearInterval(timerId)
   if (resizeObserver) resizeObserver.disconnect()
-  if (ctx && canvasRef.value) ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
+  if (visibilityObserver) visibilityObserver.disconnect()
+  if (ctx) ctx.clearRect(0, 0, w, h)
   particles = []
-  currentText = null
+  prevText = ''
   ctx = null
 }
 
@@ -308,17 +234,12 @@ onUnmounted(() => cleanup())
   display: block;
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  max-width: 100%;
+  background: #000;
 }
 .countdown-canvas {
   display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
-}
-
-[data-device="mobile"] .countdown-container {
-  height: 100px !important;
 }
 </style>

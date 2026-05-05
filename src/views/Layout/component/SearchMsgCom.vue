@@ -54,8 +54,8 @@ symbolArr.value.forEach(item => {
       msgTwo: arr[1],
       symbol: item
     }
-    return 
-   }   
+    return
+   }
 })
 
 </script>
@@ -67,16 +67,8 @@ symbolArr.value.forEach(item => {
 </template>
 
 <style scoped>
-html,
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
 h2 {
-  opacity: 0; /* 初始隐藏，由 GSAP 显示 */
+  opacity: 0;
 }
 
 .container {
@@ -85,7 +77,6 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 9px;
 }
 
 .line {
@@ -93,23 +84,24 @@ h2 {
 }
 
 .word {
-  border: 1.5px dashed var(--color-surface-white);
-  background-image: var(--color-text-gradient);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  min-height: 50px;
-  padding: 1rem;
-  border-radius: 10px;
+  border: var(--mg-border-light);
+  color: var(--mg-black);
+  font-family: var(--mg-font-display);
+  font-size: 1.8em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
   margin: 0.25rem;
+  background: var(--mg-white);
+  display: inline-block;
 }
 
-/* 确保 sup 不影响行高 */
 sup {
   line-height: 0;
+}
+
+[data-device="mobile"] .word {
+  font-size: 1.2em;
+  padding: 0.3rem 0.6rem;
 }
 </style>

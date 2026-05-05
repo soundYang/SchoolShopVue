@@ -12,7 +12,7 @@ const goSearchPage = () => {
   if(searchMessage.value.trim() === '') {
     return showToast('请输入搜索内容')
   }
-  
+
   router.push({
     path: '/search',
     query: {
@@ -68,158 +68,144 @@ const goSearchPage = () => {
 .container_chat_bot .container-chat-options {
   position: relative;
   display: flex;
-  background: linear-gradient(
-    to bottom right,
-    #7e7e7e,
-    #363636,
-    #363636,
-    #363636,
-    #363636
-  );
-  border-radius: 16px;
-  padding: 1.5px;
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
+  padding: 2px;
   overflow: hidden;
-
-  &::after {
-    position: absolute;
-    content: "";
-    top: -10px;
-    left: -10px;
-    background: radial-gradient(
-      ellipse at center,
-      #ffffff,
-      rgba(255, 255, 255, 0.3),
-      rgba(255, 255, 255, 0.1),
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0)
-    );
-    width: 30px;
-    height: 30px;
-    filter: blur(1px);
-  }
 }
 
 .container_chat_bot .container-chat-options .chat {
   display: flex;
-  flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
+  flex-direction: row;
+  align-items: center;
+  background: var(--mg-white);
   width: 100%;
   overflow: hidden;
+  gap: 8px;
 }
 
 .container_chat_bot .container-chat-options .chat .chat-bot {
   position: relative;
   display: flex;
+  flex: 1;
 }
 
 .container_chat_bot .chat .chat-bot textarea {
-  background-color: transparent;
-  border-radius: 16px;
+  background-color: var(--mg-white);
   border: none;
   width: 100%;
   height: 50px;
-  color: #ffffff;
-  font-family: sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  padding: 10px;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
   resize: none;
   outline: none;
 
   &::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
   }
-
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-
   &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
+    background: var(--mg-gray-dark);
   }
-
   &::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--mg-black);
     cursor: pointer;
   }
 
   &::placeholder {
-    color: #f3f6fd;
+    color: var(--mg-gray-dark);
+    font-weight: 400;
     transition: all 0.3s ease;
   }
   &:focus::placeholder {
-    color: #363636;
+    color: transparent;
   }
 }
 
-/* 修改 .options 布局，使提交按钮靠右 */
 .container_chat_bot .chat .options {
   display: flex;
-  justify-content: flex-end;  /* 原为 space-between，现改为右对齐 */
-  align-items: flex-end;
-  padding: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 4px 10px 4px 0;
 }
-
-/* 已删除 .btns-add 相关样式 */
 
 .container_chat_bot .chat .options .btn-submit {
   display: flex;
-  padding: 2px;
-  background-image: linear-gradient(to top, #292929, #555555, #292929);
-  border-radius: 10px;
-  box-shadow: inset 0 6px 2px -4px rgba(255, 255, 255, 0.5);
+  padding: 0;
+  background: var(--mg-black);
   cursor: pointer;
   border: none;
   outline: none;
   transition: all 0.15s ease;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
 
   & i {
-    width: 30px;
-    height: 30px;
-    padding: 6px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    backdrop-filter: blur(3px);
-    color: #8b8b8b;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mg-white);
   }
   & svg {
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
+  }
+  &:hover {
+    background: var(--mg-white);
+    border: var(--mg-border-light);
   }
   &:hover svg {
-    color: #f3f6fd;
-    filter: drop-shadow(0 0 5px #ffffff);
-  }
-
-  &:focus svg {
-    color: #f3f6fd;
-    filter: drop-shadow(0 0 5px #ffffff);
-    transform: scale(1.2) rotate(45deg) translateX(-2px) translateY(1px);
-  }
-
-  &:active {
-    transform: scale(0.92);
+    color: var(--mg-black);
   }
 }
 
 .container_chat_bot .tags {
-  padding: 14px 0;
   display: flex;
-  color: #ffffff;
-  font-size: 10px;
-  gap: 4px;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
 
-  & span {
-    padding: 4px 8px;
-    background-color: #1b1b1b;
-    border: 1.5px solid #363636;
-    border-radius: 10px;
-    cursor: pointer;
-    user-select: none;
-  }
+.container_chat_bot .tags span {
+  font-family: var(--mg-font);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mg-black);
+  border: var(--mg-border-light);
+  padding: 4px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.container_chat_bot .tags span:hover {
+  background: var(--mg-black);
+  color: var(--mg-white);
+}
+
+[data-device="mobile"] .container_chat_bot .chat .chat-bot textarea {
+  height: 40px;
+  font-size: 12px;
+  padding: 8px 12px;
+}
+[data-device="mobile"] .container_chat_bot .chat .options .btn-submit {
+  width: 32px;
+  height: 32px;
+}
+[data-device="mobile"] .container_chat_bot .tags {
+  gap: 8px;
+}
+[data-device="mobile"] .container_chat_bot .tags span {
+  font-size: 11px;
+  padding: 3px 10px;
 }
 </style>

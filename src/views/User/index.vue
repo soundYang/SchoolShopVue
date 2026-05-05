@@ -129,7 +129,9 @@ defineOptions({
     display: flex;
     justify-content: space-between;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    background: var(--mg-white);
+    color: var(--mg-black);
   }
   .userBox>div{
     padding: 40px;
@@ -147,9 +149,6 @@ defineOptions({
     flex-direction: column;
     margin-top: 30px;
   }
-  /* .proInfoBox>div{
-    border: 1px solid white;
-  } */
   .boughtBox,
   .postedBox{
     flex: 1.25;
@@ -165,42 +164,37 @@ defineOptions({
   }
   .reviewTitle{
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     margin-left: 10px;
-    font-family: "方正舒体";
+    font-family: var(--mg-font-display);
   }
   .noReview{
     text-align: center;
     font-weight: 600;
-    font-family: "方正舒体";
+    font-family: var(--mg-font);
     line-height: 300px;
     margin-left: -160px;
+    color: var(--mg-black);
   }
   .reviewBox::before {
     content: '';
     display: block;
     width: 1000px;
-    height: 1px;
-    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.6);
+    height: 2px;
+    background: var(--mg-black);
     position: absolute;
     bottom: 0;
     left: 0;
   }
   .reviewList{
     margin-bottom: 20px;
-    overflow: scroll;
-    height: 400px;
-
-  }
-  .reviewList {
-    /* 保留原有滚动能力，但隐藏滚动条 */
-    overflow-x: hidden;          /* 必须保留，否则无法滚动 */
+    overflow-x: hidden;
     overflow-y: auto;
-    scrollbar-width: none;     /* Firefox 隐藏滚动条 */
-    -ms-overflow-style: none;  /* IE 和 Edge 旧版隐藏滚动条 */
+    height: 400px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  /* Chrome, Safari, 新版 Edge 隐藏滚动条 */
   .reviewList::-webkit-scrollbar {
     display: none;
   }

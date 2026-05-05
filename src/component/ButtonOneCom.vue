@@ -45,144 +45,49 @@ const arrStr = strToArr(props.str)
 </template>
 
 <style scoped>
-/* ===== CSS 变量 ===== */
-:root {
-  --highlight-hue: 210deg;
-  --btn-color: #101010;
-  --border-radius: 24px;
-  --padding: 4px;
-  --transition: 0.4s;
-  --glow-color: hsl(var(--highlight-hue), 100%, 70%);
-}
-
-/* ===== 基础样式 ===== */
 .btn-wrapper {
   position: relative;
   display: inline-block;
 }
 
 .btn {
-  --border-radius: 24px;
-  --padding: 4px;
-
   user-select: none;
   display: flex;
   justify-content: center;
-  padding: 0.5em 0.5em 0.5em 1.1em;
-  font-family: "Poppins", "Inter", "Segoe UI", sans-serif;
+  padding: 0.5em 0.7em 0.5em 0.7em;
+  font-family: var(--mg-font);
   font-size: 1em;
-  font-weight: 400;
-  background-color: var(--btn-color);
-  box-shadow:
-    inset 0px 1px 1px rgba(255,255,255,0.2),
-    inset 0px 2px 2px rgba(255,255,255,0.15),
-    inset 0px 4px 4px rgba(255,255,255,0.1),
-    inset 0px 8px 8px rgba(255,255,255,0.05),
-    inset 0px 16px 16px rgba(255,255,255,0.05),
-    0px -1px 1px rgba(0,0,0,0.02),
-    0px -2px 2px rgba(0,0,0,0.03),
-    0px -4px 4px rgba(0,0,0,0.05),
-    0px -8px 8px rgba(0,0,0,0.06),
-    0px -16px 16px rgba(0,0,0,0.08);
-  border: solid 1px #fff2;
-  border-radius: var(--border-radius);
+  font-weight: 600;
+  background-color: var(--mg-white);
+  border: var(--mg-border);
+  border-radius: 0;
+  box-shadow: var(--mg-shadow);
   cursor: pointer;
-  transition:
-    box-shadow var(--transition),
-    border var(--transition),
-    background-color var(--transition);
+  transition: all 0.15s ease;
+  color: var(--mg-black);
+  letter-spacing: 1px;
 }
 
-/* 伪元素共用阴影变量（精简合并） */
-.btn::before,
-.btn::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  pointer-events: none;
-  transition:
-    opacity var(--transition),
-    filter var(--transition),
-    box-shadow var(--transition);
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow-hover);
 }
 
-.btn::before {
-  top: calc(0px - var(--padding));
-  left: calc(0px - var(--padding));
-  width: calc(100% + var(--padding) * 2);
-  height: calc(100% + var(--padding) * 2);
-  border-radius: calc(var(--border-radius) + var(--padding));
-  background-image: linear-gradient(0deg, #0004, #000a);
-  box-shadow:
-    0 -8px 8px -6px #0000 inset,
-    0 -16px 16px -8px #00000000 inset,
-    1px 1px 1px #fff2,
-    2px 2px 2px #fff1,
-    -1px -1px 1px #0002,
-    -2px -2px 2px #0001;
-  z-index: -1;
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
 }
 
-.btn::after {
-  background-image: linear-gradient(
-    0deg,
-    #fff,
-    var(--glow-color),
-    hsla(var(--highlight-hue), 100%, 70%, 0.5) 8%,
-    transparent
-  );
-  opacity: 0;
-}
-
-/* ===== 字母动画 ===== */
-.btn-letter {
-  position: relative;
-  display: inline-block;
-  color: #fff5;
-  animation: letter-anim 2s ease-in-out infinite;
-  animation-delay: calc(0.08s * var(--delay, 0)); /* 关键简化：使用自定义属性 */
-  transition:
-    color var(--transition),
-    text-shadow var(--transition),
-    opacity var(--transition);
-}
-
-@keyframes letter-anim {
-  50% {
-    text-shadow: 0 0 3px #fff8;
-    color: #fff;
-  }
-}
-
-/* ===== SVG 图标 ===== */
 .btn-svg {
-  flex-grow: 1;
-  height: 24px;
-  margin-right: 0.5rem;
-  fill: #e8e8e8;
-  animation: flicker 2s linear infinite;
-  animation-delay: 0.5s;
-  filter: drop-shadow(0 0 2px #fff9);
-  transition:
-    fill var(--transition),
-    filter var(--transition),
-    opacity var(--transition);
+  height: 20px;
+  margin-right: 0.3rem;
+  fill: var(--mg-black);
 }
 
-@keyframes flicker {
-  50% { opacity: 0.3; }
-}
-
-/* ===== 文字容器 ===== */
 .txt-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 6.4em;
 }
 
 .txt-1,
@@ -192,139 +97,15 @@ const arrStr = strToArr(props.str)
 }
 
 .txt-1 {
-  animation: appear-anim 1s ease-in-out forwards;
+  position: static;
 }
 
 .txt-2 {
-  opacity: 0;
+  display: none;
 }
 
-@keyframes appear-anim {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* ===== 交互状态 ===== */
-
-/* Focus 状态 */
-.btn:focus {
-  outline: none;
-}
-
-.btn:focus .txt-1 {
-  animation: opacity-anim 0.3s ease-in-out forwards;
-  animation-delay: 1s;
-}
-
-.btn:focus .txt-2 {
-  animation: opacity-anim 0.3s ease-in-out reverse forwards;
-  animation-delay: 1s;
-}
-
-@keyframes opacity-anim {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.btn:focus .btn-letter {
-  animation:
-    focused-letter-anim 1s ease-in-out forwards,
-    letter-anim 1.2s ease-in-out infinite;
-  animation-delay: 0s, 1s;
-}
-
-@keyframes focused-letter-anim {
-  0%, 100% { filter: blur(0px); }
-  50% {
-    transform: scale(2);
-    filter: blur(10px) brightness(150%)
-      drop-shadow(-36px 12px 12px var(--glow-color));
-  }
-}
-
-.btn:focus .btn-svg {
-  animation-duration: 1.2s;
-  animation-delay: 0.2s;
-}
-
-.btn:focus::before {
-  box-shadow:
-    0 -8px 12px -6px #fff3 inset,
-    0 -16px 16px -8px hsla(var(--highlight-hue), 100%, 70%, 0.2) inset,
-    1px 1px 1px #fff3,
-    2px 2px 2px #fff1,
-    -1px -1px 1px #0002,
-    -2px -2px 2px #0001;
-}
-
-.btn:focus::after {
-  opacity: 0.6;
-  mask-image: linear-gradient(0deg, #fff, transparent);
-  filter: brightness(100%);
-}
-
-/* Active 状态 */
-.btn:active {
-  border: solid 1px hsla(var(--highlight-hue), 100%, 80%, 0.7);
-  background-color: hsla(var(--highlight-hue), 50%, 20%, 0.5);
-}
-
-.btn:active::before {
-  box-shadow:
-    0 -8px 12px -6px #fffa inset,
-    0 -16px 16px -8px hsla(var(--highlight-hue), 100%, 70%, 0.8) inset,
-    1px 1px 1px #fff4,
-    2px 2px 2px #fff2,
-    -1px -1px 1px #0002,
-    -2px -2px 2px #0001;
-}
-
-.btn:active::after {
-  opacity: 1;
-  mask-image: linear-gradient(0deg, #fff, transparent);
-  filter: brightness(200%);
-}
-
-.btn:active .btn-letter {
-  text-shadow: 0 0 1px hsla(var(--highlight-hue), 100%, 90%, 0.9);
-  animation: none;
-}
-
-/* Hover 状态 */
-.btn:hover {
-  border: solid 1px hsla(var(--highlight-hue), 100%, 80%, 0.4);
-}
-
-.btn:hover::before {
-  box-shadow:
-    0 -8px 8px -6px #fffa inset,
-    0 -16px 16px -8px hsla(var(--highlight-hue), 100%, 70%, 0.3) inset,
-    1px 1px 1px #fff2,
-    2px 2px 2px #fff1,
-    -1px -1px 1px #0002,
-    -2px -2px 2px #0001;
-}
-
-.btn:hover::after {
-  opacity: 1;
-  mask-image: linear-gradient(0deg, #fff, transparent);
-}
-
-.btn:hover .btn-svg {
-  fill: #fff;
-  filter: drop-shadow(0 0 3px var(--glow-color)) drop-shadow(0 -4px 6px #0009);
-  animation: none;
-}
-
-[data-device="mobile"] .btn {
-  padding: 0.2em 0.3em 0.2em 0.6em;
-  font-size: 0.75em;
-}
-[data-device="mobile"] .btn-svg {
-  height: 16px;
-  margin-right: 0.25rem;
-}
-[data-device="mobile"] .txt-wrapper {
-  min-width: 3.6em;
+.btn-letter {
+  display: inline-block;
+  color: var(--mg-black);
 }
 </style>

@@ -130,16 +130,17 @@ onMounted(() => {
   position: relative;
   width: 200px;
   height: 300px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 16px;
+  border: var(--mg-border);
   overflow: hidden;
-  box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--mg-shadow);
   transition: box-shadow 0.2s ease;
   cursor: pointer;
+  background: var(--mg-white);
 }
 
 .glass-card:hover {
-  box-shadow: 0 25px 40px -8px rgba(0, 0, 0, 0.6);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow-hover);
 }
 
 .card-bg-layer {
@@ -152,7 +153,6 @@ onMounted(() => {
 .card-bg-shape {
   width: 100%;
   height: 100%;
-  border-radius: 12px 100px 40px 12px;
 }
 
 .card-frost-center {
@@ -162,23 +162,18 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-color: transparent;
+  background-color: var(--mg-white);
   z-index: 2;
-  border-radius: inherit;
-  transition: backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 
 .card-frost-center.no-frost {
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+  opacity: 0;
 }
 
 .spinner {
   width: 140px;
   height: 140px;
-  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -188,15 +183,12 @@ onMounted(() => {
   width: 130px;
   height: 130px;
   object-fit: contain;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  filter: drop-shadow(0 8px 20px rgba(245, 158, 11, 0.5));
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  border: var(--mg-border-light);
+  transition: transform 0.3s ease;
 }
 
 .glass-card:hover .box-image {
   transform: scale(1.08);
-  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .card-content {
@@ -213,36 +205,33 @@ onMounted(() => {
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(249, 250, 251, 0.1);
-  border-radius: 16px;
-  color: #ffffff;
-  font-family: 'Courier New', monospace, monospace;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  background-color: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font-display);
   pointer-events: auto;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: var(--mg-border-light);
   box-sizing: border-box;
-  transition: backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease, background-color 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 
 .frost-panel-full.fade-blur {
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  background-color: transparent;
+  opacity: 1;
 }
 
 .frost-panel-full .title {
   font-size: 24px;
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .frost-panel-full .sub {
   font-size: 14px;
-  color: #ffffff;
+  color: var(--mg-black);
   margin-top: 4px;
   font-weight: 600;
+  font-family: var(--mg-font-mono);
 }
 
 .frost-panel-full .year {
@@ -252,9 +241,11 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--mg-black);
   letter-spacing: 1px;
   font-weight: 600;
+  border-top: var(--mg-border-light);
+  padding-top: 8px;
 }
 
 .card-highlight {
@@ -266,7 +257,6 @@ onMounted(() => {
   pointer-events: none;
   z-index: 10;
   overflow: hidden;
-  border-radius: 16px;
 }
 
 .card-highlight::after {
@@ -276,7 +266,7 @@ onMounted(() => {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 60%);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.35) 0%, rgba(255, 215, 0, 0) 60%);
   opacity: 0;
   transform: translateY(-30%) rotate(15deg);
 }

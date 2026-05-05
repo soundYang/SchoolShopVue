@@ -59,22 +59,22 @@ onUnmounted(() => {
   margin-top: 40px;
   padding: 30px;
   height: 300px;
-  font-family: '方正舒体';
+  font-family: var(--mg-font);
   position: relative;
-  box-sizing: border-box; /* 确保 padding 不影响实际内容宽度 */
+  box-sizing: border-box;
 }
 .proListBox::before {
   content: '';
   display: block;
   width: 100%;
-  height: 1px;
-  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.6);
+  height: 2px;
+  background: var(--mg-black);
   position: absolute;
   bottom: 0;
   left: 0;
 }
 .title {
-  color: white;
+  color: var(--mg-black);
 }
 .list {
   display: flex;
@@ -89,26 +89,16 @@ onUnmounted(() => {
   height: 8px;
 }
 .list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--mg-black);
   border-radius: 4px;
 }
 .list::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--mg-gray);
+  border-radius: 4px;
 }
 .noPro {
   text-align: center;
   line-height: 200px;
-}
-.list {
-  /* 保留原有滚动能力，但隐藏滚动条 */
-  overflow-x: auto;          /* 必须保留，否则无法滚动 */
-  overflow-y: hidden;
-  scrollbar-width: none;     /* Firefox 隐藏滚动条 */
-  -ms-overflow-style: none;  /* IE 和 Edge 旧版隐藏滚动条 */
-}
-
-/* Chrome, Safari, 新版 Edge 隐藏滚动条 */
-.list::-webkit-scrollbar {
-  display: none;
+  color: var(--mg-black);
 }
 </style>

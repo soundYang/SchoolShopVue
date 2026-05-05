@@ -77,7 +77,10 @@ onUnmounted(() => {
 }
 
 .label {
-  color: #aaa;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .time-display {
@@ -90,47 +93,50 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ff5858;
-  color: white;
-  border-radius: 4px;
-  font-weight: bold;
-  font-family: 'Roboto Mono', monospace;
-}
-
-.colon {
-  color: #ff5858;
-  font-weight: bold;
+  background: var(--mg-black);
+  color: var(--mg-white);
+  font-weight: 700;
+  font-family: var(--mg-font-mono);
+  border: 2px solid var(--mg-black);
 }
 
 .countdown.medium .time-block {
-  width: 28px;
-  height: 28px;
-  font-size: 14px;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
 }
 
 .countdown.medium .colon {
-  font-size: 14px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .countdown.medium .label {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .countdown.small .time-block {
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
 }
 
 .countdown.small .colon {
-  font-size: 12px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .countdown.small .label {
-  font-size: 11px;
+  font-size: 12px;
+}
+
+.colon {
+  color: var(--mg-black);
+  font-weight: 700;
 }
 
 .countdown.expired .label {
-  color: #ff5858;
+  color: var(--mg-black);
+  font-weight: 700;
 }
 </style>

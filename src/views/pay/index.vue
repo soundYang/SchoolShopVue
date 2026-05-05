@@ -119,29 +119,31 @@ const handlePay = async () => {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  font-family: var(--mg-font);
 }
 
 .pay-card {
   width: 100%;
   max-width: 500px;
-  background: rgb(38, 38, 38);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
 }
 
 .pay-header {
-  background: linear-gradient(135deg, #ff5858, #ff3333);
+  background: var(--mg-black);
   padding: 20px;
   position: relative;
+  border-bottom: var(--mg-border);
 }
 
 .pay-title {
   margin: 0;
   text-align: center;
-  color: white;
+  color: var(--mg-white);
   font-size: 24px;
   font-weight: bold;
+  font-family: var(--mg-font-display);
 }
 
 .pay-content {
@@ -149,10 +151,10 @@ const handlePay = async () => {
 }
 
 .order-info {
-  background: #2a2a2a;
-  border-radius: 12px;
+  background: var(--mg-gray);
   padding: 20px;
   margin-bottom: 20px;
+  border: var(--mg-border-light);
 }
 
 .info-row {
@@ -160,7 +162,7 @@ const handlePay = async () => {
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: var(--mg-border-light);
 }
 
 .info-row:last-child {
@@ -168,38 +170,41 @@ const handlePay = async () => {
 }
 
 .info-label {
-  color: #888;
+  color: var(--mg-black);
   font-size: 14px;
 }
 
 .info-value {
-  color: white;
+  color: var(--mg-black);
   font-size: 14px;
   font-weight: 500;
 }
 
 .info-value.order-id {
   font-size: 12px;
-  color: #aaa;
+  color: var(--mg-black);
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: var(--mg-font-mono);
 }
 
 .info-value.price {
   font-size: 28px;
   font-weight: bold;
-  color: #ff5858;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
 .info-value.insufficient {
-  color: #ff4444;
+  color: var(--mg-black);
+  text-decoration: line-through;
 }
 
 .warning-box {
-  background: rgba(255, 68, 68, 0.2);
-  border: 1px solid #ff5858;
-  border-radius: 8px;
+  background: var(--mg-white);
+  border: var(--mg-border-light);
+  border-style: dashed;
   padding: 15px;
   margin-bottom: 20px;
   text-align: center;
@@ -207,14 +212,14 @@ const handlePay = async () => {
 
 .warning-box p {
   margin: 0;
-  color: #ff5858;
+  color: var(--mg-black);
   font-size: 14px;
+  font-family: var(--mg-font-mono);
 }
 
 .success-box {
-  background: rgba(0, 255, 136, 0.2);
-  border: 1px solid #00ff88;
-  border-radius: 8px;
+  background: var(--mg-white);
+  border: var(--mg-border);
   padding: 30px;
   margin-bottom: 20px;
   text-align: center;
@@ -223,28 +228,30 @@ const handlePay = async () => {
 .success-icon {
   width: 60px;
   height: 60px;
-  background: #00ff88;
-  border-radius: 50%;
+  background: var(--mg-black);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 15px;
   font-size: 30px;
-  color: white;
+  color: var(--mg-white);
   font-weight: bold;
+  border: var(--mg-border-light);
 }
 
 .success-box p {
   margin: 0;
-  color: #00ff88;
+  color: var(--mg-black);
   font-size: 16px;
+  font-family: var(--mg-font);
 }
 
 .paying-text {
   text-align: center;
-  color: #ff5858;
+  color: var(--mg-black);
   font-size: 14px;
   padding: 10px 0;
+  font-family: var(--mg-font-mono);
 }
 
 .pay-actions {
@@ -258,23 +265,33 @@ const handlePay = async () => {
 .pay-btn {
   display: inline-block;
   padding: 15px 50px;
-  background: linear-gradient(135deg, #ff5858, #ff3333);
-  color: white;
-  border-radius: 8px;
+  background: var(--mg-black);
+  color: var(--mg-white);
   font-weight: bold;
   font-size: 18px;
-  transition: all 0.3s;
+  transition: all 0.2s;
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
+  font-family: var(--mg-font-display);
+  cursor: pointer;
 }
 
 .pay-btn:not(.disabled):hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(255, 88, 88, 0.5);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--mg-black);
+}
+
+.pay-btn:not(.disabled):active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .pay-btn.disabled {
-  background: #555;
+  background: var(--mg-gray);
+  color: var(--mg-black);
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.6;
+  box-shadow: none;
 }
 
 .disabled {
@@ -290,7 +307,6 @@ const handlePay = async () => {
 
 [data-device="mobile"] .pay-card {
   max-width: 100%;
-  border-radius: 12px;
 }
 
 [data-device="mobile"] .pay-header {

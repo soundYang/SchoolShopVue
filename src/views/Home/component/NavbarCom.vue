@@ -51,16 +51,15 @@ const jumpProductManagement = () => {
   position: relative;
   width: 180px;
   height: 200px;
-  background: linear-gradient(#fff2, transparent);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.5s;
-  border-radius: 10px;
+  transition: transform 0.5s, margin 0.5s;
+  will-change: transform, opacity;
   margin: 0 -45px;
-  backdrop-filter: blur(10px);
   transform: rotate(calc(var(--r) * 1deg));
   cursor: pointer;
 }
@@ -76,15 +75,19 @@ const jumpProductManagement = () => {
   bottom: 0;
   width: 100%;
   height: 40px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--mg-black);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: var(--mg-white);
+  font-family: var(--mg-font);
+  font-weight: 600;
+  font-size: 14px;
+  border-top: var(--mg-border-light);
 }
 .container .glass i {
   font-size: 2.5em;
-  fill: #fff;
+  color: var(--mg-black);
 }
 
 [data-device="mobile"] .container .glass {

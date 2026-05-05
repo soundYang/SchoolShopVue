@@ -157,9 +157,12 @@ useInfiniteScroll(
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow-y: auto;          /* 允许滚动，用于无限滚动监听 */
-  max-height: 100vh;         /* 可调整，或由父级控制高度 */
-  padding-top: 80px;         /* 为 fixed 头部留出空间，避免返回按钮被遮挡 */
+  overflow-y: auto;
+  max-height: 100vh;
+  padding-top: 100px;
+  background: var(--mg-white);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .shopBox {
@@ -175,8 +178,9 @@ useInfiniteScroll(
 .promptMsg {
   text-align: center;
   font-size: 20px;
-  color: #666;
+  color: var(--mg-black);
   padding: 100px;
+  font-family: var(--mg-font);
 }
 
 .searchBox {
@@ -189,12 +193,13 @@ useInfiniteScroll(
 .end-tip {
   text-align: center;
   font-size: 14px;
-  color: #999;
+  color: var(--mg-black);
   padding: 20px 0;
+  font-family: var(--mg-font);
 }
 
 [data-device="mobile"] .box {
-  padding-top: 60px;
+  padding-top: 80px;
 }
 
 [data-device="mobile"] .searchBox {

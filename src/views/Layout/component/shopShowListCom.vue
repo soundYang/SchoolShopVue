@@ -117,6 +117,7 @@ defineProps({
   flex-wrap: nowrap;
   will-change: transform;
   position: relative;
+  backface-visibility: hidden;
 }
 
 .project-wrap {
@@ -125,25 +126,26 @@ defineProps({
   box-sizing: content-box;
 }
 
-/* title style */
 .text-center{
   margin-left: 70px;
   margin-bottom: 20px;
-  /* 字体倾斜 */
   transform: skewX(-20deg);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--mg-font-display);
+  font-size: 2em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mg-black);
 }
 .text-center::before{
   content: "";
   display: block;
   width: 120px;
-  height: 2px;
-  background: white;
+  height: 3px;
+  background: var(--mg-black);
   margin-bottom: -40px;
   margin-left: -5px;
 }
 
-/* 更多详情 */
 .more-details{
   display: flex;
   justify-content: center;
@@ -151,9 +153,15 @@ defineProps({
   gap: 10px;
   margin-left: -200px;
   cursor: pointer;
+  font-family: var(--mg-font);
+  font-weight: 600;
+  color: var(--mg-black);
 }
 .more-details>span{
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px rgba(255,255,255,0.5);
+  font-size: 1.2em;
+}
+.more-details i {
+  font-size: 1.5em;
 }
 
 [data-device="mobile"] .horiz-gallery-strip {
@@ -162,8 +170,25 @@ defineProps({
   gap: 12px;
 }
 [data-device="mobile"] .project-wrap {
-  width: 45vw;
+  width: 44vw;
   padding: 0.5rem;
+}
+[data-device="mobile"] .project-wrap .card_box {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+}
+[data-device="mobile"] .project-wrap .proDemo>img {
+  width: 70%;
+  height: auto;
+  aspect-ratio: 1 / 1.4;
+  margin-top: 10%;
+}
+[data-device="mobile"] .project-wrap .proDemo>h2 {
+  font-size: 12px;
+}
+[data-device="mobile"] .project-wrap .proDemo>h3 {
+  font-size: 14px;
 }
 [data-device="mobile"] .more-details {
   margin-left: 0;

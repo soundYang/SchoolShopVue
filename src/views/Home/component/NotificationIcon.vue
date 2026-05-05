@@ -202,27 +202,11 @@ onUnmounted(() => {
 
 .notification-icon {
   font-size: 24px;
-  transition: color 0.3s, text-shadow 0.3s;
+  color: var(--mg-black);
 }
 
-.notification-icon:hover {
-  color: #FAC921;
-}
-
-/* 有未读通知时图标发光 */
 .notification-icon.has-unread {
-  color: #FAC921;
-  text-shadow: 0 0 8px rgba(250, 201, 33, 0.6), 0 0 16px rgba(250, 201, 33, 0.3);
-  animation: glow-icon 2s infinite;
-}
-
-@keyframes glow-icon {
-  0%, 100% {
-    text-shadow: 0 0 8px rgba(250, 201, 33, 0.6), 0 0 16px rgba(250, 201, 33, 0.3);
-  }
-  50% {
-    text-shadow: 0 0 12px rgba(250, 201, 33, 0.9), 0 0 24px rgba(250, 201, 33, 0.5);
-  }
+  color: var(--mg-black);
 }
 
 .badge {
@@ -233,37 +217,24 @@ onUnmounted(() => {
   height: 18px;
   line-height: 18px;
   text-align: center;
-  background: #f44336;
-  color: white;
+  background: var(--mg-black);
+  color: var(--mg-white);
   font-size: 11px;
-  border-radius: 9px;
   padding: 0 4px;
   font-weight: bold;
-  box-shadow: 0 0 6px rgba(244, 67, 54, 0.6);
-  animation: pulse-badge 2s infinite;
-}
-
-/* 红色角标呼吸脉冲动画 */
-@keyframes pulse-badge {
-  0%, 100% {
-    box-shadow: 0 0 6px rgba(244, 67, 54, 0.6);
-  }
-  50% {
-    box-shadow: 0 0 14px rgba(244, 67, 54, 0.9);
-  }
+  border: 2px solid var(--mg-black);
 }
 
 .notification-popup {
   position: absolute;
   top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 380px;
+  max-width: calc(100vw - 24px);
   max-height: 480px;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  background: var(--mg-white);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   overflow: hidden;
   z-index: 200;
 }
@@ -273,29 +244,35 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px 12px;
-  border-bottom: 1px solid #444;
+  border-bottom: var(--mg-border-light);
 }
 
 .popup-title {
   font-size: 16px;
   font-weight: bold;
-  color: #fff;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .mark-all-btn {
-  background: transparent;
-  border: 1px solid #FAC921;
-  color: #FAC921;
+  background: var(--mg-white);
+  border: var(--mg-border-light);
+  color: var(--mg-black);
   font-size: 12px;
   padding: 4px 12px;
-  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s;
+  font-family: var(--mg-font);
+  box-shadow: var(--mg-shadow-sm);
 }
 
 .mark-all-btn:hover {
-  background: #FAC921;
-  color: #333;
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow);
+}
+
+.mark-all-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
 }
 
 .popup-body {
@@ -305,9 +282,10 @@ onUnmounted(() => {
 
 .popup-empty {
   text-align: center;
-  color: #888;
+  color: var(--mg-black);
   padding: 40px 20px;
   font-size: 14px;
+  font-family: var(--mg-font);
 }
 
 .notification-item {
@@ -315,8 +293,7 @@ onUnmounted(() => {
   gap: 12px;
   padding: 14px 20px;
   cursor: pointer;
-  transition: background 0.2s;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--mg-black);
 }
 
 .notification-item:last-child {
@@ -324,20 +301,19 @@ onUnmounted(() => {
 }
 
 .notification-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--mg-gray);
 }
 
-/* 未读通知有浅色高亮背景 */
 .notification-item.unread {
-  background: rgba(250, 201, 33, 0.05);
+  background: var(--mg-gray);
 }
 
 .item-dot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
   flex-shrink: 0;
   margin-top: 5px;
+  border: 2px solid var(--mg-black);
 }
 
 .item-content {
@@ -348,26 +324,28 @@ onUnmounted(() => {
 .item-title {
   font-size: 14px;
   font-weight: bold;
-  color: #fff;
+  color: var(--mg-black);
   margin-bottom: 4px;
+  font-family: var(--mg-font);
 }
 
 .item-message {
   font-size: 12px;
-  color: #aaa;
+  color: var(--mg-black);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: 4px;
+  font-family: var(--mg-font);
 }
 
 .item-time {
   font-size: 11px;
-  color: #666;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
-/* 弹层出现/消失过渡动画 */
 .popup-enter-active,
 .popup-leave-active {
   transition: all 0.25s ease;
@@ -376,10 +354,9 @@ onUnmounted(() => {
 .popup-enter-from,
 .popup-leave-to {
   opacity: 0;
-  transform: translateX(-50%) translateY(-8px);
+  transform: translateY(-8px);
 }
 
-/* ==================== 系统通知详情弹窗 ==================== */
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -394,11 +371,11 @@ onUnmounted(() => {
 }
 
 .dialog-box {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--mg-white);
   width: 380px;
   max-width: 90vw;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: var(--mg-border);
+  box-shadow: var(--mg-shadow);
   overflow: hidden;
 }
 
@@ -412,21 +389,24 @@ onUnmounted(() => {
 .dialog-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--mg-black);
+  font-family: var(--mg-font);
 }
 
 .dialog-close {
   background: none;
-  border: none;
-  font-size: 24px;
-  color: #999;
+  border: var(--mg-border-light);
+  font-size: 20px;
+  color: var(--mg-black);
   cursor: pointer;
-  padding: 0 4px;
+  padding: 0 6px;
   line-height: 1;
+  font-family: var(--mg-font-mono);
 }
 
 .dialog-close:hover {
-  color: #333;
+  background: var(--mg-black);
+  color: var(--mg-white);
 }
 
 .dialog-body {
@@ -435,11 +415,12 @@ onUnmounted(() => {
 
 .dialog-message {
   font-size: 15px;
-  color: #555;
+  color: var(--mg-black);
   line-height: 1.8;
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
+  font-family: var(--mg-font);
 }
 
 .dialog-footer {
@@ -451,26 +432,32 @@ onUnmounted(() => {
 
 .dialog-time {
   font-size: 12px;
-  color: #999;
+  color: var(--mg-black);
+  font-family: var(--mg-font-mono);
 }
 
 .dialog-btn {
-  background: #FAC921;
-  color: #333;
-  border: none;
-  border-radius: 6px;
+  background: var(--mg-black);
+  color: var(--mg-white);
+  border: var(--mg-border-light);
   padding: 8px 20px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  font-family: var(--mg-font);
+  box-shadow: var(--mg-shadow-sm);
 }
 
 .dialog-btn:hover {
-  background: #e8b81e;
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow);
 }
 
-/* 弹窗动画 */
+.dialog-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
 .dialog-enter-active {
   animation: dialog-in 0.25s ease-out;
 }
@@ -503,14 +490,14 @@ onUnmounted(() => {
   top: -5px;
   right: -8px;
   padding: 0 3px;
-  border-radius: 7px;
 }
 [data-device="mobile"] .notification-popup {
-  width: calc(100vw - 24px);
-  max-width: 360px;
-  left: auto;
-  right: -8px;
-  transform: none;
+  position: fixed;
+  top: 56px;
+  left: 12px;
+  right: 12px;
+  width: auto;
+  max-width: none;
 }
 [data-device="mobile"] .popup-enter-from,
 [data-device="mobile"] .popup-leave-to {
