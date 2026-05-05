@@ -149,4 +149,20 @@ const handleDrop = (targetIndex, event) => {
   color: #999;
   font-size: 18px;
 }
+
+[data-device="mobile"] .card {
+  height: 196px;
+  width: 132px;
+  border-width: 3px;
+  border-bottom-width: 20px;
+  border-radius: 6%;
+}
+
+[data-device="mobile"] .proImg {
+  border-radius: 10px;
+}
+
+[data-device="mobile"] .no-images {
+  font-size: 14px;
+}
 </style>

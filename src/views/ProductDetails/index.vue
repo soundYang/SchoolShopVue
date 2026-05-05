@@ -281,4 +281,43 @@ const buyShop = () => {
 [data-device="mobile"] .bottom h1 {
   font-size: 24px;
 }
+
+[data-device="mobile"] .bottom h3 {
+  font-size: 16px;
+}
+
+[data-device="mobile"] .bottom > span {
+  font-size: 12px;
+}
+
+[data-device="mobile"] .countBox {
+  gap: 12px;
+}
+
+[data-device="mobile"] .countBox * {
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+[data-device="mobile"] .sellInfoBox svg {
+  width: 100px;
+  height: 100px;
+}
+
+[data-device="mobile"] .sellInfoBox h3 {
+  font-size: 14px;
+  margin-top: 12px !important;
+}
+
+[data-device="mobile"] .self-product-hint {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+[data-device="mobile"] .box-button {
+  display: flex;
+  justify-content: center;
+}
 </style>
