@@ -106,6 +106,7 @@ provide('openPutAddressFrom', openPutAddressFrom)
         @input="setProFrom({ ...proFrom, shopMsg: $event.target.value })"
         placeholder="商品描述"
         class="input proMsg"
+        maxlength="100"
       ></textarea>
 
       <!-- 复选框 -->

@@ -49,6 +49,11 @@ if(props.putAddress.receiver){
 const openAddressFrom = inject('openAddressFrom')
 // 添加地址
 const addInfo = async () => {
+  // 先去空格
+  addressFrom.value.receiver = addressFrom.value.receiver.trim()
+  addressFrom.value.phone = addressFrom.value.phone.trim()
+  addressFrom.value.detail = addressFrom.value.detail.trim()
+
   for(let [key,value] of addressFrom.value){
     if(key === 'isDefault') continue
     if(!value){
@@ -66,6 +71,11 @@ const addInfo = async () => {
 
 // 修改地址
 const putInfo = async () => {
+  // 先去空格
+  addressFrom.value.receiver = addressFrom.value.receiver.trim()
+  addressFrom.value.phone = addressFrom.value.phone.trim()
+  addressFrom.value.detail = addressFrom.value.detail.trim()
+
   if(!checkInfo()) return
 
   await AddressUpdateServer(addressFrom.value)
@@ -92,9 +102,9 @@ const checkInfo = () => {
     <div v-if="!props.putAddress.receiver" class="title">新增地址<br><span>Add new address</span></div>
     <div v-else class="title">修改地址<br><span>Put new address</span></div>
 
-    <input v-model="addressFrom.receiver" placeholder="收货人" required name="receiver" class="input">
-    <input v-model="addressFrom.phone" placeholder="收货人电话" required name="phone" class="input">
-    <input v-model="addressFrom.detail" placeholder="收货地址" required name="detail" class="input">
+    <input v-model="addressFrom.receiver" placeholder="联系人" required name="receiver" class="input">
+    <input v-model="addressFrom.phone" placeholder="联系电话" required name="phone" class="input">
+    <input v-model="addressFrom.detail" placeholder="详细地址" required name="detail" class="input">
 
     <!-- 自定义圆形复选框 -->
     <label class="checkbox-wrapper">

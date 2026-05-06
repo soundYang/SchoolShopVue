@@ -49,6 +49,15 @@ export const ProductPublishServer = (formData) => {
   })
 }
 
+// 修改商品（使用 FormData，包含 _id 和所有字段）
+export const ProductUpdateServer = (formData) => {
+  return request.post('/product/updatePro', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 // 修改商品状态
 export const ProductUpdateStatusServer = ({id, status}) => {
   return request.post('product/updatePro', {

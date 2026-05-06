@@ -38,20 +38,17 @@ const displayText = computed(() => {
 </script>
 
 <style scoped>
-.toast-container {
+.glitch-toast {
   position: fixed;
-  bottom: 30px;
+  top: 30px;
   right: 30px;
   z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   pointer-events: none;
 }
 
-.toast-item {
+.glitch-toast-content {
   pointer-events: auto;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 12px;
   min-width: 260px;
@@ -64,67 +61,44 @@ const displayText = computed(() => {
   font-size: 14px;
   font-weight: 600;
   color: var(--mg-black);
-  animation: toastEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.toast-item.removing {
-  animation: toastExit 0.3s ease-in forwards;
-}
-
-@keyframes toastEnter {
-  0% { opacity: 0; transform: translateX(120px) scale(0.9); }
-  100% { opacity: 1; transform: translateX(0) scale(1); }
-}
-
-@keyframes toastExit {
-  0% { opacity: 1; transform: translateX(0) scale(1); }
-  100% { opacity: 0; transform: translateX(120px) scale(0.9); }
-}
-
-.toast-icon {
-  width: 24px;
-  height: 24px;
+.glitch-toast-text {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.toast-icon.success { color: #2ecc71; }
-.toast-icon.error { color: #e74c3c; }
-.toast-icon.warning { color: #f39c12; }
-.toast-icon.info { color: #3498db; }
-
-.toast-msg {
-  flex: 1;
+  gap: 8px;
   line-height: 1.4;
 }
 
-.toast-close {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  color: var(--mg-black);
-  background: none;
-  border: none;
-  line-height: 1;
+.glitch-toast-text i {
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
-.toast-close:hover {
-  background: var(--mg-gray);
+/* 过渡动画 */
+.fade-enter-active {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.fade-leave-active {
+  transition: all 0.3s ease-in;
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateX(120px) scale(0.9);
+}
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(120px) scale(0.9);
 }
 
-[data-device="mobile"] .toast-container {
+[data-device="mobile"] .glitch-toast {
+  top: auto;
   bottom: 16px;
   right: 16px;
   left: 16px;
 }
 
-[data-device="mobile"] .toast-item {
+[data-device="mobile"] .glitch-toast-content {
   min-width: 0;
   max-width: 100%;
   padding: 12px 16px;

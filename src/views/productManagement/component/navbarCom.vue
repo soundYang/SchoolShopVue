@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const navbarList = ref([
   {
@@ -23,6 +26,7 @@ const navbarList = ref([
       <div  class="card"
       v-for="item in navbarList"
       :key="item.name"
+      :class="{ active: route.path === item.path }"
       @click="$router.push(item.path)"
       >
         <span>{{ item.name }}</span>
@@ -69,6 +73,13 @@ const navbarList = ref([
   .card:active {
     transform: translate(1px, 1px);
     box-shadow: none;
+  }
+
+  .card.active {
+    background: var(--mg-black);
+    color: var(--mg-white);
+    border-color: var(--mg-black);
+    box-shadow: var(--mg-shadow);
   }
 </style>
 

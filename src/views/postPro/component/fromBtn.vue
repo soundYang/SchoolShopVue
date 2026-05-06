@@ -25,7 +25,7 @@ const proFromRegx = {
   },
   shopMsg:{
     message: '商品描述长度2~100个字符',
-     regx: /^.{2,100}$/
+     regx: /^[\s\S]{2,100}$/
   },
   [Symbol.iterator]: function* () {
     yield* Object.entries(proFromRegx)
@@ -35,6 +35,11 @@ const proFromRegx = {
 const pushProduct = inject('pushProduct')
 
 const subPro = async () => {
+  // 先去除空格
+  for (let key of ['shopName', 'shopPrice', 'shopActualValue', 'shopNum', 'shopMsg']) {
+    proFrom.value[key] = proFrom.value[key].trim()
+  }
+
   // 验证图片
   if (!setImgList()) {
     return showToast('请至少上传一张商品图片')
@@ -61,18 +66,18 @@ const subPro = async () => {
   const formData = new FormData()
 
   // 添加普通字段
-  formData.append('shopName', proFrom.value.shopName)
-  formData.append('shopPrice', proFrom.value.shopPrice)
-  formData.append('shopActualValue', proFrom.value.shopActualValue)
-  formData.append('shopNum', proFrom.value.shopNum)
-  formData.append('shopMsg', proFrom.value.shopMsg)
+  formData.append('shopName', proFrom.value.shopName.trim())
+  formData.append('shopPrice', proFrom.value.shopPrice.trim())
+  formData.append('shopActualValue', proFrom.value.shopActualValue.trim())
+  formData.append('shopNum', proFrom.value.shopNum.trim())
+  formData.append('shopMsg', proFrom.value.shopMsg.trim())
   formData.append('isBlinBox', proFrom.value.isBlinBox)
   formData.append('shopType', JSON.stringify(proFrom.value.shopType))
   formData.append('publishAddress', JSON.stringify(proFrom.value.publishAddress))
 
   // 添加图片文件
-  if (proFrom.value.shopImg && proFrom.value.shopImg.length) {
-    proFrom.value.shopImg.forEach((file) => {
+  if (proFrom.value.shopImg && proFrom.value.shopImg.files) {
+    proFrom.value.shopImg.files.forEach((file) => {
       formData.append('shopImg', file)
     })
   }

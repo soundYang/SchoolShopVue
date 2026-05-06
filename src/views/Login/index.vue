@@ -21,8 +21,8 @@ const showFrom = ref(true) // true: 登录, false: 注册
 const LoginfromModel = ref({
   userName: {
     value: "",
-    rex: /^[a-zA-Z0-9_-]{4,16}$/,
-    msg: '用户名必须是4-16位字母、数字、下划线、减号'
+    rex: /^[\u4e00-\u9fa5a-zA-Z0-9_-]{2,16}$/,
+    msg: '用户名必须是2-16位的中文、字母、数字、下划线、减号'
   },
   passWord: {
     value: "",
@@ -38,8 +38,8 @@ const LoginfromModel = ref({
 const RegisterfromModel = ref({
   userName: {
     value: "",
-    rex: /^[a-zA-Z0-9_-]{4,16}$/,
-    msg: '用户名必须是4-16位字母、数字、下划线、减号'
+    rex: /^[\u4e00-\u9fa5a-zA-Z0-9_-]{2,16}$/,
+    msg: '用户名必须是2-16位的中文、字母、数字、下划线、减号'
   },
   passWord: {
     value: "",
@@ -71,6 +71,11 @@ const RegisterfromModel = ref({
 
 // 登录提交
 const login = async () => {
+  // 先去空格
+  for (let field of LoginfromModel.value) {
+    field.value = field.value.trim()
+  }
+
   for (let { value, rex, msg } of LoginfromModel.value) {
     if (!rex.test(value)) {
       return showToast(msg, 3000)
@@ -91,6 +96,11 @@ const login = async () => {
 
 // 注册提交
 const register = async () => {
+  // 先去空格
+  for (let field of RegisterfromModel.value) {
+    field.value = field.value.trim()
+  }
+
   for (let field of RegisterfromModel.value) {
     // 处理自定义验证（如密码确认）
     if (field.customValidator && !field.customValidator()) {
@@ -176,7 +186,7 @@ onMounted(() => fetchCaptcha())
             id="login-username"
             name="username"
             required=""
-            placeholder=" "
+            placeholder="请输入账号"
             v-model="LoginfromModel.userName.value"
           />
           <label for="login-username" class="form-label" data-text="账号">账号</label>
@@ -188,7 +198,7 @@ onMounted(() => fetchCaptcha())
             id="login-password"
             name="password"
             required=""
-            placeholder=" "
+            placeholder="请输入密码"
             v-model="LoginfromModel.passWord.value"
           />
           <label for="login-password" class="form-label" data-text="密码">密码</label>
@@ -216,7 +226,7 @@ onMounted(() => fetchCaptcha())
             id="register-username"
             name="username"
             required=""
-            placeholder=" "
+            placeholder="请输入账号"
             v-model="RegisterfromModel.userName.value"
           />
           <label for="register-username" class="form-label" data-text="账号">账号</label>
@@ -228,7 +238,7 @@ onMounted(() => fetchCaptcha())
             id="register-password"
             name="password"
             required=""
-            placeholder=" "
+            placeholder="请输入密码"
             v-model="RegisterfromModel.passWord.value"
           />
           <label for="register-password" class="form-label" data-text="密码">密码</label>
@@ -240,7 +250,7 @@ onMounted(() => fetchCaptcha())
             id="register-confirm"
             name="confirmPassword"
             required=""
-            placeholder=" "
+            placeholder="请确认密码"
             v-model="RegisterfromModel.confirmPassWord.value"
           />
           <label for="register-confirm" class="form-label" data-text="确认密码">确认密码</label>
@@ -252,7 +262,7 @@ onMounted(() => fetchCaptcha())
             id="register-phone"
             name="phoneNumber"
             required=""
-            placeholder=" "
+            placeholder="请输入电话"
             v-model="RegisterfromModel.phoneNumber.value"
           />
           <label for="register-phone" class="form-label" data-text="电话">电话</label>
@@ -265,7 +275,7 @@ onMounted(() => fetchCaptcha())
             id="register-captcha"
             name="captchaText"
             required=""
-            placeholder=" "
+            placeholder="请输入验证码"
             maxlength="6"
             v-model="RegisterfromModel.captchaText.value"
           />

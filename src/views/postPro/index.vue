@@ -5,16 +5,24 @@ defineOptions({
 
 import proInfoFrom from './component/proInfoFrom.vue'
 
-import { ref, onMounted, onUnmounted, provide } from 'vue'
+import { ref, onMounted, onUnmounted, provide, computed } from 'vue'
 import { useToast } from '@/composables/useToast'
 import { compressImage } from '@/unit/compressImage'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import { LabelGetAllServer } from '@/api/label'
-import { ProductPublishServer } from '@/api/product'
+import { ProductPublishServer, ProductUpdateServer, ProductGetOneServer } from '@/api/product'
+import { getImageUrl } from '@/unit/getImagerUrl'
 
 const { showToast } = useToast()
 const router = useRouter()
+const route = useRoute()
+
+const isEditMode = computed(() => !!route.query.id)
+const productId = computed(() => route.query.id || '')
+
+provide('isEditMode', isEditMode)
+provide('productId', productId)
 
 // 商品信息
 const proFrom = ref({
@@ -51,11 +59,13 @@ provide('setProFrom', setProFrom)
 provide('labels', labels)
 
 // 图片上传 - 存储 File 对象和临时 URL
-const imgFiles = ref([]) // 存储 File 对象
-const imgUrls = ref([])  // 存储临时 URL
+const imgFiles = ref([]) // 新上传的 File 对象
+const imgUrls = ref([])  // 预览 URL（含已有图片和新上传的）
+const existingImgUrls = ref([]) // 编辑模式下已有的图片 URL
 
 const pushImg = async (e) => {
-  if (imgFiles.value.length >= 6) {
+  const totalCount = imgFiles.value.length + existingImgUrls.value.length
+  if (totalCount >= 6) {
     return showToast('最多上传六张图片')
   }
   const img = e.target.files[0]
@@ -67,44 +77,55 @@ const pushImg = async (e) => {
     return showToast('图片大小不能超过 1MB')
   }
 
-
-  // 存储 File 对象
   imgFiles.value.push(newFile)
-  // 创建临时 URL 用于预览
   const imageUrl = URL.createObjectURL(newFile)
   imgUrls.value.push(imageUrl)
 }
 
-// 删除图片
 const removeImage = (index) => {
-  // 释放临时 URL
-  if (imgUrls.value[index]) {
-    URL.revokeObjectURL(imgUrls.value[index])
+  const existingCount = existingImgUrls.value.length
+  if (index < existingCount) {
+    existingImgUrls.value.splice(index, 1)
+  } else {
+    const fileIndex = index - existingCount
+    if (imgUrls.value[index]) {
+      URL.revokeObjectURL(imgUrls.value[index])
+    }
+    imgFiles.value.splice(fileIndex, 1)
   }
-  imgFiles.value.splice(index, 1)
   imgUrls.value.splice(index, 1)
 }
 
-// 提交时设置图片
 const setImgList = () => {
-  if (!imgFiles.value.length) {
+  const totalCount = imgFiles.value.length + existingImgUrls.value.length
+  if (!totalCount) {
     showToast('请至少上传一张商品图片')
     return false
   }
-  proFrom.value.shopImg = [...imgFiles.value] // 复制一份
+  proFrom.value.shopImg = {
+    files: [...imgFiles.value],
+    existing: [...existingImgUrls.value]
+  }
   return true
 }
 provide('setImgList', setImgList)
 
-// 获取图片列表容器引用
 const imgShowRef = ref(null)
 
-// 上传商品
 const pushProduct = async (formData) => {
   try {
-    const res = await ProductPublishServer(formData)
-    if (res.msg && res.msg.includes('图片待管理员审核')) {
-      showToast('商品已发布成功，图片待管理员审核通过后展示，请耐心等待')
+    if (isEditMode.value) {
+      formData.append('_id', productId.value)
+      if (existingImgUrls.value.length) {
+        formData.append('existingImages', JSON.stringify(existingImgUrls.value))
+      }
+      await ProductUpdateServer(formData)
+      showToast('商品已修改成功')
+    } else {
+      const res = await ProductPublishServer(formData)
+      if (res.msg && res.msg.includes('图片待管理员审核')) {
+        showToast('商品已发布成功，图片待管理员审核通过后展示，请耐心等待')
+      }
     }
     router.push('/publishedPro')
   } catch (err) {
@@ -117,16 +138,16 @@ const pushProduct = async (formData) => {
         imgUrls.value.forEach(url => URL.revokeObjectURL(url))
         imgUrls.value = []
         imgFiles.value = []
+        existingImgUrls.value = []
         proFrom.value.shopImg = []
         return
       }
     }
-    console.error('发布商品失败:', err)
+    console.error(isEditMode.value ? '修改商品失败:' : '发布商品失败:', err)
   }
 }
 provide('pushProduct', pushProduct)
 
-// 鼠标滚轮横向滚动处理
 const handleWheel = (e) => {
   e.preventDefault()
   if (imgShowRef.value) {
@@ -134,13 +155,38 @@ const handleWheel = (e) => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  if (isEditMode.value) {
+    try {
+      const res = await ProductGetOneServer(productId.value)
+      const product = res.data
+      proFrom.value = {
+        shopName: product.shopName || '',
+        shopPrice: String(product.shopPrice || ''),
+        shopActualValue: String(product.shopActualValue || ''),
+        shopNum: String(product.shopNum || ''),
+        shopMsg: product.shopMsg || '',
+        isBlinBox: product.isBlinBox ?? true,
+        shopImg: [],
+        shopType: product.shopType || [],
+        publishAddress: product.publishAddress || {}
+      }
+      if (product.shopImg && product.shopImg.length) {
+        existingImgUrls.value = product.shopImg.map(img => typeof img === 'string' ? img : '')
+        imgUrls.value = existingImgUrls.value.map(url => getImageUrl(url))
+      }
+    } catch (err) {
+      console.error('加载商品信息失败:', err)
+      showToast('加载商品信息失败')
+      router.push('/publishedPro')
+    }
+  }
+
   if (imgShowRef.value) {
     imgShowRef.value.addEventListener('wheel', handleWheel, { passive: false })
   }
 })
 
-// 组件卸载时释放所有临时 URL
 onUnmounted(() => {
   if (imgShowRef.value) {
     imgShowRef.value.removeEventListener('wheel', handleWheel)
@@ -154,7 +200,7 @@ onUnmounted(() => {
 <template>
   <div class="postProBox">
     <ReturnPage />
-    <h1 class="title">上传商品图片</h1>
+    <h1 class="title">{{ isEditMode ? '编辑商品图片' : '上传商品图片' }}</h1>
     <div class="photoBox">
       <input
         @change="pushImg"
@@ -248,87 +294,54 @@ onUnmounted(() => {
   display: flex;
   gap: 20px;
   overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  align-items: center;
-  height: 100%;
-  position: relative;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
 }
 
 .imgShow::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+
+.imgShow::-webkit-scrollbar-thumb {
+  background: var(--mg-black);
+  border-radius: 3px;
 }
 
 .image-item {
   position: relative;
-  height: 100%;
   flex-shrink: 0;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border: var(--mg-border-light);
 }
 
-.imgShow img {
+.image-item img {
+  width: 100%;
   height: 100%;
-  width: 280px;
-  border: var(--mg-border-light);
   object-fit: cover;
-  flex-shrink: 0;
 }
 
 .remove-btn {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 25px;
-  height: 25px;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border: none;
   background: var(--mg-black);
   color: var(--mg-white);
-  border: none;
-  font-size: 20px;
+  font-size: 16px;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.1s;
-  font-family: var(--mg-font-mono);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-.remove-btn:hover {
-  background: #ff4444;
-  transform: scale(1.1);
-}
-
-[data-device="mobile"] .postProBox {
-  padding: 12px;
-  padding-top: 60px;
-}
-
-[data-device="mobile"] .title {
-  font-size: 18px;
-  margin-bottom: 12px;
-}
-
-[data-device="mobile"] .photoBox {
-  height: 180px;
-  padding: 12px;
-  gap: 12px;
-  flex-direction: column;
-}
-
-[data-device="mobile"] .photoBox::before {
-  left: 12px;
-  top: 12px;
-  width: calc(33.33% - 16px);
-  min-width: 60px;
-  height: calc(100% - 24px);
-  font-size: 48px;
-}
-
-[data-device="mobile"] .imgShow {
-  flex: 1;
-  gap: 10px;
-}
-
-[data-device="mobile"] .imgShow img {
-  width: 160px;
+.image-item:hover .remove-btn {
+  opacity: 1;
 }
 </style>

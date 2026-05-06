@@ -52,16 +52,29 @@ onMounted(() => {
       0.3
     )
     .reverse() // 使时间线初始为反向状态（菜单收起）
+
+  // 点击菜单外部区域时收起菜单
+  document.addEventListener('click', handleClickOutside)
 })
 
 // 组件卸载时清理 GSAP 实例，防止内存泄漏
 onUnmounted(() => {
   if (tl) tl.kill()
+  document.removeEventListener('click', handleClickOutside)
 })
 
 // 切换菜单展开/收起
 const toggleMenu = () => {
   if (tl) tl.reversed(!tl.reversed())
+}
+
+// 点击菜单外部区域时收起菜单
+const handleClickOutside = (e) => {
+  if (!tl || tl.reversed()) return
+  const headerEl = document.querySelector('.header')
+  if (headerEl && !headerEl.contains(e.target)) {
+    tl.reversed(true)
+  }
 }
 
 // 监听路由变化：如果菜单展开则自动收起
@@ -79,7 +92,7 @@ watch(
 <template>
   <div class="header">
     <nav>
-      <div class="nav-link" @click="toggleMenu">
+      <div class="nav-link" @click.stop="toggleMenu">
         <ButtonOneCom str="Navbar" />
         <NotificationIcon />
       </div>
