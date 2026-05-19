@@ -49,11 +49,6 @@ if(props.putAddress.receiver){
 const openAddressFrom = inject('openAddressFrom')
 // 添加地址
 const addInfo = async () => {
-  // 先去空格
-  addressFrom.value.receiver = addressFrom.value.receiver.trim()
-  addressFrom.value.phone = addressFrom.value.phone.trim()
-  addressFrom.value.detail = addressFrom.value.detail.trim()
-
   for(let [key,value] of addressFrom.value){
     if(key === 'isDefault') continue
     if(!value){
@@ -71,11 +66,6 @@ const addInfo = async () => {
 
 // 修改地址
 const putInfo = async () => {
-  // 先去空格
-  addressFrom.value.receiver = addressFrom.value.receiver.trim()
-  addressFrom.value.phone = addressFrom.value.phone.trim()
-  addressFrom.value.detail = addressFrom.value.detail.trim()
-
   if(!checkInfo()) return
 
   await AddressUpdateServer(addressFrom.value)
@@ -102,9 +92,9 @@ const checkInfo = () => {
     <div v-if="!props.putAddress.receiver" class="title">新增地址<br><span>Add new address</span></div>
     <div v-else class="title">修改地址<br><span>Put new address</span></div>
 
-    <input v-model="addressFrom.receiver" placeholder="联系人" required name="receiver" class="input">
-    <input v-model="addressFrom.phone" placeholder="联系电话" required name="phone" class="input">
-    <input v-model="addressFrom.detail" placeholder="详细地址" required name="detail" class="input">
+    <input v-model="addressFrom.receiver" placeholder="收货人" required name="receiver" class="input">
+    <input v-model="addressFrom.phone" placeholder="收货人电话" required name="phone" class="input">
+    <input v-model="addressFrom.detail" placeholder="收货地址" required name="detail" class="input">
 
     <!-- 自定义圆形复选框 -->
     <label class="checkbox-wrapper">
@@ -126,19 +116,20 @@ const checkInfo = () => {
 <style scoped>
 .form {
   --input-focus: #2d8cf0;
-  --font-color: #000;
+  --font-color: #323232;
   --font-color-sub: #666;
   --bg-color: #fff;
-  --main-color: #000;
+  --main-color: #323232;
   padding: 20px;
-  background: var(--mg-white);
+  background: lightgrey;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   gap: 20px;
-  border: var(--mg-border);
-  box-shadow: var(--mg-shadow);
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
 }
 
 .title {
@@ -146,28 +137,26 @@ const checkInfo = () => {
   font-weight: 900;
   font-size: 20px;
   margin-bottom: 25px;
-  font-family: var(--mg-font);
 }
 
 .title span {
   color: var(--font-color-sub);
   font-weight: 600;
   font-size: 17px;
-  font-family: var(--mg-font);
 }
 
 .input {
   width: 250px;
   height: 40px;
-  border: var(--mg-border-light);
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
   background-color: var(--bg-color);
-  box-shadow: var(--mg-shadow-sm);
+  box-shadow: 4px 4px var(--main-color);
   font-size: 15px;
   font-weight: 600;
   color: var(--font-color);
   padding: 5px 10px;
   outline: none;
-  font-family: var(--mg-font);
 }
 
 .input::placeholder {
@@ -176,29 +165,24 @@ const checkInfo = () => {
 }
 
 .input:focus {
-  border: 2px solid var(--mg-black);
+  border: 2px solid var(--input-focus);
 }
 
 .button-confirm {
   margin: 50px auto 0 auto;
   width: 120px;
   height: 40px;
-  border: var(--mg-border-light);
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
   background-color: var(--bg-color);
-  box-shadow: var(--mg-shadow-sm);
+  box-shadow: 4px 4px var(--main-color);
   font-size: 17px;
   font-weight: 600;
   color: var(--font-color);
   cursor: pointer;
-  font-family: var(--mg-font);
-  transition: all 0.1s;
 }
 
-.button-confirm:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--mg-shadow);
-}
-
+/* 自定义复选框容器 */
 .checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -207,6 +191,7 @@ const checkInfo = () => {
   user-select: none;
 }
 
+/* 隐藏原生复选框 */
 .checkbox-hidden {
   position: absolute;
   opacity: 0;
@@ -216,36 +201,41 @@ const checkInfo = () => {
   pointer-events: none;
 }
 
+/* 自定义圆形复选框 */
 .checkbox-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--mg-black);
+  border-radius: 50%;
+  border: 2px solid var(--main-color);
   background-color: var(--bg-color);
-  box-shadow: var(--mg-shadow-sm);
+  box-shadow: 4px 4px var(--main-color);
   transition: all 0.2s ease;
   display: inline-block;
   box-sizing: border-box;
 }
 
+/* 选中状态样式 */
 .checkbox-hidden:checked + .checkbox-custom {
-  background-color: var(--mg-black);
-  border-color: var(--mg-black);
-  box-shadow: var(--mg-shadow-sm);
+  background-color: var(--input-focus); /* 选中时背景色变蓝，可自定义 */
+  border-color: var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
 }
 
+/* 可选：添加一个内圆点表示选中，更符合圆形的视觉习惯 */
 .checkbox-hidden:checked + .checkbox-custom::after {
   content: "";
   display: block;
   width: 8px;
   height: 8px;
   background: white;
-  margin: 4px auto;
+  border-radius: 50%;
+  margin: 5px auto; /* 居中，取决于实际尺寸 */
 }
 
+/* 文字样式 */
 .checkbox-text {
   color: var(--font-color);
   font-size: 15px;
   font-weight: 500;
-  font-family: var(--mg-font);
 }
 </style>

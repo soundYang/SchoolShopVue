@@ -30,11 +30,6 @@ const putFrom = ref({
 })
 
 const putInfo = async () => {
-  // 先去空格
-  putFrom.value.oldPassword = putFrom.value.oldPassword.trim()
-  putFrom.value.PassWord = putFrom.value.PassWord.trim()
-  putFrom.value.UserName = putFrom.value.UserName.trim()
-
   if(props.putCount === 2) {
     if(!putFrom.value.oldPassword) return showToast('请输入原密码')
     if(putFrom.value.PassWord === putFrom.value.oldPassword) return showToast('新密码不能与旧密码相同')

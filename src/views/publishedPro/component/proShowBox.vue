@@ -60,10 +60,6 @@ const onDelete = () => {
 const goToDetail = () => {
   router.push({ name: 'productDetail', params: { id: props.product._id } })
 }
-
-const goToEdit = () => {
-  router.push({ path: '/postPro', query: { id: props.product._id } })
-}
 </script>
 
 <template>
@@ -117,9 +113,6 @@ const goToEdit = () => {
         <div class="actions">
           <button class="action-btn view-btn" @click="goToDetail">
             查看
-          </button>
-          <button class="action-btn edit-btn" @click="goToEdit">
-            编辑
           </button>
           <button class="action-btn delete-btn" @click="onDelete">
             删除
@@ -380,16 +373,6 @@ const goToEdit = () => {
 
 .status-btn:hover {
   background: #ff9800;
-  color: white;
-}
-
-.edit-btn {
-  border-color: #4caf50;
-  color: #4caf50;
-}
-
-.edit-btn:hover {
-  background: #4caf50;
   color: white;
 }
 

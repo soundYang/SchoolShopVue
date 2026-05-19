@@ -160,11 +160,10 @@ useInfiniteScroll(
 }
 
 .proBox {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px;
   width: 1200px;
-  justify-content: flex-start;
 }
 
 .noPro {
@@ -193,7 +192,7 @@ useInfiniteScroll(
 [data-device="mobile"] .proBox {
   width: 100%;
   gap: 12px;
-  justify-content: center;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 [data-device="mobile"] .body {

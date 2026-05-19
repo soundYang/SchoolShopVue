@@ -6,26 +6,15 @@
 
 <style scoped>
   button {
-    border: var(--mg-border);
+    border: none;
     width: 140px;
     height: 50px;
-    color: var(--mg-white);
+    color: #fff;
     z-index: 1;
     display: flex;
-    background: var(--mg-black);
+    background: #000;
     position: relative;
     cursor: pointer;
-    font-family: var(--mg-font);
-    transition: all 0.1s;
-  }
-
-  button:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--mg-shadow);
-  }
-
-  button:active {
-    transform: translate(2px, 2px);
   }
 
   button p {
@@ -72,17 +61,19 @@
       82% 100%,
       0 100%
     );
-    background: var(--mg-white);
+    background: #8792eb;
     transition: 0.2s ease;
   }
 
   button::before {
     position: absolute;
     content: "";
+    /*   bottom: 80%; */
     transform: rotate(180deg);
     width: 100%;
     height: 10%;
     transition: 0.2s ease;
+    /*   bottom:; */
     z-index: -1;
     clip-path: polygon(
       0% 74%,
@@ -113,8 +104,7 @@
       82% 100%,
       0 100%
     );
-    background: var(--mg-white);
-    transition: 0.2s ease;
+    background: #8792eb;
   }
 
   button:hover::after {

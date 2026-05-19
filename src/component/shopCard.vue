@@ -37,8 +37,8 @@ defineProps({
 
 <style scoped>
 .card {
-  width: 21.5vw;
-  min-width: 150px;
+  width: 100%;
+  min-width: 130px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,7 +134,7 @@ defineProps({
 }
 
 [data-device="mobile"] .card {
-  width: 42vw;
+  width: 100%;
   min-width: 0;
 }
 

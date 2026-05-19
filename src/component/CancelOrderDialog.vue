@@ -24,7 +24,7 @@ const handleClose = () => {
 }
 
 const handleConfirm = () => {
-  emit('confirm', reason.value.trim())
+  emit('confirm', reason.value)
   reason.value = ''
 }
 
@@ -57,19 +57,20 @@ const handleCancel = () => {
 <style scoped>
 .form {
   --input-focus: #2d8cf0;
-  --font-color: #000;
+  --font-color: #323232;
   --font-color-sub: #666;
   --bg-color: #fff;
-  --main-color: #000;
+  --main-color: #323232;
   padding: 20px;
-  background: var(--mg-white);
+  background: lightgrey;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
-  border: var(--mg-border);
-  box-shadow: var(--mg-shadow);
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
 }
 
 .title {
@@ -78,27 +79,26 @@ const handleCancel = () => {
   font-size: 20px;
   margin-bottom: 5px;
   text-align: center;
-  font-family: var(--mg-font);
 }
 
 .title span {
   color: var(--font-color-sub);
   font-weight: 600;
   font-size: 17px;
-  font-family: var(--mg-font);
 }
 
 .input {
   width: 350px;
-  border: var(--mg-border-light);
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
   background-color: var(--bg-color);
-  box-shadow: var(--mg-shadow-sm);
+  box-shadow: 4px 4px var(--main-color);
   font-size: 15px;
   font-weight: 600;
   color: var(--font-color);
   padding: 10px;
   outline: none;
-  font-family: var(--mg-font);
+  font-family: inherit;
 }
 
 .input.textarea {
@@ -112,7 +112,7 @@ const handleCancel = () => {
 }
 
 .input:focus {
-  border: 2px solid var(--mg-black);
+  border: 2px solid var(--input-focus);
 }
 
 .char-count {
@@ -121,7 +121,6 @@ const handleCancel = () => {
   font-size: 12px;
   color: var(--font-color-sub);
   margin-top: -10px;
-  font-family: var(--mg-font);
 }
 
 .dialog-actions {
@@ -134,23 +133,23 @@ const handleCancel = () => {
 .button-confirm {
   width: 120px;
   height: 40px;
-  border: var(--mg-border-light);
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
   background-color: var(--bg-color);
-  box-shadow: var(--mg-shadow-sm);
+  box-shadow: 4px 4px var(--main-color);
   font-size: 17px;
   font-weight: 600;
   color: var(--font-color);
   cursor: pointer;
   transition: all 0.1s;
-  font-family: var(--mg-font);
 }
 
 .button-confirm:hover {
   transform: translate(-2px, -2px);
-  box-shadow: var(--mg-shadow);
+  box-shadow: 6px 6px var(--main-color);
 }
 
 .button-confirm.cancel {
-  background: var(--mg-gray);
+  background: #e0e0e0;
 }
 </style>
