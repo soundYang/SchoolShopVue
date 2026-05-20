@@ -3,9 +3,12 @@ import { ref, provide, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import { useBlindBoxStore } from '@/stores/model/blindBox'
 
 import { ProductGetOneServer } from '@/api/product'
 import { OrderCreateServer } from '@/api/order'
+import { BlindBoxCreateOrderServer } from '@/api/blindBox'
+import blindBoxIcon from '@/assets/盲盒.png'
 
 import PopupLayerCom from '@/component/PopupLayerCom.vue'
 import manageAddress from '@/component/manageAddress.vue'
@@ -22,9 +25,14 @@ const route = useRoute()
 const router = useRouter()
 const { showToast } = useToast()
 const shopId = route.query.id
-const count = +route.query.count
+const count = +route.query.count || 1
+const blindBoxId = route.query.blindBoxId
+const blindBoxPrice = route.query.price
+const blindBoxLabel = route.query.label
+const isBlindBoxOrder = !!blindBoxId
 
 const userStore = useUserStore()
+const blindBoxStore = useBlindBoxStore()
 const { Account } = storeToRefs(userStore)
 
 const showPopup = ref(false)
@@ -59,6 +67,19 @@ const addressButtonText = computed(() => hasAddress.value ? '修改地址' : '�
 // const canCreateOrder = computed(() => !!postOrder.value.deliverAddress)
 
 const getProduct = async () => {
+  if (isBlindBoxOrder) {
+    productInfo.value = {
+      shopId: '',
+      shopName: decodeURIComponent(blindBoxLabel || '盲盒商品'),
+      shopPrice: Number(blindBoxPrice) || 0,
+      shopImages: [],
+      isBlindBox: true
+    }
+    postOrder.value.isBlindBox = true
+    postOrder.value.unitPrice = Number(blindBoxPrice) || 0
+    postOrder.value.quantity = 1
+    return
+  }
   if (!shopId) return
   const res = await ProductGetOneServer(shopId)
   const product = res.data
@@ -96,7 +117,13 @@ const createOrder = async () => {
   }
 
   try {
-   const orderData = {
+    if (isBlindBoxOrder) {
+      const res = await BlindBoxCreateOrderServer(blindBoxId, postOrder.value.deliverAddress)
+      const orderId = res.data.orderId
+      blindBoxStore.setBlindBoxOrderId(blindBoxId, orderId)
+      return { _id: orderId }
+    }
+    const orderData = {
       sellerId: postOrder.value.sellerId,
       productId: postOrder.value.productId,
       deliverAddress: postOrder.value.deliverAddress,
@@ -108,6 +135,13 @@ const createOrder = async () => {
     return res.data
   } catch (error) {
     console.error('订单创建失败:', error)
+
+    if (error?.msg === '该盲盒商品已售罄') {
+      showToast('该盲盒商品已被抢走，请刷新后重试')
+      blindBoxStore.getBlindBox()
+      router.push('/layout')
+      return false
+    }
 
     return false
   }
@@ -192,6 +226,7 @@ onMounted(() => {
           <OrderBox
             :product="productInfo"
             :quantity="count || 1"
+            :blind-box-image="isBlindBoxOrder ? blindBoxIcon : ''"
             @submit-order="handleSubmitOrder"
           />
         </div>

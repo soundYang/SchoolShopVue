@@ -3,29 +3,34 @@ import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const emit = defineEmits(['navClick'])
 
 const userStore = useUserStore()
 const jumpUser = () => {
   if(!userStore.token){
+    emit('navClick')
     return router.push('/login')
   }
+  emit('navClick')
   router.push('/user')
 }
 
 const jumpProductManagement = () => {
   if(!userStore.token){
+    emit('navClick')
     return router.push('/login')
   }
+  emit('navClick')
   router.push('/productManagement')
 }
 </script>
 
 <template>
   <div class="container">
-  <div @click="router.push('/layout')" data-text="首页" style="--r:-15;" class="glass">
+  <div @click="emit('navClick'); router.push('/layout')" data-text="首页" style="--r:-15;" class="glass">
     <i class="iconfont icon-shouye"></i>
   </div>
-  <div @click="router.push('/allProduct')" data-text="全部商品" style="--r:5;" class="glass">
+  <div @click="emit('navClick'); router.push('/allProduct')" data-text="全部商品" style="--r:5;" class="glass">
     <i class="iconfont icon-shangpin"></i>
   </div>
   <div @click="jumpProductManagement" data-text="商品管理" style="--r:25;" class="glass">

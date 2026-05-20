@@ -25,7 +25,7 @@ const handleClose = () => {
 
 const handleConfirm = () => {
   emit('confirm', reason.value)
-  reason.value = ''
+  handleClose()
 }
 
 const handleCancel = () => {

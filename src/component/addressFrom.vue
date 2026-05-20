@@ -2,6 +2,7 @@
 import { ref, inject } from 'vue'
 import { AddressAddServer, AddressUpdateServer } from '@/api/address'
 import { useToast } from '@/composables/useToast'
+import { rules } from '@/unit/validate'
 
 const { showToast } = useToast()
 const props = defineProps({
@@ -27,8 +28,8 @@ const fromRegx = ref({
     message: '请输入2-20位中文或英文名'
   },
   phone: {
-    regx:/^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/,
-    message: '请输入正确的手机号码'
+    regx: rules.phoneNumber.rex,
+    message: rules.phoneNumber.msg
   },
   detail: {
     regx:/^[\u4e00-\u9fa5a-zA-Z0-9\s\-·,.]{2,50}$/,
@@ -78,6 +79,10 @@ const putInfo = async () => {
 // 数据验证
 const checkInfo = () => {
   for(let [ key, value ] of fromRegx.value){
+    const val = addressFrom.value[key]
+    if (typeof val === 'string') {
+      addressFrom.value[key] = val.trim()
+    }
     if(!value.regx.test(addressFrom.value[key])){
       showToast(value.message)
       return false

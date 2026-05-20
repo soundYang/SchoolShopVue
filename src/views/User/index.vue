@@ -10,7 +10,7 @@ import { UserGetSimpleInfoServer } from '@/api/user'
 import { productGetUserListServer } from "@/api/product"
 
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const { Account } = storeToRefs(useUserStore())
@@ -19,6 +19,9 @@ const { getSellProductList } = useProductStore()
 
 const route = useRoute()
 
+let isAlive = true
+onUnmounted(() => { isAlive = false })
+
 // 响应式数据
 const sellerId = ref(route.query.id)  // 卖家id
 const sellerInfo = ref()              // 卖家信息
@@ -26,53 +29,50 @@ const buyerOrderList = ref([])        // 订单列表
 const reviewList = ref([])            // 评价列表
 const sellProductList = ref([])       // 卖家商品列表
 const judgeUser = ref(false)          // 判断用户是否为卖家 默认为非卖家
-// 统一的数据获取函数
+// 统一的数据获取函数——所有响应式变量一次性写入，避免部分更新触发的渲染与组件卸载竞态
 const fetchData = async () => {
+  const currentSellerId = route.query.id
+  const isOtherUser = !!(currentSellerId && currentSellerId !== Account.value?._id)
+
+  let _sellerInfo = null
+  let _buyerOrders = null
+  let _sellProducts = []
+  let _reviews = []
+
   try {
-    const currentSellerId = route.query.id
-    sellerId.value = currentSellerId
-
-    if (currentSellerId && currentSellerId !== Account.value?._id) {
-      judgeUser.value = true
-    } else {
-      judgeUser.value = false
+    if (isOtherUser) {
+      _sellerInfo = (await UserGetSimpleInfoServer(currentSellerId)).data
     }
 
-    // 1. 获取卖家信息
-    if (judgeUser.value) {
-      const res = await UserGetSimpleInfoServer(currentSellerId)
-      sellerInfo.value = res.data
+    if (isOtherUser) {
+      _buyerOrders = null
     } else {
-      sellerInfo.value = null
+      _buyerOrders = (await OrderGetlistServer({ role: 'buyer', status: 3 })).data
     }
 
-    // 2. 获取当前用户购买的已完成商品（仅自己主页）
-    if (judgeUser.value) {
-      buyerOrderList.value = null
-    } else {
-      const res = await OrderGetlistServer({ role: 'buyer', status: 3 })
-      buyerOrderList.value = res.data
-    }
-
-    // 3. 获取卖家发布的商品
-    if (judgeUser.value) {
-      const res = await productGetUserListServer(currentSellerId)
-      sellProductList.value = res.data
+    if (isOtherUser) {
+      _sellProducts = (await productGetUserListServer(currentSellerId)).data
     } else {
       await getSellProductList({ id: Account.value?._id })
     }
 
-    // 4. 获取评价列表
     const targetUserId = currentSellerId || Account.value?._id
     if (targetUserId) {
-      const res = await ReviewGetlistServer({ sellerId: targetUserId })
-      reviewList.value = res.data
-    } else {
-      reviewList.value = []
+      _reviews = (await ReviewGetlistServer({ sellerId: targetUserId })).data
     }
   } catch (error) {
     console.error('User page data fetch error:', error)
+    return
   }
+
+  if (!isAlive) return
+
+  sellerId.value = currentSellerId
+  judgeUser.value = isOtherUser
+  sellerInfo.value = _sellerInfo
+  buyerOrderList.value = _buyerOrders
+  sellProductList.value = _sellProducts
+  reviewList.value = _reviews
 }
 
 /**
@@ -82,9 +82,10 @@ const fetchData = async () => {
 watch(
   () => route.query.id,
   async () => {
+    if (route.name !== 'user') return
     await fetchData()
   },
-  { immediate: true } // immediate 确保组件挂载时执行一次
+  { immediate: true }
 )
 
 defineOptions({
@@ -102,7 +103,7 @@ defineOptions({
     </div>
     <div class="proInfoBox">
       <div class="boughtBox">
-        <proListBox title="已购商品" :proList="buyerOrderList" />
+        <proListBox title="已购商品" :proList="buyerOrderList?.map(o => o.productId || o)" />
       </div>
       <div class="postedBox">
         <proListBox

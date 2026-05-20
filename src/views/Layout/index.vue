@@ -55,6 +55,10 @@ getList(newList,'new')
 </template>
 
 <style scoped>
+ .body {
+   background: var(--mg-white);
+ }
+
  .searchBox{
    display: flex;
    justify-content: center;

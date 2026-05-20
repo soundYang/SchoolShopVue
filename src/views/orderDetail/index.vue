@@ -178,6 +178,7 @@ const handleCancel = () => {
 const handleCancelConfirm = async (reason) => {
   if (isCancelling.value) return
   isCancelling.value = true
+  showCancelDialog.value = false
   try {
     const shouldRefund = isBuyer.value && order.value.status === 1 && !order.value.isBlindBox
     if (shouldRefund) {
@@ -345,7 +346,7 @@ onMounted(() => {
   <ReviewPopup
     :visible="showReviewPopup"
     :image-url="imageUrl"
-    :product-name="productInfo.shopName || '商品'"
+    :product-name="isBlindBox && isBuyer ? '盲盒商品' : (productInfo.shopName || '商品')"
     :review-content="reviewContent"
     :is-confirming="isConfirming"
     :is-submitting-review="isSubmittingReview"

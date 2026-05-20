@@ -4,6 +4,7 @@ import { useToast } from '@/composables/useToast'
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores'
+import { rules } from '@/unit/validate'
 
 const { putUser } = useUserStore()
 
@@ -26,13 +27,33 @@ const props = defineProps({
 const putFrom = ref({
   oldPassword: '',
   PassWord: '',
-  UserName: ''
+  confirmPassWord: '',
+  UserName: '',
+  PhoneNumber: ''
 })
 
 const putInfo = async () => {
-  if(props.putCount === 2) {
-    if(!putFrom.value.oldPassword) return showToast('请输入原密码')
-    if(putFrom.value.PassWord === putFrom.value.oldPassword) return showToast('新密码不能与旧密码相同')
+  if (props.putCount === 0) {
+    putFrom.value.PhoneNumber = putFrom.value.PhoneNumber.trim()
+    if (!rules.phoneNumber.rex.test(putFrom.value.PhoneNumber)) {
+      return showToast(rules.phoneNumber.msg)
+    }
+    await UserPutInfoServer({ PhoneNumber: putFrom.value.PhoneNumber })
+    putUser()
+    return close()
+  }
+
+  if (props.putCount === 2) {
+    putFrom.value.oldPassword = putFrom.value.oldPassword.trim()
+    putFrom.value.PassWord = putFrom.value.PassWord.trim()
+    putFrom.value.confirmPassWord = putFrom.value.confirmPassWord.trim()
+
+    if (!putFrom.value.oldPassword) return showToast('请输入原密码')
+    if (!rules.passWord.rex.test(putFrom.value.oldPassword)) return showToast(rules.passWord.msg)
+    if (!rules.passWord.rex.test(putFrom.value.PassWord)) return showToast(rules.passWord.msg)
+    if (putFrom.value.PassWord === putFrom.value.oldPassword) return showToast('新密码不能与旧密码相同')
+    if (putFrom.value.PassWord !== putFrom.value.confirmPassWord) return showToast('两次密码不一致')
+
     await UserPutInfoServer({
       oldPassWord: putFrom.value.oldPassword,
       PassWord: putFrom.value.PassWord
@@ -42,12 +63,12 @@ const putInfo = async () => {
     return close()
   }
 
-  const data = {}
-  if (props.putCount === 3 && putFrom.value.UserName) {
-    data.UserName = putFrom.value.UserName
-  }
-  if (Object.keys(data).length) {
-    await UserPutInfoServer(data)
+  if (props.putCount === 3) {
+    putFrom.value.UserName = putFrom.value.UserName.trim()
+    if (!rules.userName.rex.test(putFrom.value.UserName)) {
+      return showToast(rules.userName.msg)
+    }
+    await UserPutInfoServer({ UserName: putFrom.value.UserName })
     putUser()
   }
   close()
@@ -58,13 +79,13 @@ const putInfo = async () => {
   <form class="form">
     <div class="title">修改信息<br><span>Edit Information</span></div>
 
-    <!-- 电话 -->
+    <input v-if="putCount === 0" v-model="putFrom.PhoneNumber" placeholder="新手机号" required="" name="phoneNumber" class="input">
 
-    <!-- 密码 -->
     <input v-if="putCount === 2" v-model="putFrom.oldPassword" placeholder="原密码" required="" name="oldPassword" class="input">
     <input v-if="putCount === 2" v-model="putFrom.PassWord" placeholder="新密码" required="" name="newPassword" class="input">
-    <!-- 用户名 -->
-    <input v-if="putCount === 3" v-model="putFrom.UserName" placeholder="用户名" required="" name="userName" class="input">
+    <input v-if="putCount === 2" v-model="putFrom.confirmPassWord" placeholder="确认新密码" required="" name="confirmPassword" class="input">
+
+    <input v-if="putCount === 3" v-model="putFrom.UserName" placeholder="新用户名" required="" name="userName" class="input">
 
     <button @click.prevent="putInfo" class="button-confirm">修改</button>
   </form>

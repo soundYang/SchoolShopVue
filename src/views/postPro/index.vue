@@ -31,7 +31,7 @@ const proFrom = ref({
   shopActualValue: '',
   shopNum: '',
   shopMsg: '',
-  isBlinBox: true,
+  isBlindBox: true,
   shopImg: [],
   shopType: [],
   publishAddress: {}
@@ -166,7 +166,7 @@ onMounted(async () => {
         shopActualValue: String(product.shopActualValue || ''),
         shopNum: String(product.shopNum || ''),
         shopMsg: product.shopMsg || '',
-        isBlinBox: product.isBlinBox ?? true,
+        isBlindBox: product.isBlindBox ?? true,
         shopImg: [],
         shopType: product.shopType || [],
         publishAddress: product.publishAddress || {}

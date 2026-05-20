@@ -11,7 +11,7 @@ import { provide, inject, ref, watch } from 'vue'
 const proFrom = inject('proFrom')
 const setProFrom = inject('setProFrom')
 
-// 定义需要循环的字段（排除 shopMsg 和 isBlinBox，单独处理）
+// 定义需要循环的字段（排除 shopMsg 和 isBlindBox，单独处理）
 const fields = [
   { key: 'shopName', placeholder: '商品名称' },
   { key: 'shopPrice', placeholder: '商品价格' },
@@ -112,8 +112,8 @@ provide('openPutAddressFrom', openPutAddressFrom)
       <label class="custom-checkbox">
         <span style="margin-right: 20px;">是否允许为盲盒</span>
         <input
-          :checked="proFrom.isBlinBox"
-          @change="setProFrom({ ...proFrom, isBlinBox: $event.target.checked })"
+          :checked="proFrom.isBlindBox"
+          @change="setProFrom({ ...proFrom, isBlindBox: $event.target.checked })"
           type="checkbox"
         />
         <span class="checkmark"></span>

@@ -167,11 +167,10 @@ useInfiniteScroll(
 
 .shopBox {
   width: 80%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px;
   padding: 100px;
-  gap: 80px;
   margin-top: -70px;
 }
 
@@ -213,6 +212,7 @@ useInfiniteScroll(
   padding: 16px;
   gap: 12px;
   margin-top: 0;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 [data-device="mobile"] .promptMsg {

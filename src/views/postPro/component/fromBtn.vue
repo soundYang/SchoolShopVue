@@ -71,7 +71,7 @@ const subPro = async () => {
   formData.append('shopActualValue', proFrom.value.shopActualValue.trim())
   formData.append('shopNum', proFrom.value.shopNum.trim())
   formData.append('shopMsg', proFrom.value.shopMsg.trim())
-  formData.append('isBlinBox', proFrom.value.isBlinBox)
+  formData.append('isBlindBox', proFrom.value.isBlindBox)
   formData.append('shopType', JSON.stringify(proFrom.value.shopType))
   formData.append('publishAddress', JSON.stringify(proFrom.value.publishAddress))
 

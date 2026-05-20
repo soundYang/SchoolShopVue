@@ -1,16 +1,16 @@
 <script setup>
 import { getImageUrl } from '@/unit/getImagerUrl'
 import { formatPrice } from '@/unit/format'
-defineProps({
-  product: Object
+ defineProps({
+  product: [Object, String]
 })
 </script>
 
 <template>
-  <div class="card">
-    <img v-img-lazy="getImageUrl(product.shopImg[0])" alt="">
-    <h2>{{ product.shopName }}</h2>
-    <h3>￥{{ formatPrice(product.shopPrice) }}</h3>
+  <div class="card" v-if="product && typeof product === 'object'">
+    <img v-img-lazy="getImageUrl(product.shopImg?.[0] || '')" alt="">
+    <h2>{{ product.shopName || '' }}</h2>
+    <h3>￥{{ formatPrice(product.shopPrice || 0) }}</h3>
   </div>
 </template>
 

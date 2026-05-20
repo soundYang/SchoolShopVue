@@ -20,6 +20,10 @@ const props = defineProps({
     type: Number,
     required: true,
     default: 1
+  },
+  blindBoxImage: {
+    type: String,
+    default: ''
   }
 })
 
@@ -47,6 +51,11 @@ const handleSubmitOrder = () => {
           v-if="hasImage"
           :src="imageUrl"
           :alt="product.shopName"
+        />
+        <img
+          v-else-if="product.isBlindBox && blindBoxImage"
+          :src="blindBoxImage"
+          alt="盲盒"
         />
         <div v-else class="image-placeholder">暂无图片</div>
       </div>

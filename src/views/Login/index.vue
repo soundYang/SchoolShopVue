@@ -5,6 +5,7 @@ import { UserLoginServer, UserRegisterServer } from '@/api/user'
 import { getCaptcha } from '@/api/captcha'
 import { useUserStore } from '@/stores'
 import { useRouter, useRoute } from 'vue-router'
+import { rules } from '@/unit/validate'
 
 const { showToast } = useToast()
 const userStore = useUserStore()
@@ -21,13 +22,13 @@ const showFrom = ref(true) // true: 登录, false: 注册
 const LoginfromModel = ref({
   userName: {
     value: "",
-    rex: /^[\u4e00-\u9fa5a-zA-Z0-9_-]{2,16}$/,
-    msg: '用户名必须是2-16位的中文、字母、数字、下划线、减号'
+    rex: rules.userName.rex,
+    msg: rules.userName.msg
   },
   passWord: {
     value: "",
-    rex: /^[a-zA-Z0-9_-]{4,16}$/,
-    msg: '密码必须是4-16位字母、数字、下划线、减号'
+    rex: rules.passWord.rex,
+    msg: rules.passWord.msg
   },
   [Symbol.iterator]: function* () {
     yield* Object.values(this)
@@ -38,31 +39,31 @@ const LoginfromModel = ref({
 const RegisterfromModel = ref({
   userName: {
     value: "",
-    rex: /^[\u4e00-\u9fa5a-zA-Z0-9_-]{2,16}$/,
-    msg: '用户名必须是2-16位的中文、字母、数字、下划线、减号'
+    rex: rules.userName.rex,
+    msg: rules.userName.msg
   },
   passWord: {
     value: "",
-    rex: /^[a-zA-Z0-9_-]{4,16}$/,
-    msg: '密码必须是4-16位字母、数字、下划线、减号'
+    rex: rules.passWord.rex,
+    msg: rules.passWord.msg
   },
   confirmPassWord: {
     value: "",
-    rex: /^[a-zA-Z0-9_-]{4,16}$/,
+    rex: rules.passWord.rex,
     customValidator: () => {
       return RegisterfromModel.value.passWord.value === RegisterfromModel.value.confirmPassWord.value
     },
-    msg: '密码不一致'
+    msg: '两次密码不一致'
   },
   phoneNumber: {
     value: '',
-    rex: /^[1][3-9]\d{9}$/,
-    msg: '手机号格式不正确'
+    rex: rules.phoneNumber.rex,
+    msg: rules.phoneNumber.msg
   },
   captchaText: {
     value: "",
-    rex: /^[A-Za-z0-9]{1,6}$/,
-    msg: '验证码格式不正确'
+    rex: rules.captchaText.rex,
+    msg: rules.captchaText.msg
   },
   [Symbol.iterator]: function* () {
     yield* Object.values(this)
@@ -186,7 +187,7 @@ onMounted(() => fetchCaptcha())
             id="login-username"
             name="username"
             required=""
-            placeholder="请输入账号"
+            placeholder="请输入用户名/手机号"
             v-model="LoginfromModel.userName.value"
           />
           <label for="login-username" class="form-label" data-text="账号">账号</label>
@@ -377,7 +378,8 @@ onMounted(() => fetchCaptcha())
 
 .form-group--code input {
   flex: 1;
-  width: auto;
+  min-width: 0;
+  width: 0;
 }
 
 .form-group--code .captcha-img {

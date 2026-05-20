@@ -51,15 +51,14 @@ const router = createRouter({
 })
 
 // 路由拦截：未登录跳转登录页
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const userStore = useUserStore()
   const token = userStore.token
   if (authRequiredPages.includes(to.path)) {
     if (!token) {
-      return next('/login')
+      return '/login'
     }
   }
-  next()
 })
 
 export default router

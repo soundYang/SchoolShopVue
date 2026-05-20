@@ -28,7 +28,7 @@ ul{
   list-style: none;
 }
 body{
-  background: var(--mg-white);
+  background: transparent;
   color: var(--mg-black);
   font-family: var(--mg-font);
 }

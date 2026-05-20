@@ -150,6 +150,7 @@ const handleCancel = (orderId) => {
 const handleCancelConfirm = async (reason) => {
   if (isCancelling.value || !cancelOrderId.value) return
   isCancelling.value = true
+  showCancelDialog.value = false
   try {
     const order = orders.value.find(o => o._id === cancelOrderId.value)
     const shouldRefund = order && activeRole.value === 'buyer' && order.status === 1 && !order.isBlindBox
