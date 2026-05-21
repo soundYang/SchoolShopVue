@@ -94,6 +94,12 @@ const goToEdit = () => {
           <span v-if="product.isBlindBox" class="tag blind-box">盲盒</span>
         </div>
 
+        <!-- 违规次数 -->
+        <div v-if="product.violationCount > 0" class="violation-row">
+          <span class="label">违规</span>
+          <span class="value">{{ product.violationCount }} / 3 次</span>
+        </div>
+
         <!-- 原价信息 -->
         <div v-if="product.shopActualValue && product.shopActualValue !== product.shopPrice" class="original-price-row">
           <span class="label">价值</span>
@@ -289,6 +295,23 @@ const goToEdit = () => {
 
 .original-price-row .value {
   text-decoration: line-through;
+  font-family: var(--mg-font-mono);
+}
+
+.violation-row {
+  font-size: 12px;
+  color: #856404;
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.violation-row .label {
+  opacity: 0.8;
+}
+
+.violation-row .value {
+  font-weight: 600;
   font-family: var(--mg-font-mono);
 }
 

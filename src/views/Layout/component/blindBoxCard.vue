@@ -379,13 +379,15 @@ onMounted(() => {
   height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));
+  margin-top: 40px;
+  border-radius: 5px;
 }
 
 .back-category {
   display: inline-block;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(4px);
-  color: #fff;
+  color: #111;
   font-size: 14px;
   font-weight: 700;
   padding: 4px 16px;
@@ -398,7 +400,7 @@ onMounted(() => {
 .back-price {
   font-size: 28px;
   font-weight: 700;
-  color: #fff;
+  color: #111;
   font-family: 'Courier New', monospace;
   margin-top: 10px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.15);

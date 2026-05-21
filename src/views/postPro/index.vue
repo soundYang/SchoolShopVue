@@ -110,6 +110,7 @@ const setImgList = () => {
 }
 provide('setImgList', setImgList)
 
+const productViolationCount = ref(0)
 const imgShowRef = ref(null)
 
 const pushProduct = async (formData) => {
@@ -119,10 +120,30 @@ const pushProduct = async (formData) => {
       if (existingImgUrls.value.length) {
         formData.append('existingImages', JSON.stringify(existingImgUrls.value))
       }
-      await ProductUpdateServer(formData)
+      const res = await ProductUpdateServer(formData)
+      if (res.msg && res.msg.includes('自动删除')) {
+        showToast('商品多次修改仍存在违规内容，已达3次上限，已自动删除')
+        router.push('/publishedPro')
+        return
+      }
+      if (res.msg && res.msg.includes('等待管理员审核')) {
+        showToast(res.msg)
+        router.push('/publishedPro')
+        return
+      }
       showToast('商品已修改成功')
     } else {
       const res = await ProductPublishServer(formData)
+      if (res.msg && res.msg.includes('自动删除')) {
+        showToast('商品多次修改仍存在违规内容，已达3次上限，已自动删除')
+        router.push('/publishedPro')
+        return
+      }
+      if (res.msg && res.msg.includes('等待管理员审核')) {
+        showToast(res.msg)
+        router.push('/publishedPro')
+        return
+      }
       if (res.msg && res.msg.includes('图片待管理员审核')) {
         showToast('商品已发布成功，图片待管理员审核通过后展示，请耐心等待')
       }
@@ -171,6 +192,10 @@ onMounted(async () => {
         shopType: product.shopType || [],
         publishAddress: product.publishAddress || {}
       }
+      productViolationCount.value = product.violationCount || 0
+      if (productViolationCount.value > 0) {
+        showToast(`该商品当前违规次数：${productViolationCount.value}，累计 3 次将自动删除`)
+      }
       if (product.shopImg && product.shopImg.length) {
         existingImgUrls.value = product.shopImg.map(img => typeof img === 'string' ? img : '')
         imgUrls.value = existingImgUrls.value.map(url => getImageUrl(url))
@@ -200,6 +225,9 @@ onUnmounted(() => {
 <template>
   <div class="postProBox">
     <ReturnPage />
+    <div v-if="isEditMode && productViolationCount > 0" class="violation-banner">
+      ⚠ 该商品已有 {{ productViolationCount }} 次违规记录，累计 3 次将自动删除
+    </div>
     <h1 class="title">{{ isEditMode ? '编辑商品图片' : '上传商品图片' }}</h1>
     <div class="photoBox">
       <input
@@ -343,5 +371,16 @@ onUnmounted(() => {
 
 .image-item:hover .remove-btn {
   opacity: 1;
+}
+
+.violation-banner {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 12px 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
 }
 </style>

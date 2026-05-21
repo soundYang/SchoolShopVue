@@ -1,10 +1,11 @@
 <script setup>
-import { inject } from 'vue'
+import { ref, inject } from 'vue'
 import { useToast } from '@/composables/useToast'
 
 const { showToast } = useToast()
 const proFrom = inject('proFrom')
 const setImgList = inject('setImgList')
+const isSubmitting = ref(false)
 
 const proFromRegx = {
   shopName:{
@@ -35,62 +36,69 @@ const proFromRegx = {
 const pushProduct = inject('pushProduct')
 
 const subPro = async () => {
-  // 先去除空格
-  for (let key of ['shopName', 'shopPrice', 'shopActualValue', 'shopNum', 'shopMsg']) {
-    proFrom.value[key] = proFrom.value[key].trim()
-  }
+  if (isSubmitting.value) return
+  isSubmitting.value = true
 
-  // 验证图片
-  if (!setImgList()) {
-    return showToast('请至少上传一张商品图片')
-  }
-
-  // 验证字段
-  for (let [key, value] of Object.entries(proFromRegx)) {
-    if (!value.regx.test(proFrom.value[key])) {
-      return showToast(value.message)
+  try {
+    // 先去除空格
+    for (let key of ['shopName', 'shopPrice', 'shopActualValue', 'shopNum', 'shopMsg']) {
+      proFrom.value[key] = proFrom.value[key].trim()
     }
+
+    // 验证图片
+    if (!setImgList()) {
+      return showToast('请至少上传一张商品图片')
+    }
+
+    // 验证字段
+    for (let [key, value] of Object.entries(proFromRegx)) {
+      if (!value.regx.test(proFrom.value[key])) {
+        return showToast(value.message)
+      }
+    }
+
+    // 验证商品类型
+    if (!proFrom.value.shopType.length) {
+      return showToast('请选择商品类型')
+    }
+
+    // 验证地址
+    if (!proFrom.value.publishAddress || !Object.keys(proFrom.value.publishAddress).length) {
+      return showToast('请选择发货地址')
+    }
+
+    // 构建 FormData
+    const formData = new FormData()
+
+    // 添加普通字段
+    formData.append('shopName', proFrom.value.shopName.trim())
+    formData.append('shopPrice', proFrom.value.shopPrice.trim())
+    formData.append('shopActualValue', proFrom.value.shopActualValue.trim())
+    formData.append('shopNum', proFrom.value.shopNum.trim())
+    formData.append('shopMsg', proFrom.value.shopMsg.trim())
+    formData.append('isBlindBox', proFrom.value.isBlindBox)
+    formData.append('shopType', JSON.stringify(proFrom.value.shopType))
+    formData.append('publishAddress', JSON.stringify(proFrom.value.publishAddress))
+
+    // 添加图片文件
+    if (proFrom.value.shopImg && proFrom.value.shopImg.files) {
+      proFrom.value.shopImg.files.forEach((file) => {
+        formData.append('shopImg', file)
+      })
+    }
+
+    // 调用上传接口
+    await pushProduct(formData)
+  } finally {
+    isSubmitting.value = false
   }
-
-  // 验证商品类型
-  if (!proFrom.value.shopType.length) {
-    return showToast('请选择商品类型')
-  }
-
-  // 验证地址
-  if (!proFrom.value.publishAddress || !Object.keys(proFrom.value.publishAddress).length) {
-    return showToast('请选择发货地址')
-  }
-
-  // 构建 FormData
-  const formData = new FormData()
-
-  // 添加普通字段
-  formData.append('shopName', proFrom.value.shopName.trim())
-  formData.append('shopPrice', proFrom.value.shopPrice.trim())
-  formData.append('shopActualValue', proFrom.value.shopActualValue.trim())
-  formData.append('shopNum', proFrom.value.shopNum.trim())
-  formData.append('shopMsg', proFrom.value.shopMsg.trim())
-  formData.append('isBlindBox', proFrom.value.isBlindBox)
-  formData.append('shopType', JSON.stringify(proFrom.value.shopType))
-  formData.append('publishAddress', JSON.stringify(proFrom.value.publishAddress))
-
-  // 添加图片文件
-  if (proFrom.value.shopImg && proFrom.value.shopImg.files) {
-    proFrom.value.shopImg.files.forEach((file) => {
-      formData.append('shopImg', file)
-    })
-  }
-
-  // 调用上传接口
-  await pushProduct(formData)
 }
 </script>
 
 <template>
-  <button @click.prevent="subPro">
+  <button @click.prevent="subPro" :disabled="isSubmitting">
     <span>
-      提交
+      {{ isSubmitting ? '提交中...' : '提交' }}
     </span>
   </button>
 </template>
@@ -121,5 +129,12 @@ const subPro = async () => {
   button:active {
    transform: translate(1px, 1px);
    box-shadow: none;
+  }
+
+  button:disabled {
+   opacity: 0.5;
+   cursor: not-allowed;
+   transform: none;
+   box-shadow: var(--mg-shadow-sm);
   }
 </style>
