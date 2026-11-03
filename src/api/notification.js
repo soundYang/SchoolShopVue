@@ -4,13 +4,14 @@ import request from '@/unit/request'
 export const NotificationGetListServer = ({ page = 1, pageSize = 20, unreadOnly = false } = {}) => {
   return request.get('/notification/list', {
     params: { page, pageSize, unreadOnly },
-    noLoading: true
+    noLoading: true,
+    noAuthRedirect: true
   })
 }
 
 // 获取未读通知数量
 export const NotificationGetUnreadCountServer = () => {
-  return request.get('/notification/unreadCount', { noLoading: true })
+  return request.get('/notification/unreadCount', { noLoading: true, noAuthRedirect: true })
 }
 
 // 标记单条通知为已读

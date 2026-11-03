@@ -208,6 +208,7 @@ onMounted(() => fetchCaptcha())
         <button data-text="登陆" type="submit" class="submit-btn">
           <span class="btn-text">登陆</span>
         </button>
+        <button type="button" class="home-btn" @click="router.push('/layout')">前往网页</button>
       </div>
     </form>
 
@@ -293,6 +294,7 @@ onMounted(() => fetchCaptcha())
         <button data-text="注册" type="submit" class="submit-btn">
           <span class="btn-text">注册</span>
         </button>
+        <button type="button" class="home-btn" @click="router.push('/layout')">前往网页</button>
       </div>
     </form>
   </div>
@@ -420,6 +422,32 @@ onMounted(() => fetchCaptcha())
 
 .submit-btn:active {
   transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.home-btn {
+  display: block;
+  width: 100%;
+  padding: 0.7em;
+  margin-top: 0.8rem;
+  background: transparent;
+  border: var(--mg-border-light);
+  color: var(--mg-black);
+  font-family: var(--mg-font);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.1em;
+}
+
+.home-btn:hover {
+  border-color: var(--mg-black);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--mg-shadow-sm);
+}
+
+.home-btn:active {
+  transform: translate(1px, 1px);
   box-shadow: none;
 }
 

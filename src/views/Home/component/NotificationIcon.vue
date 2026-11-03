@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useNotificationStore } from '@/stores'
+import { useNotificationStore, useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
 const router = useRouter()
+const userStore = useUserStore()
+const { token } = storeToRefs(userStore)
 const notificationStore = useNotificationStore()
 // 从 Store 中解出响应式的通知列表和未读数量
 const { list, unreadCount } = storeToRefs(notificationStore)
@@ -110,7 +112,9 @@ const stopPolling = () => {
 }
 
 onMounted(() => {
-  startPolling()
+  if (token.value) {
+    startPolling()
+  }
   document.addEventListener('click', handleClickOutside)
 })
 

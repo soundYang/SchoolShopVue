@@ -37,15 +37,10 @@ getList(newList,'new')
       <blindBox />
 
       <!-- 热门商品 -->
-      <template v-if="hotList.length">
-        <shopShowListCom
-        :list="hotList"
-        badge-text="热门好物"
-        />
-      </template>
-      <div v-else class="empty-hint">
-        <span>暂无热门好物，敬请期待</span>
-      </div>
+      <shopShowListCom
+      :list="hotList"
+      badge-text="热门好物"
+      />
 
        <!-- 每日好物 -->
         <newProCom

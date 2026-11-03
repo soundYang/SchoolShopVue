@@ -81,18 +81,24 @@ defineProps({
 }
 
 [data-device="mobile"] .card_box {
-  width: 220px;
-  height: 340px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+}
+[data-device="mobile"] .proDemo {
+  padding: 12px;
+  row-gap: 10px;
 }
 [data-device="mobile"] .proDemo>img {
-  width: 140px;
-  height: 200px;
-  margin-top: 20px;
+  width: 75%;
+  height: auto;
+  aspect-ratio: 1 / 1.4;
+  margin-top: 8%;
 }
 [data-device="mobile"] .proDemo>h2 {
-  font-size: 14px;
+  font-size: 12px;
 }
 [data-device="mobile"] .proDemo>h3 {
-  font-size: 16px;
+  font-size: 14px;
 }
 </style>

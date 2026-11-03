@@ -48,8 +48,11 @@ request.interceptors.response.use(function (response) {
       loadingStore.hide()
     }
     if(error.response?.data?.code === 401){
-      router.replace('/login')
-      showToast('登录过期')
+      if (!error.config?.noAuthRedirect) {
+        router.replace('/login')
+        showToast('登录过期')
+      }
+      return Promise.reject(error)
     }
     showToast(error.response?.data?.msg || '请求失败')
 

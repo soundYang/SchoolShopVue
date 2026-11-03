@@ -33,29 +33,34 @@ export const useBlindBoxStore = defineStore("blindBox", () => {
   }
 
   const getBlindBox = async () => {
-    const res = await BlindBoxGetAllServer()
+    try {
+      const res = await BlindBoxGetAllServer()
 
-    if (res.open === false) {
-      blindBoxOpen.value = false
-      blindBoxCount.value = res.count || 0
-      blindBox.value = []
-      return
-    }
-
-    blindBoxOpen.value = true
-    const boxes = res.data
-    const current = Array.isArray(blindBox.value) ? blindBox.value : []
-    boxes.forEach(box => {
-      const existing = current.find(b => b._id === box._id)
-      if (existing) {
-        if (existing.orderId) box.orderId = existing.orderId
-        if (existing.isRevealed) {
-          box.isRevealed = existing.isRevealed
-          box.orderId = existing.orderId || box.orderId
-        }
+      if (res.open === false) {
+        blindBoxOpen.value = false
+        blindBoxCount.value = res.count || 0
+        blindBox.value = []
+        return
       }
-    })
-    blindBox.value = boxes
+
+      blindBoxOpen.value = true
+      const boxes = res.data
+      const current = Array.isArray(blindBox.value) ? blindBox.value : []
+      boxes.forEach(box => {
+        const existing = current.find(b => b._id === box._id)
+        if (existing) {
+          if (existing.orderId) box.orderId = existing.orderId
+          if (existing.isRevealed) {
+            box.isRevealed = existing.isRevealed
+            box.orderId = existing.orderId || box.orderId
+          }
+        }
+      })
+      blindBox.value = boxes
+    } catch (error) {
+      console.error('获取盲盒列表失败:', error)
+      blindBox.value = []
+    }
   }
 
   const setBlindBoxOrderId = (boxId, orderId) => {

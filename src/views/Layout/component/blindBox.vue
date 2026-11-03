@@ -2,22 +2,35 @@
 import blindBoxCard from './blindBoxCard.vue'
 import patticleClock from './patticleClock.vue'
 
-import { ref } from 'vue'
-import { useBlindBoxStore } from '@/stores'
+import { ref, computed } from 'vue'
+import { useBlindBoxStore, useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
 import goldenImg from '@/assets/Golden.png'
 import purpleImg from '@/assets/Purple.png'
 import blueImg from '@/assets/blue.png'
 import greenImg from '@/assets/green.png'
 
+const router = useRouter()
+const userStore = useUserStore()
+const blindBoxStore = useBlindBoxStore()
+const { blindBox, blindBoxOpen, blindBoxCount } = storeToRefs(blindBoxStore)
+const { token } = storeToRefs(userStore)
+
+const needsLogin = computed(() => !token.value)
+
+if (!needsLogin.value) {
+  blindBoxStore.getBlindBox()
+}
+
+const goToLogin = () => {
+  router.push('/login')
+}
+
 /**
  * 价格数据 [0.99  6.99 9.99  19.9 39.9  69.9]
  */
-
-const blindBoxStore = useBlindBoxStore()
-const { blindBox, blindBoxOpen, blindBoxCount } = storeToRefs(blindBoxStore)
-blindBoxStore.getBlindBox()
 
 const color = ref([
   {
@@ -60,7 +73,14 @@ const colorSelect = (price) => {
     <div>
       <span class="time">下次刷新时间：</span><patticle-clock width="500px" height="200px"/>
     </div>
-    <div v-if="blindBox.length">
+    <div v-if="needsLogin" class="empty-tip">
+      <div class="login-tip">
+        <span class="login-title">请先登录</span>
+        <span class="login-desc">登录后即可参与盲盒</span>
+        <button class="login-btn" @click="goToLogin">去登录</button>
+      </div>
+    </div>
+    <div v-else-if="blindBox.length">
         <blind-box-card
         v-for="(item, index) in blindBox"
         :key="index"
@@ -153,6 +173,43 @@ const colorSelect = (price) => {
   font-weight: bold;
 }
 
+.login-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.login-title {
+  font-size: 32px;
+  color: var(--mg-black);
+  font-family: var(--mg-font-display);
+}
+.login-desc {
+  font-size: 16px;
+  color: var(--mg-gray-dark);
+  font-family: var(--mg-font);
+}
+.login-btn {
+  padding: 10px 32px;
+  border: var(--mg-border-light);
+  background: var(--mg-black);
+  color: var(--mg-white);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--mg-font);
+  cursor: pointer;
+  transition: all .15s;
+  box-shadow: var(--mg-shadow-sm);
+}
+.login-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--mg-shadow);
+}
+.login-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
 [data-device="mobile"] .title {
   margin-left: 20px;
   margin-bottom: 50px;
@@ -184,5 +241,11 @@ const colorSelect = (price) => {
 }
 [data-device="mobile"] .closed-desc em {
   font-size: 18px;
+}
+[data-device="mobile"] .login-title {
+  font-size: 22px;
+}
+[data-device="mobile"] .login-desc {
+  font-size: 14px;
 }
 </style>

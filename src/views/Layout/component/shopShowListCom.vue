@@ -80,7 +80,7 @@ defineProps({
       <h2 class="text-center">{{ badgeText }}</h2>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" v-if="list && list.length">
       <div ref="galleryWrapper" class="horiz-gallery-wrapper">
 
         <div class="horiz-gallery-strip">
@@ -98,6 +98,9 @@ defineProps({
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="empty-hint">
+      <span>暂无{{ badgeText }}，敬请期待</span>
     </div>
   </section>
 </template>
@@ -151,7 +154,6 @@ defineProps({
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-left: -200px;
   cursor: pointer;
   font-family: var(--mg-font);
   font-weight: 600;
@@ -164,35 +166,29 @@ defineProps({
   font-size: 1.5em;
 }
 
-[data-device="mobile"] .horiz-gallery-strip {
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+[data-device="mobile"] .horiz-gallery-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+[data-device="mobile"] .horiz-gallery-wrapper::-webkit-scrollbar {
+  display: none;
 }
 [data-device="mobile"] .project-wrap {
   width: 44vw;
+  flex-shrink: 0;
   padding: 0.5rem;
 }
-[data-device="mobile"] .project-wrap .card_box {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 2 / 3;
-}
-[data-device="mobile"] .project-wrap .proDemo>img {
-  width: 70%;
-  height: auto;
-  aspect-ratio: 1 / 1.4;
-  margin-top: 10%;
-}
-[data-device="mobile"] .project-wrap .proDemo>h2 {
-  font-size: 12px;
-}
-[data-device="mobile"] .project-wrap .proDemo>h3 {
-  font-size: 14px;
+[data-device="mobile"] .horiz-gallery-strip {
+  flex-wrap: nowrap;
+  gap: 8px;
 }
 [data-device="mobile"] .more-details {
   margin-left: 0;
-  min-height: 200px;
+  min-height: auto;
+  width: 30vw;
+  flex-shrink: 0;
 }
 [data-device="mobile"] .text-center {
   margin-left: 20px;
@@ -202,5 +198,21 @@ defineProps({
   width: 80px;
   margin-bottom: -28px;
   margin-left: -5px;
+}
+
+.empty-hint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--mg-gray-dark, #999);
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-family: var(--mg-font);
+}
+
+[data-device="mobile"] .empty-hint {
+  font-size: 14px;
+  height: 120px;
 }
 </style>

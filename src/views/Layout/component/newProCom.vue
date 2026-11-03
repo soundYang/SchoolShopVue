@@ -96,7 +96,7 @@ const getCardStyle = (index, total) => {
   transform: perspective(800px);
   animation: autoRun3d 20s linear infinite;
   will-change: transform;
-  margin: 100px auto;
+  margin: 200px auto;
 }
 
 .card-3d div {
@@ -131,7 +131,7 @@ const getCardStyle = (index, total) => {
 }
 [data-device="mobile"] .card-3d {
   height: 40vw;
-  margin: 50px auto;
+  margin: 60px auto;
   animation-duration: 30s;
   transform: perspective(400px);
 }
